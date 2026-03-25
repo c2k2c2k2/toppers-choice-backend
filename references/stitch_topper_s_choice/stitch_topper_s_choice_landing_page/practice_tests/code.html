@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f3f4f5",
+              "on-tertiary-fixed-variant": "#693c00",
+              "tertiary-fixed": "#ffdcbd",
+              "on-tertiary-fixed": "#2c1600",
+              "surface-container": "#edeeef",
+              "tertiary-fixed-dim": "#ffb86f",
+              "secondary-container": "#d6e3fe",
+              "on-surface-variant": "#43474f",
+              "on-secondary-fixed": "#0f1c2f",
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-primary": "#ffffff",
+              "tertiary": "#301900",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-high": "#e7e8e9",
+              "secondary-fixed-dim": "#bac7e1",
+              "primary-fixed": "#d5e3ff",
+              "on-secondary-fixed-variant": "#3b475d",
+              "on-tertiary-container": "#e18600",
+              "on-tertiary": "#ffffff",
+              "primary": "#001e40",
+              "secondary-fixed": "#d6e3fe",
+              "on-primary-container": "#799dd6",
+              "primary-fixed-dim": "#a7c8ff",
+              "surface-dim": "#d9dadb",
+              "on-primary-fixed-variant": "#1f477b",
+              "outline": "#737780",
+              "on-surface": "#191c1d",
+              "error": "#ba1a1a",
+              "on-secondary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-variant": "#e1e3e4",
+              "surface-tint": "#3a5f94",
+              "secondary": "#525f75",
+              "on-primary-fixed": "#001b3c",
+              "on-secondary-container": "#58657c",
+              "tertiary-container": "#4e2b00",
+              "inverse-surface": "#2e3132",
+              "surface-bright": "#f8f9fa",
+              "primary-container": "#003366",
+              "background": "#f8f9fa",
+              "inverse-on-surface": "#f0f1f2",
+              "on-background": "#191c1d",
+              "outline-variant": "#c3c6d1",
+              "inverse-primary": "#a7c8ff",
+              "surface": "#f8f9fa",
+              "surface-container-highest": "#e1e3e4"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift-no-borders {
+            border: none !important;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,30,64,0.08)] border-b border-slate-200/20">
+<div class="flex justify-between items-center h-20 px-8 w-full max-w-[1920px] mx-auto font-['Manrope'] antialiased tracking-tight">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-black text-[#001e40] tracking-tighter">Topper's Choice</span>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-500 font-medium hover:text-[#e18600] transition-colors duration-200" href="#">Dashboard</a>
+<a class="text-slate-500 font-medium hover:text-[#e18600] transition-colors duration-200" href="#">My Courses</a>
+<a class="text-[#001e40] font-bold border-b-2 border-[#ffb86f] pb-1 hover:text-[#e18600] transition-colors duration-200" href="#">Practice Tests</a>
+<a class="text-slate-500 font-medium hover:text-[#e18600] transition-colors duration-200" href="#">Performance</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<button class="p-2 text-slate-500 hover:text-primary transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed shadow-sm">
+<img alt="Student Profile Avatar" class="w-full h-full object-cover" data-alt="Portrait of a male student smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxIDSdO6frT-nB57eY4k5w2aHgPvYfXQMRKXD68BsF2w_ihmwa4z8Wqfg6MlwZBa1FhuMLe1fSN1TDRyneYlLHfrSap0B2tI48K4iDyqjt-xeUM8cAwmiUHa0bobMPMhRJzslI6r95S9TQDXcuL6MJTN5u8WWEhOJ3yTnBBMmEGFJQhUPxWpObeWmChghN3bzmfA5VvkeHho-bXBYT8meRcZY6rqhrKzBmLN7X0SifCWh3f-A5OqvyzSx67eB3g_KTFzdy6bbAMdU"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex pt-20 min-h-screen">
+<!-- Sidebar -->
+<aside class="hidden lg:flex h-[calc(100vh-5rem)] w-72 sticky top-20 flex-col p-6 gap-y-4 bg-slate-50 border-r border-slate-200/30 tonal-shift-no-borders font-['Manrope'] font-medium text-sm">
+<div class="mb-8">
+<h3 class="text-primary font-bold text-xl">Topper's Choice</h3>
+<p class="text-slate-500 text-xs">The Academic Atelier</p>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-100 rounded-xl hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-100 rounded-xl hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span>My Courses</span>
+</a>
+<a class="flex items-center gap-3 p-3 bg-[#003366] text-white rounded-xl shadow-lg hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+<span>Practice Tests</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-100 rounded-xl hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span>Performance</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-100 rounded-xl hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span>Profile</span>
+</a>
+</div>
+<div class="mt-auto p-4 bg-primary-container rounded-2xl text-white">
+<p class="text-xs opacity-80 mb-2">Ready to excel?</p>
+<button class="w-full py-2 bg-tertiary-fixed-dim text-on-tertiary-fixed font-bold rounded-lg text-xs hover:bg-tertiary-fixed transition-colors">
+                    Start Practice
+                </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8 lg:p-12 bg-surface">
+<!-- Header Section -->
+<div class="mb-12 max-w-5xl">
+<h1 class="font-headline text-5xl font-extrabold text-primary tracking-tight mb-4">Practice Test Center</h1>
+<p class="font-body text-on-surface-variant text-lg leading-relaxed max-w-2xl">
+                    Master your curriculum through high-fidelity simulations. Our mock tests are designed to replicate the rigorous standards of premium academic institutions.
+                </p>
+</div>
+<!-- Featured: Daily Quiz (Bento Layout Style) -->
+<section class="mb-16">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 relative overflow-hidden bg-primary-container rounded-3xl p-10 text-white flex flex-col justify-between min-h-[320px]">
+<div class="relative z-10">
+<span class="inline-block px-4 py-1 bg-tertiary-fixed-dim/20 text-tertiary-fixed-dim rounded-full text-xs font-bold tracking-widest uppercase mb-4">Featured Assessment</span>
+<h2 class="font-headline text-4xl font-bold mb-4 leading-tight">Daily Quiz: General Mental Ability</h2>
+<p class="opacity-80 max-w-md font-body">15 minutes • 20 Questions • 500+ students took this today</p>
+</div>
+<div class="relative z-10 mt-8">
+<button class="px-8 py-3 bg-tertiary-fixed-dim text-on-tertiary-fixed font-bold rounded-md hover:bg-tertiary-fixed transition-colors shadow-lg shadow-black/20">
+                                Start Today's Quiz
+                            </button>
+</div>
+<!-- Abstract Background Decoration -->
+<div class="absolute -right-20 -top-20 w-80 h-80 bg-[#001e40] rounded-full blur-3xl opacity-50"></div>
+<div class="absolute right-10 bottom-10 opacity-20">
+<span class="material-symbols-outlined text-[120px]" data-icon="lightbulb">lightbulb</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-3xl p-8 shadow-[0_10px_40px_rgba(0,30,64,0.08)] flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 bg-secondary-container rounded-xl flex items-center justify-center text-primary mb-6">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-primary mb-2">Streak Master</h3>
+<p class="text-on-surface-variant text-sm font-body">You have completed tests for 5 consecutive days. Keep the momentum!</p>
+</div>
+<div class="mt-6 flex items-end gap-2">
+<span class="text-4xl font-black text-[#e18600]">05</span>
+<span class="text-on-surface-variant font-medium mb-1">Day Streak</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Test List Section -->
+<section>
+<div class="flex items-center justify-between mb-8">
+<h2 class="font-headline text-3xl font-bold text-primary">Mock Assessments</h2>
+<div class="flex gap-4">
+<div class="flex items-center gap-2 px-4 py-2 bg-surface-container rounded-lg text-on-surface-variant text-sm font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                            Filter Subjects
+                        </div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-[0_10px_40px_rgba(0,30,64,0.08)]">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-8 py-6 font-headline font-bold text-primary text-sm uppercase tracking-wider">Test Name</th>
+<th class="px-8 py-6 font-headline font-bold text-primary text-sm uppercase tracking-wider">Questions</th>
+<th class="px-8 py-6 font-headline font-bold text-primary text-sm uppercase tracking-wider">Duration</th>
+<th class="px-8 py-6 font-headline font-bold text-primary text-sm uppercase tracking-wider">Difficulty</th>
+<th class="px-8 py-6 font-headline font-bold text-primary text-sm uppercase tracking-wider text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary/5 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+</div>
+<div>
+<div class="font-bold text-primary font-headline">MPSC Mock #12</div>
+<div class="text-xs text-on-surface-variant font-body">General Studies Paper I</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 text-on-surface-variant font-medium font-body">100</td>
+<td class="px-8 py-6 text-on-surface-variant font-medium font-body">90 mins</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-[10px] font-bold uppercase tracking-wider">Medium</span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="px-6 py-2 bg-primary-container text-white font-bold rounded-md hover:bg-primary transition-all active:scale-95 text-sm shadow-sm group-hover:shadow-md">
+                                            Start
+                                        </button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary/5 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+</div>
+<div>
+<div class="font-bold text-primary font-headline">Science &amp; Tech Advance</div>
+<div class="text-xs text-on-surface-variant font-body">High Impact Module</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 text-on-surface-variant font-medium font-body">50</td>
+<td class="px-8 py-6 text-on-surface-variant font-medium font-body">45 mins</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-error-container text-error rounded-full text-[10px] font-bold uppercase tracking-wider">Hard</span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="px-6 py-2 bg-primary-container text-white font-bold rounded-md hover:bg-primary transition-all active:scale-95 text-sm shadow-sm group-hover:shadow-md">
+                                            Start
+                                        </button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary/5 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="calculate">calculate</span>
+</div>
+<div>
+<div class="font-bold text-primary font-headline">Quantitative Aptitude #08</div>
+<div class="text-xs text-on-surface-variant font-body">Mental Math Foundations</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 text-on-surface-variant font-medium font-body">75</td>
+<td class="px-8 py-6 text-on-surface-variant font-medium font-body">60 mins</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-bold uppercase tracking-wider">Easy</span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="px-6 py-2 border border-outline-variant text-primary font-bold rounded-md hover:bg-surface-container-high transition-all active:scale-95 text-sm">
+                                            Retake
+                                        </button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary/5 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+</div>
+<div>
+<div class="font-bold text-primary font-headline">Indian Polity &amp; Law</div>
+<div class="text-xs text-on-surface-variant font-body">Constitution Intensive</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 text-on-surface-variant font-medium font-body">120</td>
+<td class="px-8 py-6 text-on-surface-variant font-medium font-body">120 mins</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-[10px] font-bold uppercase tracking-wider">Medium</span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="px-6 py-2 bg-primary-container text-white font-bold rounded-md hover:bg-primary transition-all active:scale-95 text-sm shadow-sm group-hover:shadow-md">
+                                            Start
+                                        </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Subject Wise Papers Card -->
+<div class="bg-surface-container-low p-8 rounded-3xl group cursor-pointer hover:bg-surface-container-high transition-all">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="font-headline text-2xl font-bold text-primary mb-2">Subject-wise Papers</h3>
+<p class="text-on-surface-variant text-sm font-body">Deep dive into specific domains to strengthen your weak areas.</p>
+</div>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+<div class="flex flex-wrap gap-3">
+<span class="px-4 py-2 bg-white rounded-xl text-xs font-bold text-primary shadow-sm">Economics</span>
+<span class="px-4 py-2 bg-white rounded-xl text-xs font-bold text-primary shadow-sm">Geography</span>
+<span class="px-4 py-2 bg-white rounded-xl text-xs font-bold text-primary shadow-sm">Modern History</span>
+<span class="px-4 py-2 bg-white rounded-xl text-xs font-bold text-primary shadow-sm">+8 more</span>
+</div>
+</div>
+<!-- Performance Insights Card -->
+<div class="bg-primary p-8 rounded-3xl text-white">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+</div>
+<h3 class="font-headline text-2xl font-bold">Preparation Insight</h3>
+</div>
+<p class="opacity-80 text-sm font-body mb-6 leading-relaxed">
+                            Your accuracy in "Quantitative Aptitude" has improved by 15% this week. Focus on "Polity" for your next session.
+                        </p>
+<div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim w-3/4 rounded-full"></div>
+</div>
+<div class="mt-2 text-right text-[10px] font-bold uppercase tracking-widest text-tertiary-fixed-dim">75% Course Completion</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Mobile Navigation (Bottom Nav) -->
+<footer class="md:hidden fixed bottom-0 w-full bg-white/95 backdrop-blur-md border-t border-slate-100 px-6 py-4 z-50">
+<div class="flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Courses</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<div class="p-3 bg-primary-container rounded-2xl -mt-8 shadow-lg text-white">
+<span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-tighter mt-1">Practice</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Stats</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Profile</span>
+</a>
+</div>
+</footer>
+</body></html>

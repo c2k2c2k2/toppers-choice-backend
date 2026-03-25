@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container": "#edeeef",
+              "surface-container-high": "#e7e8e9",
+              "on-surface": "#191c1d",
+              "secondary-fixed-dim": "#bac7e1",
+              "tertiary-fixed-dim": "#ffb86f",
+              "on-primary-fixed": "#001b3c",
+              "surface": "#f8f9fa",
+              "inverse-surface": "#2e3132",
+              "background": "#f8f9fa",
+              "surface-container-low": "#f3f4f5",
+              "secondary-container": "#d6e3fe",
+              "primary-fixed-dim": "#a7c8ff",
+              "on-tertiary-container": "#e18600",
+              "on-secondary": "#ffffff",
+              "primary": "#001e40",
+              "on-secondary-fixed": "#0f1c2f",
+              "tertiary": "#301900",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d9dadb",
+              "on-primary": "#ffffff",
+              "surface-container-highest": "#e1e3e4",
+              "secondary-fixed": "#d6e3fe",
+              "inverse-primary": "#a7c8ff",
+              "on-surface-variant": "#43474f",
+              "surface-variant": "#e1e3e4",
+              "on-secondary-container": "#58657c",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#1f477b",
+              "outline": "#737780",
+              "on-tertiary": "#ffffff",
+              "tertiary-container": "#4e2b00",
+              "on-tertiary-fixed-variant": "#693c00",
+              "surface-tint": "#3a5f94",
+              "outline-variant": "#c3c6d1",
+              "surface-bright": "#f8f9fa",
+              "primary-container": "#003366",
+              "surface-container-lowest": "#ffffff",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2c1600",
+              "error-container": "#ffdad6",
+              "secondary": "#525f75",
+              "on-background": "#191c1d",
+              "primary-fixed": "#d5e3ff",
+              "tertiary-fixed": "#ffdcbd",
+              "on-secondary-fixed-variant": "#3b475d",
+              "on-primary-container": "#799dd6",
+              "inverse-on-surface": "#f0f1f2"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .snap-y-mandatory { scroll-snap-type: y mandatory; }
+        .snap-start { scroll-snap-align: start; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .glass-panel { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface h-screen overflow-hidden">
+<!-- TopNavBar (Derived from JSON) -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,30,64,0.08)]">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-6">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-all text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div>
+<h1 class="font-headline text-xl font-bold text-primary tracking-tight">Macroeconomic Principles</h1>
+<p class="text-xs font-medium text-secondary uppercase tracking-widest">Module 4: Global Trade Dynamics</p>
+</div>
+</div>
+<!-- Reading Progress -->
+<div class="hidden md:flex items-center gap-4 bg-surface-container-low px-4 py-2 rounded-full">
+<div class="w-32 h-1.5 bg-surface-variant rounded-full overflow-hidden">
+<div class="w-[65%] h-full bg-primary-container"></div>
+</div>
+<span class="text-sm font-semibold text-primary font-label">Page 14 of 22</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden sm:flex items-center gap-4 mr-6">
+<a class="text-slate-500 hover:text-primary transition-colors font-medium text-sm" href="#">Dashboard</a>
+<a class="text-primary border-b-2 border-tertiary-fixed-dim pb-1 font-medium text-sm" href="#">Courses</a>
+</div>
+<button class="p-2 hover:bg-slate-100/50 rounded-lg transition-all text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-primary-fixed overflow-hidden">
+<img alt="Student Profile" class="w-full h-full object-cover" data-alt="close-up portrait of a student wearing a smart casual outfit in a bright, modern academic setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATBeEs0y77zLGngMmtwEONnhXb4hzrE0AYAChKwzaHsT2vuG8e3kTUU_dj-T4hS7RF1QLAJHou1esBhG8k38gAq4CuKXCJVfuhbzBSbTmdKu4bUvbVj_HwyRuabV19PLpSazOSPCLPP9Idsz7ZGkI9W23qAeVuBZb0J4KreLgRCKhItI_5l58F9O0BuZ8Mw0ZodnPh9UHyul-p9Pr5Huhl3UOUC28myEg2gPSk0NOzNXsP4xL3q8nGUMLJMeKc3odnUhTidbLt5m8"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- Side Floating Toolbar (Glassmorphic) -->
+<aside class="fixed right-6 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-4">
+<div class="glass-panel p-3 rounded-2xl flex flex-col gap-5 shadow-2xl border border-white/40">
+<button class="group flex flex-col items-center gap-1">
+<div class="p-3 rounded-xl bg-surface-container-lowest text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+</div>
+<span class="text-[10px] font-bold text-primary opacity-60">SAVE</span>
+</button>
+<button class="group flex flex-col items-center gap-1">
+<div class="p-3 rounded-xl bg-surface-container-lowest text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+<span class="material-symbols-outlined" data-icon="draw">draw</span>
+</div>
+<span class="text-[10px] font-bold text-primary opacity-60">MARK</span>
+</button>
+<button class="group flex flex-col items-center gap-1">
+<div class="p-3 rounded-xl bg-surface-container-lowest text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+<span class="material-symbols-outlined" data-icon="sticky_note_2">sticky_note_2</span>
+</div>
+<span class="text-[10px] font-bold text-primary opacity-60">NOTE</span>
+</button>
+<div class="h-[1px] bg-outline-variant/30 mx-2"></div>
+<button class="group flex flex-col items-center gap-1">
+<div class="p-3 rounded-xl bg-surface-container-lowest text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</div>
+<span class="text-[10px] font-bold text-primary opacity-60">FIND</span>
+</button>
+</div>
+<!-- Share/Export -->
+<button class="glass-panel p-4 rounded-full text-on-tertiary-container bg-tertiary-fixed shadow-xl border border-white/40 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ios_share</span>
+</button>
+</aside>
+<!-- Vertical Reel Container -->
+<main class="h-screen w-full snap-y-mandatory overflow-y-scroll hide-scrollbar pt-20">
+<!-- Page 14 -->
+<section class="h-screen w-full snap-start flex items-center justify-center p-4 md:p-8">
+<div class="max-w-4xl w-full h-full bg-surface-container-lowest shadow-[0_20px_60px_rgba(0,0,0,0.05)] rounded-2xl overflow-hidden flex flex-col relative group">
+<div class="absolute top-6 left-6 z-10">
+<span class="bg-primary/5 text-primary px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase">Page 14: Theories of Comparative Advantage</span>
+</div>
+<div class="flex-grow flex items-center justify-center bg-surface-container-low/50 overflow-hidden p-12">
+<div class="w-full h-full bg-white shadow-lg p-12 flex flex-col gap-8 relative">
+<div class="absolute top-0 left-0 w-2 h-full bg-tertiary-fixed-dim/40"></div>
+<h2 class="font-headline text-3xl font-extrabold text-primary leading-tight">The Ricardian Model</h2>
+<div class="space-y-6 text-on-surface-variant leading-relaxed text-lg">
+<p>David Ricardo's theory suggests that international trade can benefit all participating nations if they specialize in producing goods for which they have a lower <strong>opportunity cost</strong>.</p>
+<div class="bg-surface-container-low p-6 rounded-xl border-l-4 border-tertiary-container italic">
+                                "Even if one nation is less efficient than another in the production of all commodities, there is still a basis for mutually beneficial trade."
+                            </div>
+<p>Consider the classic example of Wine and Cloth production between England and Portugal...</p>
+</div>
+<div class="mt-auto flex justify-between items-end border-t border-surface-container-high pt-6">
+<div class="text-xs text-outline font-medium tracking-tighter">ScholarsAtelier · Academic Reserve · 2024</div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Visual Swipe Hint -->
+<div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary/30 animate-bounce">keyboard_double_arrow_down</span>
+<span class="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Swipe for next page</span>
+</div>
+</div>
+</section>
+<!-- Page 15 (Interactive / Visual Focused) -->
+<section class="h-screen w-full snap-start flex items-center justify-center p-4 md:p-8">
+<div class="max-w-4xl w-full h-full bg-surface-container-lowest shadow-[0_20px_60px_rgba(0,0,0,0.05)] rounded-2xl overflow-hidden flex flex-col relative">
+<div class="absolute top-6 left-6 z-10">
+<span class="bg-primary/5 text-primary px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase">Page 15: Visualizing Opportunity Cost</span>
+</div>
+<div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-0">
+<div class="p-12 flex flex-col justify-center gap-6">
+<h3 class="font-headline text-2xl font-bold text-primary">The Production Possibility Frontier</h3>
+<p class="text-on-surface-variant">The curve represents the maximum possible output combinations of two goods or services an economy can achieve when all resources are fully and efficiently employed.</p>
+<div class="space-y-4 mt-4">
+<div class="flex items-center gap-4">
+<span class="w-8 h-8 rounded-lg bg-primary-container text-white flex items-center justify-center text-xs font-bold">A</span>
+<span class="text-sm font-medium">Efficient allocation</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="w-8 h-8 rounded-lg bg-tertiary-container text-white flex items-center justify-center text-xs font-bold">B</span>
+<span class="text-sm font-medium">Underutilized resources</span>
+</div>
+</div>
+</div>
+<div class="bg-primary flex items-center justify-center p-12 relative overflow-hidden">
+<div class="absolute inset-0 opacity-20">
+<img alt="Abstract Diagram" class="w-full h-full object-cover" data-alt="minimalist abstract geometric visualization with thin glowing lines representing a mathematical grid and curves on a deep navy background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0fmssDO1cYz-s_o_DzIjTKYc-5yni7mtO__ti2sDs7MFKpMj7hSAorLPDyQ9rCH_zO41LvFE01o_76blRmVMV6kJxUGjbsLpUupGmeSqqBtliDuQ-jmp9g5qfoH16hdGgE4_B97L1RHBsJLcwkfYHiwqeS5gKS_A7ik24sHvBExZfRMaw422AfEoPJZtiY4E2wrrRNNNNmxMK_Rfyzz4gbRQw5bDj85TRVi2MpMqaoEe_mTXNydfWUWFpoOb2yv2T_CZ3DnSN40A"/>
+</div>
+<div class="relative z-10 w-full aspect-square border-2 border-dashed border-white/30 rounded-full flex items-center justify-center">
+<div class="w-3/4 h-3/4 border-2 border-tertiary-fixed-dim rounded-tl-full"></div>
+<div class="absolute top-1/4 right-1/4 w-4 h-4 bg-tertiary-fixed-dim rounded-full shadow-[0_0_20px_#ffb86f]"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Page 16 (Case Study) -->
+<section class="h-screen w-full snap-start flex items-center justify-center p-4 md:p-8">
+<div class="max-w-4xl w-full h-full bg-surface-container-lowest shadow-[0_20px_60px_rgba(0,0,0,0.05)] rounded-2xl overflow-hidden flex flex-col relative group">
+<div class="absolute top-6 left-6 z-10">
+<span class="bg-primary/5 text-primary px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase">Page 16: Modern Application</span>
+</div>
+<div class="flex-grow p-12 overflow-y-auto hide-scrollbar">
+<div class="max-w-2xl mx-auto space-y-12">
+<header class="text-center space-y-4">
+<h2 class="font-headline text-4xl font-black text-primary uppercase tracking-tighter">Case Study: The Silicon Shield</h2>
+<p class="text-secondary font-medium italic">How Taiwan leverages specific comparative advantage in semiconductor fabrication to define global supply chains.</p>
+</header>
+<div class="grid grid-cols-2 gap-8">
+<div class="aspect-video rounded-xl bg-surface-container-low overflow-hidden">
+<img alt="Tech Lab" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="high-tech semiconductor cleanroom with futuristic machinery and bright blue laboratory lighting for an industrial case study" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhwOI0nuOtRa93WFb83iaD4U5LVjebxxiXwpLRGDkdzOBokU5MlvHxtK6LYI99XulLbj4hiryyXChMVsTu1OUGxJF1UXKwOpR38oEVVqGfM-VukrPwWXb0ByGbDf2HKfw4KCFu-mAP7XYriWjgfzjj3yEhsl9UpObDqkKh6ayaRNvecTz03JRVTGHbK0P1oMcECq_KnkQ40Pua3UBIy9QJ84r8qF5oaKY10ErzWzZiLoJ7lnT0kdQ4CJeENNrtXnhvSIXBSzVhYmk"/>
+</div>
+<div class="aspect-video rounded-xl bg-surface-container-low overflow-hidden">
+<img alt="Global Trade" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="wide shot of a massive container port at night with glowing lights and complex logistics machinery under a dark sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBurDnWQbz46tYC3_kN8mLEJh1dI6FSxqcxbUY5oyoFgrfTiYFsNbM_ouzPz5BQJetActooAXThx2WPhw9DMIXoI00zuyvLfuCNjSgV7PmI04sV4MM1n6XbJ8PEHF95jliQOqJEyZ9oM5CHK3StGopN3j2J8SYM6gRdjCrTOkJzQdiLlEHrIvV8JYWuwdYhizySDI1RTuJ3VqRqmrv9p8tMPeIAuya--3dKUf0vVkL0UzDzBRMPJZ4YsXP80k1jjIedD56cT_Ih4bs"/>
+</div>
+</div>
+<article class="columns-2 gap-10 text-sm leading-relaxed text-on-surface-variant">
+<p class="mb-4">The concentration of advanced logic chip manufacturing in a single geographic location presents a unique intersection of economic theory and geopolitical reality.</p>
+<p class="mb-4">By achieving economies of scale that no other nation can replicate, the 'Silicon Shield' demonstrates that comparative advantage isn't just about resource endowment, but also long-term institutional investment.</p>
+<p>Critics argue that such hyper-specialization creates systemic vulnerabilities. However, the Ricardo model suggests that the global efficiency gain outweighs the localized risk factor.</p>
+</article>
+</div>
+</div>
+<div class="p-8 border-t border-surface-container-high bg-surface-container-low/30 flex justify-between items-center">
+<div class="flex gap-4">
+<button class="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-widest">
+<span class="material-symbols-outlined text-base">forum</span>
+                            Discuss Page
+                        </button>
+<button class="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-widest">
+<span class="material-symbols-outlined text-base">psychology</span>
+                            Quiz Me
+                        </button>
+</div>
+<span class="text-xs font-semibold text-outline">End of Segment 4.1</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Page Indicator (Mobile) -->
+<div class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 glass-panel px-6 py-3 rounded-full shadow-lg z-50 flex items-center gap-4">
+<span class="text-sm font-bold text-primary font-label">14 / 22</span>
+<div class="h-4 w-[1px] bg-outline-variant"></div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">list</span>
+</div>
+</body></html>

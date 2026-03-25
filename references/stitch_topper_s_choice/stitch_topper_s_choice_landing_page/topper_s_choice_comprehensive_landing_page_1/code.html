@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Topper's Choice - The Academic Atelier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline-variant": "#c3c6d1",
+                        "on-tertiary-container": "#e18600",
+                        "tertiary-fixed-dim": "#ffb86f",
+                        "outline": "#737780",
+                        "surface": "#f8f9fa",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "on-secondary-fixed": "#0f1c2f",
+                        "secondary": "#525f75",
+                        "primary": "#001e40",
+                        "secondary-container": "#d6e3fe",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-background": "#191c1d",
+                        "surface-tint": "#3a5f94",
+                        "primary-fixed": "#d5e3ff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "secondary-fixed": "#d6e3fe",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "on-primary-container": "#799dd6",
+                        "surface-bright": "#f8f9fa",
+                        "secondary-fixed-dim": "#bac7e1",
+                        "on-surface-variant": "#43474f",
+                        "on-surface": "#191c1d",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "on-secondary-fixed-variant": "#3b475d",
+                        "surface-container-low": "#f3f4f5",
+                        "on-primary-fixed": "#001b3c",
+                        "tertiary": "#301900",
+                        "inverse-primary": "#a7c8ff",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "tertiary-container": "#4e2b00",
+                        "background": "#f8f9fa",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#58657c",
+                        "surface-container-high": "#e7e8e9",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#2c1600",
+                        "tertiary-fixed": "#ffdcbd",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary-container": "#003366",
+                        "surface-container": "#edeeef",
+                        "on-primary-fixed-variant": "#1f477b"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-tertiary-fixed selection:text-on-tertiary-fixed">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center px-6 py-3 max-w-full mx-auto">
+<div class="text-2xl font-bold text-blue-900 dark:text-blue-100 tracking-tighter font-headline">Topper's Choice</div>
+<div class="hidden md:flex items-center space-x-8 font-manrope text-sm font-medium tracking-tight">
+<a class="text-blue-700 dark:text-blue-300 border-b-2 border-blue-700 dark:border-blue-300 pb-1" href="#">Marathi</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-800 transition-colors duration-200" href="#">English</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="px-5 py-2 text-sm font-medium text-primary hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 rounded-lg">Login</button>
+<button class="px-5 py-2 text-sm font-medium bg-tertiary-container text-tertiary-fixed hover:bg-tertiary-fixed transition-colors duration-200 rounded-lg shadow-sm">Sign Up</button>
+</div>
+</div>
+</nav>
+<main class="pt-16">
+<!-- Hero Section -->
+<section class="relative min-h-[921px] flex items-center overflow-hidden bg-primary-container">
+<div class="absolute inset-0 opacity-20" data-alt="Abstract academic architectural background with light rays" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA6myUuisrmLCMU9bIrvPV1jpMBjCHuISW1m0YCdY-GG19HA7jT-svO9CotUJNINu1YUrwHu8CAwO83O8Sy5innP1UzxXhHX2pSLJ9_V0fSwlI5_yq0Zcg9hYFF-Hkz1JSnsIUu1c_JF-JHqFtEHDgpvojddWoniRU5xeCxVjWgPYnPLBXNjxigyrGXTOXNWzKPMvvprClfhq_ZxGXfBtwokmKQ5pq3QkoVFm4A55IgPFsor9SFhLKqU0cWrxFJ8_oz72sBUqpQMtU'); background-size: cover; background-position: center;"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-transparent"></div>
+<div class="relative container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-tertiary-fixed/10 border border-tertiary-fixed-dim/20">
+<span class="text-tertiary-fixed-dim font-headline font-bold tracking-widest text-xs uppercase">Premium Learning Experience</span>
+</div>
+<h1 class="font-headline text-5xl md:text-7xl font-extrabold text-white leading-[1.1] tracking-tighter">
+                        35+ Years of <br/><span class="text-tertiary-fixed-dim">Proven Expertise</span>
+</h1>
+<p class="text-on-primary-container text-lg md:text-xl max-w-lg font-medium leading-relaxed">
+                        Master the complexities of competitive exams with the Academic Atelier's sophisticated curriculum.
+                    </p>
+<div class="flex flex-wrap gap-4 pt-4">
+<button class="bg-tertiary-container text-tertiary-fixed px-8 py-4 rounded-md font-bold text-sm tracking-wide hover:bg-tertiary-fixed hover:text-on-tertiary-fixed transition-all scale-100 active:scale-95 shadow-xl">START YOUR JOURNEY</button>
+<button class="border border-white/20 text-white px-8 py-4 rounded-md font-bold text-sm tracking-wide hover:bg-white/10 transition-all backdrop-blur-sm">BROWSE COURSES</button>
+</div>
+<div class="pt-6">
+<p class="text-on-primary-container italic font-medium opacity-80">"आपल्या सूचना, आमची बांधिलकी"</p>
+</div>
+</div>
+<div class="hidden md:block relative">
+<div class="glass-card rounded-2xl p-8 border border-white/10 shadow-2xl relative z-10">
+<img class="w-full h-64 object-cover rounded-xl mb-6 grayscale hover:grayscale-0 transition-all duration-700" data-alt="Student studying with high-end digital resources" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPoSYSmqndHTi66_Cc_iFu7flirsKZqZk853x_e9dz1R2Y2YsP7mkTUGJlA07O10Kw1awM80YFMX_19X096-NZwRgu99lR5EHTL1d5CXaAq_z0bYlQxHmnHMQYAsFx6TXLfDPhutXLLxcIXRN6mXUILJdPvW1RyRpEcsYKWTV_7hTVGiDdXc8jzqO3grrutJ9aQ2B3TqrwUrcqaZbYhv3Oxo88fekc6UKHVrCodRe4e2VwmZtGejoU3ozHc5wAPTn0NS1gsZaYorY"/>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-primary/5 rounded-lg border border-primary/10">
+<span class="material-symbols-outlined text-tertiary-fixed-dim block mb-2" data-icon="auto_awesome">auto_awesome</span>
+<h4 class="font-headline font-bold text-primary">Smart Assessment</h4>
+<p class="text-xs text-on-surface-variant">Real-time AI-driven feedback loops</p>
+</div>
+<div class="p-4 bg-primary/5 rounded-lg border border-primary/10">
+<span class="material-symbols-outlined text-tertiary-fixed-dim block mb-2" data-icon="architecture">architecture</span>
+<h4 class="font-headline font-bold text-primary">Structured Path</h4>
+<p class="text-xs text-on-surface-variant">Carefully curated learning modules</p>
+</div>
+</div>
+</div>
+<!-- Decorative Element -->
+<div class="absolute -top-12 -right-12 w-64 h-64 bg-tertiary-fixed/20 blur-[100px] rounded-full -z-10"></div>
+</div>
+</div>
+</section>
+<!-- Key Advantages -->
+<section class="py-24 bg-surface">
+<div class="container mx-auto px-6">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div class="max-w-2xl">
+<span class="text-on-tertiary-container font-headline font-bold text-sm tracking-[0.2em] uppercase">The Atelier Edge</span>
+<h2 class="font-headline text-4xl md:text-5xl font-bold text-primary mt-4 tracking-tight">Architecting Your Success Through Intelligence</h2>
+</div>
+<div class="text-on-surface-variant font-medium text-right hidden md:block">
+                        Refined Methods <span class="mx-2">•</span> Expert Pedagogy <span class="mx-2">•</span> Proven Results
+                    </div>
+</div>
+<div class="grid md:grid-cols-3 gap-8">
+<div class="group p-8 bg-surface-container-lowest hover:bg-primary transition-all duration-500 rounded-xl shadow-[0px_10px_40px_rgba(0,30,64,0.04)]">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-surface-container-low group-hover:bg-white/10 mb-6 transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-tertiary-fixed-dim" data-icon="psychology">psychology</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-primary group-hover:text-white mb-4">Structured Learning</h3>
+<p class="text-on-surface-variant group-hover:text-on-primary-container leading-relaxed">Systematic coverage of every sub-topic with intentional depth, ensuring no concept is left unmastered.</p>
+</div>
+<div class="group p-8 bg-surface-container-lowest hover:bg-primary transition-all duration-500 rounded-xl shadow-[0px_10px_40px_rgba(0,30,64,0.04)]">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-surface-container-low group-hover:bg-white/10 mb-6 transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-tertiary-fixed-dim" data-icon="query_stats">query_stats</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-primary group-hover:text-white mb-4">Smart Assessment</h3>
+<p class="text-on-surface-variant group-hover:text-on-primary-container leading-relaxed">Adaptive testing modules that identify your cognitive blind spots and reinforce weak subject areas.</p>
+</div>
+<div class="group p-8 bg-surface-container-lowest hover:bg-primary transition-all duration-500 rounded-xl shadow-[0px_10px_40px_rgba(0,30,64,0.04)]">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-surface-container-low group-hover:bg-white/10 mb-6 transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-tertiary-fixed-dim" data-icon="history_edu">history_edu</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-primary group-hover:text-white mb-4">Legacy Knowledge</h3>
+<p class="text-on-surface-variant group-hover:text-on-primary-container leading-relaxed">Direct access to 35+ years of pedagogical evolution and exclusive exam-cracking strategies.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Core Offerings -->
+<section class="py-24 bg-surface-container-low">
+<div class="container mx-auto px-6">
+<div class="text-center mb-16">
+<h2 class="font-headline text-4xl font-bold text-primary tracking-tight">Elite Training Modules</h2>
+<div class="h-1 w-24 bg-tertiary-fixed-dim mx-auto mt-6"></div>
+</div>
+<div class="grid md:grid-cols-4 gap-6">
+<!-- Offer 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg group hover:-translate-y-2 transition-transform duration-300">
+<div class="aspect-square bg-slate-100 rounded-lg mb-6 overflow-hidden">
+<img class="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" data-alt="MPSC study materials and official documents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-8CiPS0v6uiktO3-9kwHzDPMcrrpqte2OLR4sT3yG91VZfLER010uO10iGx619XiX9LmPr9wSGCopKjUTEdqKeqlD5Z6o1_YQsntd82vQp9prUWPJk97H_EZ8v_G5UWb56ZwcbPJzOWCCcgauGdfTDU2eWKkoeNZbF5fJQBItyVxGC8YWzB-XoDhcn2UPvPjgqzLQ0FjAmNtYu-XTz8XsinLkPY3Xk16UEb5gjZBQelBY4cTPfqNUdIdTX-kWqmwXeHJlDpSeyrA"/>
+</div>
+<h3 class="font-headline font-bold text-primary text-lg mb-2">MPSC Excellence</h3>
+<p class="text-sm text-on-surface-variant mb-4">Comprehensive tracks for State Services, PSI/STI/ASO &amp; Forest exams.</p>
+<a class="inline-flex items-center text-xs font-bold text-on-tertiary-container tracking-widest uppercase hover:underline" href="#">Explore Track <span class="material-symbols-outlined text-sm ml-1" data-icon="arrow_forward">arrow_forward</span></a>
+</div>
+<!-- Offer 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg group hover:-translate-y-2 transition-transform duration-300">
+<div class="aspect-square bg-slate-100 rounded-lg mb-6 overflow-hidden">
+<img class="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" data-alt="Banking and finance professional workspace" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoEWBwyDlmtbMqVpOmMbfeXWcdRm19HDOuhe_kqJ92WxCogjISvgZvtfDNR6_7GEoLCRaydDqrxCNtgMQI08md7MZg1afcpvJl79bVyvsMzKqjO_kqS8yAsRaygw7ULlWuwIAMA5kunBfSiFjB5hxGndWkkRqnU933-t084_YL61vJhBc0t9Y-qC4t4VNtN-HoHugYfmISm8rOgx3ERAmAuy0WJ_QM-hZYPNYLq-WnYQeQPjiKfSo0r5aG-YInDVf0CgNtyBrWgtk"/>
+</div>
+<h3 class="font-headline font-bold text-primary text-lg mb-2">Bank &amp; Staff</h3>
+<p class="text-sm text-on-surface-variant mb-4">Master Quantitative Aptitude and Logical Reasoning for IBPS &amp; SSC.</p>
+<a class="inline-flex items-center text-xs font-bold text-on-tertiary-container tracking-widest uppercase hover:underline" href="#">Explore Track <span class="material-symbols-outlined text-sm ml-1" data-icon="arrow_forward">arrow_forward</span></a>
+</div>
+<!-- Offer 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg group hover:-translate-y-2 transition-transform duration-300">
+<div class="aspect-square bg-slate-100 rounded-lg mb-6 overflow-hidden">
+<img class="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" data-alt="Focused student taking practice tests" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL1T1JLXau3Jvc-kqm95Gt29gK5LRBDmzxMx-qE7EFeIdEEr0H2t-zXdZO1ZvI1Hpxzqrn3uEOfgM7ooHPF4d0yplE3F1DPv2chtsSf1LyxHzM9LJnySEWn7FtmWO2frMxRzdFT7uIbcd3OKCqf602zRF5gscVwaky-ETl8-D0V29Dzx0HWzvHOGqYOV1S7UYE7EV6uGX57KPnUg-WHxMnYiJBxpLZh7QYcByuAuaFwHiP_KQV8PR7EfSxGNOBvL4JmuZqcnX8BI8"/>
+</div>
+<h3 class="font-headline font-bold text-primary text-lg mb-2">Practice Papers</h3>
+<p class="text-sm text-on-surface-variant mb-4">500+ Simulated test environments with detailed performance analytics.</p>
+<a class="inline-flex items-center text-xs font-bold text-on-tertiary-container tracking-widest uppercase hover:underline" href="#">Explore Track <span class="material-symbols-outlined text-sm ml-1" data-icon="arrow_forward">arrow_forward</span></a>
+</div>
+<!-- Offer 4 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg group hover:-translate-y-2 transition-transform duration-300">
+<div class="aspect-square bg-slate-100 rounded-lg mb-6 overflow-hidden">
+<img class="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" data-alt="Communication and language speaking practice" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfOvlmxal3r9dLePSek5yJnl5Hk_LHStg53a_KFhQvIEM-sIbhDwDzMNeLAf03NdBEXtYnPP6bnd56bGSDbXGc3o1oaMEG8agGJ68lAnyiFw666GYKnroEL5lPKYxLWnvLHSxKCR0kv3zgg1qf_W4Tod4fqsDI57V0qqL1uS1Ng4lzHeGFXKiBWGMWopxMdwH7V59j6i7o5ToKG5L5C5fxGB53QiLwKCc78TvBS1x8u4ikQB8M_VKb9rTYKtNRv51B8ZIOgyEQTug"/>
+</div>
+<h3 class="font-headline font-bold text-primary text-lg mb-2">English Fluency</h3>
+<p class="text-sm text-on-surface-variant mb-4">Specialized modules for advanced communicative English and vocab.</p>
+<a class="inline-flex items-center text-xs font-bold text-on-tertiary-container tracking-widest uppercase hover:underline" href="#">Explore Track <span class="material-symbols-outlined text-sm ml-1" data-icon="arrow_forward">arrow_forward</span></a>
+</div>
+</div>
+</div>
+</section>
+<!-- Unmatched Curriculum Depth -->
+<section class="py-24 bg-white">
+<div class="container mx-auto px-6">
+<div class="grid lg:grid-cols-12 gap-16 items-start">
+<div class="lg:col-span-5">
+<h2 class="font-headline text-4xl font-bold text-primary mb-8 leading-tight">Unmatched <br/><span class="text-on-tertiary-container">Curriculum Depth</span></h2>
+<p class="text-on-surface-variant text-lg mb-8 leading-relaxed">
+                            We don't just teach subjects; we master them. Our atelier provides an exhaustive breakdown of 25+ MPSC core subjects and specialized Bank/Staff modules.
+                        </p>
+<div class="p-6 bg-surface-container-low rounded-xl border-l-4 border-tertiary-fixed-dim">
+<div class="flex items-center gap-4 mb-2">
+<span class="material-symbols-outlined text-primary" data-icon="translate">translate</span>
+<h4 class="font-bold text-primary">Bi-Lingual Mastery</h4>
+</div>
+<p class="text-sm text-on-surface-variant">All subjects delivered fluently in both Marathi and English to ensure cultural and academic context is maintained.</p>
+</div>
+</div>
+<div class="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-4">
+<!-- Subject pill grid -->
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">History of India</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Geography of Maharashtra</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Indian Constitution</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Political Science</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Economics</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">General Science</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Mental Ability</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Marathi Grammar</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">English Grammar</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Environment</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Current Affairs</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Agriculture</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">HR Development</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Banking Awareness</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Data Interpretation</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Staff Selection GK</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Ancient History</div>
+<div class="bg-surface p-3 rounded-lg border border-outline-variant/30 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors cursor-default">Medieval History</div>
+</div>
+</div>
+</div>
+</section>
+<!-- About the Creator -->
+<section class="py-24 bg-primary text-white overflow-hidden">
+<div class="container mx-auto px-6 relative">
+<div class="grid lg:grid-cols-2 gap-16 items-center">
+<div class="relative">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden bg-primary-container ring-1 ring-white/10">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" data-alt="Portrait of Deulkar Sir, founder of Topper's Choice" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASPYlBa_8FxA1044p4xpE7shJX53OdF-dWRN_hpALLqbUYtI8FCiSgym6sSd5t8H9wF9t2uamnNhWUZpmJmiXKUBCWAiQFM7fEwTQEG8UYSQFQcMCqb4YwNyx6bm_XYGen4yTHVCO2zj5VAtbegKnsh0m3LJ21w342sS-SZtTYS9DcBW6ZU6WDyLOM4QTGmV_Zsu_AWDwzpptaTmNcH68JtXegRyXdEaGuUaciWFFbi-NvoP55V_2QFJGK0uUTtb0-fQ1pKX1u-V0"/>
+</div>
+<!-- Badge -->
+<div class="absolute -bottom-6 -right-6 bg-tertiary-fixed text-on-tertiary-fixed p-6 rounded-xl shadow-2xl transform rotate-3">
+<div class="text-3xl font-black font-headline">MAXIMIZED</div>
+<div class="text-sm font-bold opacity-80 uppercase tracking-widest">Time &amp; Money Saved</div>
+</div>
+</div>
+<div class="space-y-8">
+<span class="text-tertiary-fixed-dim font-headline font-bold text-sm tracking-[0.3em] uppercase">The Visionary</span>
+<h2 class="font-headline text-5xl font-extrabold tracking-tight">Meet Deulkar Sir</h2>
+<p class="text-on-primary-container text-lg leading-relaxed font-medium">
+                            With over three and a half decades in the academic trenches, Deulkar Sir has simplified the complex pathways to government service for thousands of aspirants. His philosophy of the "Academic Atelier" is built on precision, discipline, and the belief that quality education should be both sophisticated and accessible.
+                        </p>
+<ul class="space-y-4">
+<li class="flex items-center gap-4">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" data-icon="verified">verified</span>
+<span>Curated 10,000+ Success Stories</span>
+</li>
+<li class="flex items-center gap-4">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" data-icon="menu_book">menu_book</span>
+<span>Author of Bestselling Prep Manuals</span>
+</li>
+<li class="flex items-center gap-4">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" data-icon="groups">groups</span>
+<span>Trusted Mentor for MPSC &amp; Banking</span>
+</li>
+</ul>
+<div class="pt-8">
+<button class="bg-white text-primary px-8 py-4 rounded-md font-bold text-sm tracking-wide hover:bg-surface-variant transition-all">READ FULL LEGACY</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA / Motto -->
+<section class="py-24 bg-surface text-center">
+<div class="container mx-auto px-6 max-w-4xl">
+<span class="text-primary/40 font-headline font-bold text-6xl md:text-8xl opacity-10 select-none pointer-events-none block mb-[-2rem]">Topper's Choice</span>
+<h2 class="font-headline text-4xl md:text-5xl font-bold text-primary mb-8 tracking-tight">Ready to Elevate Your Standards?</h2>
+<p class="text-on-surface-variant text-xl mb-12 italic">"आपल्या सूचना, आमची बांधिलकी"</p>
+<button class="bg-tertiary-container text-tertiary-fixed px-12 py-6 rounded-md font-bold text-lg hover:bg-tertiary-fixed hover:text-on-tertiary-fixed transition-all shadow-xl">Join the Academic Atelier</button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-12 py-16 max-w-7xl mx-auto">
+<div class="space-y-6">
+<div class="text-lg font-semibold text-blue-900 dark:text-blue-100 font-headline">Topper's Choice</div>
+<p class="font-inter text-xs text-slate-500 leading-relaxed max-w-xs">
+                    The Sophisticated Scholar's destination for competitive exam mastery. 35 years of refining human potential.
+                </p>
+<div class="flex space-x-4">
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer" data-icon="facebook">social_leaderboard</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer" data-icon="language">language</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer" data-icon="share">share</span>
+</div>
+</div>
+<div class="space-y-6">
+<h4 class="text-sm font-bold text-primary uppercase tracking-widest">Resources</h4>
+<ul class="space-y-4">
+<li><a class="font-inter text-xs text-slate-500 hover:text-blue-900 transition-all" href="#">Contact on WhatsApp</a></li>
+<li><a class="font-inter text-xs text-slate-500 hover:text-blue-900 transition-all" href="#">Privacy Policy</a></li>
+<li><a class="font-inter text-xs text-slate-500 hover:text-blue-900 transition-all" href="#">Terms of Service</a></li>
+<li><a class="font-inter text-xs text-slate-500 hover:text-blue-900 transition-all" href="#">About Us</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<h4 class="text-sm font-bold text-primary uppercase tracking-widest">Global Locations</h4>
+<p class="font-inter text-xs text-slate-500">Main Administrative Atelier:<br/>Pune, Maharashtra, India</p>
+<p class="font-inter text-xs text-slate-500">Digital Support:<br/>support@topperschoice.com</p>
+</div>
+</div>
+<div class="border-t border-slate-50 py-8 text-center">
+<p class="font-inter text-xs text-slate-500">© 2024 Topper's Choice. The Sophisticated Scholar.</p>
+</div>
+</footer>
+</body></html>

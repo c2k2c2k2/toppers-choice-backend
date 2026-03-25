@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Course Library - Topper's Choice</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline-variant": "#c3c6d1",
+              "on-tertiary-container": "#e18600",
+              "tertiary-fixed-dim": "#ffb86f",
+              "outline": "#737780",
+              "surface": "#f8f9fa",
+              "on-tertiary-fixed-variant": "#693c00",
+              "on-secondary-fixed": "#0f1c2f",
+              "secondary": "#525f75",
+              "primary": "#001e40",
+              "secondary-container": "#d6e3fe",
+              "error": "#ba1a1a",
+              "surface-container-lowest": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-background": "#191c1d",
+              "surface-tint": "#3a5f94",
+              "primary-fixed": "#d5e3ff",
+              "inverse-on-surface": "#f0f1f2",
+              "secondary-fixed": "#d6e3fe",
+              "surface-variant": "#e1e3e4",
+              "surface-dim": "#d9dadb",
+              "on-primary-container": "#799dd6",
+              "surface-bright": "#f8f9fa",
+              "secondary-fixed-dim": "#bac7e1",
+              "on-surface-variant": "#43474f",
+              "on-surface": "#191c1d",
+              "on-error": "#ffffff",
+              "inverse-surface": "#2e3132",
+              "on-secondary-fixed-variant": "#3b475d",
+              "surface-container-low": "#f3f4f5",
+              "on-primary-fixed": "#001b3c",
+              "tertiary": "#301900",
+              "inverse-primary": "#a7c8ff",
+              "primary-fixed-dim": "#a7c8ff",
+              "tertiary-container": "#4e2b00",
+              "background": "#f8f9fa",
+              "on-primary": "#ffffff",
+              "on-secondary-container": "#58657c",
+              "surface-container-high": "#e7e8e9",
+              "error-container": "#ffdad6",
+              "on-secondary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-tertiary-fixed": "#2c1600",
+              "tertiary-fixed": "#ffdcbd",
+              "surface-container-highest": "#e1e3e4",
+              "primary-container": "#003366",
+              "surface-container": "#edeeef",
+              "on-primary-fixed-variant": "#1f477b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-nav {
+        background: rgba(248, 249, 250, 0.8);
+        backdrop-filter: blur(12px);
+      }
+      .tonal-layering {
+        background: rgba(243, 244, 245, 0.5);
+      }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-tertiary-fixed selection:text-on-tertiary-fixed">
+<nav class="fixed top-0 w-full z-50 glass-nav shadow-sm px-6 py-3 flex justify-between items-center max-w-full mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold text-primary tracking-tighter font-headline">Topper's Choice</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-headline text-sm font-medium tracking-tight text-slate-600 hover:text-blue-800 transition-colors duration-200" href="#">Marathi</a>
+<a class="font-headline text-sm font-medium tracking-tight text-blue-700 border-b-2 border-blue-700 pb-1" href="#">English</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-4 py-2 text-sm font-medium text-primary hover:bg-slate-100 transition-colors duration-200 rounded-lg">Login</button>
+<button class="px-6 py-2 text-sm font-semibold bg-tertiary-container text-on-tertiary-fixed hover:bg-tertiary-fixed transition-all duration-200 rounded-md">Sign Up</button>
+</div>
+</nav>
+<div class="flex min-h-screen pt-16">
+<aside class="hidden md:flex flex-col h-[calc(100vh-64px)] w-64 bg-surface-container-low py-4 space-y-2 sticky top-16">
+<div class="px-6 mb-6">
+<p class="text-xs uppercase tracking-widest text-outline font-semibold mb-1">Academic Atelier</p>
+<h3 class="font-headline font-bold text-primary">Library Console</h3>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 mx-2 px-4 py-3 bg-surface-container-lowest text-primary shadow-sm rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 mx-2 px-4 py-3 text-slate-500 hover:bg-slate-200 transition-transform duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="menu_book">menu_book</span>
+<span class="text-sm font-medium">My Courses</span>
+</a>
+<a class="flex items-center gap-3 mx-2 px-4 py-3 text-slate-500 hover:bg-slate-200 transition-transform duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="quiz">quiz</span>
+<span class="text-sm font-medium">Practice Tests</span>
+</a>
+<a class="flex items-center gap-3 mx-2 px-4 py-3 text-slate-500 hover:bg-slate-200 transition-transform duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="insights">insights</span>
+<span class="text-sm font-medium">Performance</span>
+</a>
+<a class="flex items-center gap-3 mx-2 px-4 py-3 text-slate-500 hover:bg-slate-200 transition-transform duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="work">work</span>
+<span class="text-sm font-medium">Career Guidance</span>
+</a>
+<a class="flex items-center gap-3 mx-2 px-4 py-3 text-slate-500 hover:bg-slate-200 transition-transform duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="record_voice_over">record_voice_over</span>
+<span class="text-sm font-medium">English Speaking</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<div class="p-4 bg-primary-container rounded-xl text-white mb-4">
+<p class="text-xs text-on-primary-container font-medium mb-1">PRO ACCESS</p>
+<p class="text-sm font-bold mb-3">Unlock all 25+ subjects</p>
+<button class="w-full py-2 bg-tertiary-fixed text-on-tertiary-fixed text-xs font-bold rounded-md hover:opacity-90 transition-opacity">Upgrade to Pro</button>
+</div>
+</div>
+</aside>
+<main class="flex-1 p-8 md:p-12 max-w-7xl mx-auto w-full">
+<header class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-headline text-4xl font-extrabold text-primary tracking-tight mb-2">Knowledge Repository</h1>
+<p class="text-slate-500 text-lg max-w-2xl">Refined educational pathways curated for the sophisticated scholar. Explore modules, practice rigorously, and excel in your academic journey.</p>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-low p-1.5 rounded-full">
+<button class="px-6 py-2 text-sm font-bold bg-white text-primary shadow-sm rounded-full">Marathi</button>
+<button class="px-6 py-2 text-sm font-medium text-slate-500 hover:text-primary transition-colors">English</button>
+</div>
+</div>
+<div class="mt-8 relative max-w-3xl">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full pl-12 pr-6 py-4 bg-surface-container-lowest border-none shadow-sm focus:ring-2 focus:ring-primary-fixed rounded-xl text-on-surface placeholder:text-outline/60 font-body" placeholder="Search for subjects, topics, or practice papers..." type="text"/>
+</div>
+</header>
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="group relative bg-surface-container-lowest p-8 rounded-2xl shadow-sm hover:translate-y-[-4px] transition-all duration-300 flex flex-col h-full border border-outline-variant/10">
+<div class="w-14 h-14 bg-primary-fixed rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl" data-icon="school" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-primary mb-3">MPSC Modules</h3>
+<p class="text-slate-500 text-sm mb-6 flex-1 leading-relaxed">Comprehensive coverage of 25+ subjects including History, Geography, Polity, and Economics. Tailored for state civil services.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-xs font-bold px-3 py-1 bg-surface-container-high text-primary rounded-full">25+ Subjects</span>
+<a class="text-primary font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                            Explore <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="group relative bg-surface-container-lowest p-8 rounded-2xl shadow-sm hover:translate-y-[-4px] transition-all duration-300 flex flex-col h-full border border-outline-variant/10">
+<div class="w-14 h-14 bg-secondary-container rounded-xl flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl" data-icon="account_balance" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-primary mb-3">Bank/Staff/Railway</h3>
+<div class="space-y-2 mb-6 flex-1">
+<div class="flex items-center gap-2 text-sm text-slate-600">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Quantitative Aptitude
+                        </div>
+<div class="flex items-center gap-2 text-sm text-slate-600">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Logical Reasoning
+                        </div>
+<div class="flex items-center gap-2 text-sm text-slate-600">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> English Grammar
+                        </div>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-xs font-bold px-3 py-1 bg-surface-container-high text-secondary rounded-full">Full Syllabus</span>
+<a class="text-primary font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                            View Modules <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="group relative bg-surface-container-lowest p-8 rounded-2xl shadow-sm hover:translate-y-[-4px] transition-all duration-300 flex flex-col h-full border border-outline-variant/10">
+<div class="w-14 h-14 bg-tertiary-fixed rounded-xl flex items-center justify-center mb-6 group-hover:bg-tertiary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl" data-icon="fact_check" style="font-variation-settings: 'FILL' 1;">fact_check</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-primary mb-3">Practice Papers</h3>
+<p class="text-slate-500 text-sm mb-6 flex-1 leading-relaxed">Full-length mock tests and previous year question papers with detailed analytical solutions and rank predictor.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-xs font-bold px-3 py-1 bg-surface-container-high text-tertiary rounded-full">500+ Tests</span>
+<a class="text-primary font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                            Start Quiz <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="group relative bg-surface-container-lowest p-8 rounded-2xl shadow-sm hover:translate-y-[-4px] transition-all duration-300 flex flex-col h-full border border-outline-variant/10">
+<div class="w-14 h-14 bg-primary-fixed-dim rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary-fixed group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-3xl" data-icon="explore" style="font-variation-settings: 'FILL' 1;">explore</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-primary mb-3">Career Guidance</h3>
+<p class="text-slate-500 text-sm mb-6 flex-1 leading-relaxed">Expert counselling to help you choose the right career path based on your strengths and personality traits.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-xs font-bold px-3 py-1 bg-surface-container-high text-on-primary-fixed-variant rounded-full">Expert Support</span>
+<a class="text-primary font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                            Book Session <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="group relative bg-surface-container-lowest p-8 rounded-2xl shadow-sm hover:translate-y-[-4px] transition-all duration-300 flex flex-col h-full border border-outline-variant/10">
+<div class="w-14 h-14 bg-secondary-fixed-dim rounded-xl flex items-center justify-center mb-6 group-hover:bg-secondary-fixed group-hover:text-on-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-3xl" data-icon="forum" style="font-variation-settings: 'FILL' 1;">forum</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-primary mb-3">Interview Guidance</h3>
+<p class="text-slate-500 text-sm mb-6 flex-1 leading-relaxed">Master the art of conversation. Mock interviews with retired bureaucrats and corporate leaders.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-xs font-bold px-3 py-1 bg-surface-container-high text-on-secondary-fixed-variant rounded-full">Live Mock</span>
+<a class="text-primary font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                            Join Prep <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="group relative bg-surface-container-lowest p-8 rounded-2xl shadow-sm hover:translate-y-[-4px] transition-all duration-300 flex flex-col h-full border border-outline-variant/10">
+<div class="w-14 h-14 bg-tertiary-fixed-dim rounded-xl flex items-center justify-center mb-6 group-hover:bg-tertiary-fixed group-hover:text-on-tertiary-fixed transition-colors">
+<span class="material-symbols-outlined text-3xl" data-icon="record_voice_over" style="font-variation-settings: 'FILL' 1;">record_voice_over</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-primary mb-3">English Speaking</h3>
+<p class="text-slate-500 text-sm mb-6 flex-1 leading-relaxed">Bridge the gap between knowledge and expression. Practical fluency modules for competitive aspirants.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-xs font-bold px-3 py-1 bg-surface-container-high text-on-tertiary-fixed-variant rounded-full">Fluency Track</span>
+<a class="text-primary font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                            Start Learning <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<section class="mt-20">
+<div class="bg-primary-container rounded-3xl overflow-hidden relative">
+<div class="absolute inset-0 opacity-10 mix-blend-overlay" data-alt="Abstract geometric cube pattern overlay" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC1BW2fbjMIU6_d1-ThAd74fjQ9GK7m28ueix4a7nBPXNJlevODQw4hYAxpEmxJaNV0Iggs3RofcA3YCJzQebbANtd9_DSzzIyLq6KxiC8X5OOPF9uh_xccIjzS1rxMdwn5D4B3nhpSps4dzqPaW1WZ3qrTTz3KVCFz8j8ZryrrhdF4xSVRPbfrAl8LHxsMpNv9nAUTaB_Zic72vPUTTkxngK4IrvW4NJeDJNcL0n7BETcl99iXsD75dKoQ_FmNuE-WXcurScA6IpA');"></div>
+<div class="p-10 md:p-16 flex flex-col md:flex-row items-center justify-between relative z-10 gap-12">
+<div class="max-w-xl text-center md:text-left">
+<h2 class="font-headline text-3xl md:text-4xl font-extrabold text-white mb-6">Master the Humanities with our Editorial Notes</h2>
+<p class="text-on-primary-container text-lg mb-8">Get exclusive access to high-quality summaries and critical analyses of standard textbooks, available in both Marathi and English medium.</p>
+<div class="flex flex-wrap gap-4 justify-center md:justify-start">
+<button class="px-8 py-3 bg-tertiary-container text-on-tertiary-fixed font-bold rounded-md hover:bg-tertiary-fixed transition-colors">Download Sample</button>
+<button class="px-8 py-3 border border-on-primary-container/30 text-white font-bold rounded-md hover:bg-white/10 transition-colors">View Library</button>
+</div>
+</div>
+<div class="w-full max-w-sm">
+<img alt="Stack of premium educational notebooks" class="w-full h-auto drop-shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500" data-alt="A stack of premium hardcover educational notebooks and notes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCM_pKlbXS32k4VRA4GptrEp0672tih_CpYZN3aEEcwyxaDcEnr-tLf70VRqSs1WCTMZpGFRA96XPlr51b-9yLMFvt6J68T6MzrKptbVQbI20K2DQTNf8YF7JAwVy3C_G055C43LFSPwpq-CusA9NFHKC9BBDni6jPrT5GFV6rqlobvbN5QTnupElzWmo4EZz2zNXilgkW84FzstKpspC7MWjudU_2ikUhhamgeuU4P7hRV7LAAKvQKkhj7OkuRju-1nKrB4rdVq7U"/>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<footer class="bg-surface border-t border-slate-100 mt-20">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-12 py-16 max-w-7xl mx-auto items-start">
+<div>
+<span class="text-lg font-semibold text-blue-900 tracking-tighter mb-4 block">Topper's Choice</span>
+<p class="font-inter text-xs text-slate-500 leading-relaxed mb-6">
+                    © 2024 Topper's Choice. The Sophisticated Scholar.<br/>
+                    Redefining education through editorial excellence and aesthetic rigor.
+                </p>
+</div>
+<div class="space-y-4">
+<h4 class="text-xs font-bold uppercase tracking-widest text-primary">Quick Links</h4>
+<div class="flex flex-col gap-3">
+<a class="font-inter text-xs text-slate-500 hover:text-blue-900 hover:underline transition-all" href="#">About Us</a>
+<a class="font-inter text-xs text-slate-500 hover:text-blue-900 hover:underline transition-all" href="#">Privacy Policy</a>
+<a class="font-inter text-xs text-slate-500 hover:text-blue-900 hover:underline transition-all" href="#">Terms of Service</a>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="text-xs font-bold uppercase tracking-widest text-primary">Connect</h4>
+<div class="flex items-center gap-4">
+<a class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="chat">chat</span>
+</a>
+<a class="font-inter text-xs text-amber-600 font-bold hover:underline" href="#">Contact on WhatsApp</a>
+</div>
+</div>
+</div>
+</footer>
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-tertiary-container text-on-tertiary-fixed rounded-full shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-transform z-40">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</body></html>

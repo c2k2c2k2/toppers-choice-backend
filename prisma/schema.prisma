@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SiteStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ConfigStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ConfigVisibility {
+  PUBLIC
+  INTERNAL
+}
+
+enum UserType {
+  STUDENT
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INVITED
+  SUSPENDED
+}
+
+enum RefreshSessionStatus {
+  ACTIVE
+  ROTATED
+  REVOKED
+  COMPROMISED
+}
+
+enum TokenPurpose {
+  PASSWORD_RESET
+}
+
+model Site {
+  id            String              @id @default(cuid())
+  code          String              @unique
+  slug          String              @unique
+  name          String
+  primaryDomain String?
+  defaultLocale String              @default("mr-IN")
+  timezone      String              @default("Asia/Kolkata")
+  status        SiteStatus          @default(ACTIVE)
+  isDefault     Boolean             @default(false)
+  configs       SiteConfigVersion[]
+  users         User[]
+  refreshSessions RefreshSession[]
+  passwordResetTokens PasswordResetToken[]
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  @@index([isDefault, status])
+  @@map("sites")
+}
+
+model SiteConfigVersion {
+  id         String           @id @default(cuid())
+  siteId     String
+  configKey  String
+  version    Int
+  status     ConfigStatus     @default(DRAFT)
+  visibility ConfigVisibility @default(INTERNAL)
+  configJson Json
+  publishedAt DateTime?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  site       Site             @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@unique([siteId, configKey, version])
+  @@index([siteId, configKey, status])
+  @@index([siteId, visibility, status])
+  @@map("site_config_versions")
+}
+
+model User {
+  id                String               @id @default(cuid())
+  siteId            String
+  email             String
+  phone             String?
+  fullName          String
+  passwordHash      String
+  userType          UserType
+  status            UserStatus           @default(ACTIVE)
+  lastLoginAt       DateTime?
+  emailVerifiedAt   DateTime?
+  phoneVerifiedAt   DateTime?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  site              Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  refreshSessions   RefreshSession[]
+  passwordResetTokens PasswordResetToken[]
+
+  @@unique([siteId, email])
+  @@index([siteId, userType, status])
+  @@index([siteId, status])
+  @@map("users")
+}
+
+model RefreshSession {
+  id                  String               @id
+  siteId              String
+  userId              String
+  familyId            String
+  tokenHash           String               @unique
+  status              RefreshSessionStatus @default(ACTIVE)
+  expiresAt           DateTime
+  lastUsedAt          DateTime?
+  revokedAt           DateTime?
+  revokedReason       String?
+  ipAddress           String?
+  userAgent           String?
+  replacedBySessionId String?              @unique
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  site                Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replacedBySession   RefreshSession?      @relation("RefreshSessionRotation", fields: [replacedBySessionId], references: [id], onDelete: SetNull)
+  previousSessions    RefreshSession[]     @relation("RefreshSessionRotation")
+
+  @@index([siteId, userId, createdAt])
+  @@index([userId, status, expiresAt])
+  @@index([familyId, status])
+  @@map("refresh_sessions")
+}
+
+model PasswordResetToken {
+  id               String       @id @default(cuid())
+  siteId           String
+  userId           String
+  email            String
+  purpose          TokenPurpose @default(PASSWORD_RESET)
+  codeHash         String
+  expiresAt        DateTime
+  consumedAt       DateTime?
+  invalidatedAt    DateTime?
+  attemptCount     Int          @default(0)
+  lastAttemptAt    DateTime?
+  requestedIp      String?
+  requestedUserAgent String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  site             Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose, expiresAt])
+  @@index([siteId, email, purpose, expiresAt])
+  @@map("password_reset_tokens")
+}

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f3f4f5",
+              "on-tertiary-fixed-variant": "#693c00",
+              "tertiary-fixed": "#ffdcbd",
+              "on-tertiary-fixed": "#2c1600",
+              "surface-container": "#edeeef",
+              "tertiary-fixed-dim": "#ffb86f",
+              "secondary-container": "#d6e3fe",
+              "on-surface-variant": "#43474f",
+              "on-secondary-fixed": "#0f1c2f",
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-primary": "#ffffff",
+              "tertiary": "#301900",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-high": "#e7e8e9",
+              "secondary-fixed-dim": "#bac7e1",
+              "primary-fixed": "#d5e3ff",
+              "on-secondary-fixed-variant": "#3b475d",
+              "on-tertiary-container": "#e18600",
+              "on-tertiary": "#ffffff",
+              "primary": "#001e40",
+              "secondary-fixed": "#d6e3fe",
+              "on-primary-container": "#799dd6",
+              "primary-fixed-dim": "#a7c8ff",
+              "surface-dim": "#d9dadb",
+              "on-primary-fixed-variant": "#1f477b",
+              "outline": "#737780",
+              "on-surface": "#191c1d",
+              "error": "#ba1a1a",
+              "on-secondary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-variant": "#e1e3e4",
+              "surface-tint": "#3a5f94",
+              "secondary": "#525f75",
+              "on-primary-fixed": "#001b3c",
+              "on-secondary-container": "#58657c",
+              "tertiary-container": "#4e2b00",
+              "inverse-surface": "#2e3132",
+              "surface-bright": "#f8f9fa",
+              "primary-container": "#003366",
+              "background": "#f8f9fa",
+              "inverse-on-surface": "#f0f1f2",
+              "on-background": "#191c1d",
+              "outline-variant": "#c3c6d1",
+              "inverse-primary": "#a7c8ff",
+              "surface": "#f8f9fa",
+              "surface-container-highest": "#e1e3e4"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .text-shadow-sm {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-tertiary-fixed-dim selection:text-on-tertiary-fixed">
+<nav class="fixed top-0 w-full z-50 glass-panel border-b border-slate-200/20 shadow-[0_10px_40px_rgba(0,30,64,0.08)]">
+<div class="flex justify-between items-center h-20 px-8 w-full max-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black text-[#001e40] tracking-tighter font-headline">Topper's Choice</span>
+<div class="hidden md:flex gap-8">
+<a class="text-slate-500 font-medium hover:text-[#e18600] transition-colors duration-200" href="#">Dashboard</a>
+<a class="text-[#001e40] font-bold border-b-2 border-[#ffb86f] pb-1" href="#">My Courses</a>
+<a class="text-slate-500 font-medium hover:text-[#e18600] transition-colors duration-200" href="#">Practice Tests</a>
+<a class="text-slate-500 font-medium hover:text-[#e18600] transition-colors duration-200" href="#">Performance</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-primary-fixed overflow-hidden border-2 border-surface-container-highest">
+<img alt="Student Profile Avatar" data-alt="Portrait of a smiling student avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGj0k3XKin35dvVAMbzCJBVZYggezeIFC0n70WITSz3perpWKBv9qNWhRU4zxfCFzwx8Xf6wHxNoAlt5LwdfKSvlLZbP41vHPYYz8QaY63RHJdzYXnAK5of-s9ChtLP6kJN3FyGOHbGsJUv1LoaITnGY3hqa6bx5k2D_mGW8zfoy8I4Faxo7PQSQeSUkGmEhWXBxblJedZNqmG-9AdHRXCA2G1ZDwifUOEgOXja9HWMdjT7AYdMQLKz8yhGx4syL6O7BIOjTn8Fa4"/>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-20 px-8 max-w-[1440px] mx-auto min-h-screen">
+<header class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="text-4xl md:text-5xl font-black font-headline text-primary tracking-tight mb-4">Course Library</h1>
+<p class="text-on-surface-variant max-w-2xl leading-relaxed">
+                        Welcome back, Scholar. Continue your journey through our curated academic modules. Your progress is the blueprint of your future.
+                    </p>
+</div>
+<div class="flex p-1 bg-surface-container-low rounded-xl">
+<button class="px-6 py-2 rounded-lg bg-surface-container-lowest text-primary font-bold shadow-sm">In Progress</button>
+<button class="px-6 py-2 rounded-lg text-on-surface-variant font-medium hover:text-primary transition-colors">Completed</button>
+<button class="px-6 py-2 rounded-lg text-on-surface-variant font-medium hover:text-primary transition-colors">New</button>
+</div>
+</div>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="group relative bg-surface-container-lowest rounded-2xl p-6 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,30,64,0.12)] border border-outline-variant/10 overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-fixed to-transparent opacity-10 -mr-16 -mt-16 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 bg-primary-container rounded-xl flex items-center justify-center text-tertiary-fixed shadow-lg">
+<span class="material-symbols-outlined text-3xl">account_balance</span>
+</div>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-xs font-bold rounded-full uppercase tracking-wider">Active</span>
+</div>
+<div class="mb-8">
+<h3 class="text-2xl font-black font-headline text-primary mb-1">MPSC</h3>
+<p class="text-on-surface-variant font-medium mb-4">महाराष्ट्र लोकसेवा आयोग</p>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+<span>48 Lessons</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold text-primary">
+<span>Progress</span>
+<span>65%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim rounded-full w-[65%] shadow-[0_0_12px_rgba(255,184,111,0.5)]"></div>
+</div>
+</div>
+</div>
+<div class="group relative bg-surface-container-lowest rounded-2xl p-6 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,30,64,0.12)] border border-outline-variant/10 overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-secondary-container to-transparent opacity-10 -mr-16 -mt-16 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 bg-primary-container rounded-xl flex items-center justify-center text-tertiary-fixed shadow-lg">
+<span class="material-symbols-outlined text-3xl">payments</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant text-xs font-bold rounded-full uppercase tracking-wider">Continuing</span>
+</div>
+<div class="mb-8">
+<h3 class="text-2xl font-black font-headline text-primary mb-1">Bank / Staff / Railway</h3>
+<p class="text-on-surface-variant font-medium mb-4">बँक / कर्मचारी / रेल्वे</p>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+<span>124 Lessons</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold text-primary">
+<span>Progress</span>
+<span>32%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim rounded-full w-[32%] shadow-[0_0_12px_rgba(255,184,111,0.5)]"></div>
+</div>
+</div>
+</div>
+<div class="group relative bg-surface-container-lowest rounded-2xl p-6 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,30,64,0.12)] border border-outline-variant/10 overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-tertiary-fixed to-transparent opacity-10 -mr-16 -mt-16 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 bg-primary-container rounded-xl flex items-center justify-center text-tertiary-fixed shadow-lg">
+<span class="material-symbols-outlined text-3xl">translate</span>
+</div>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-xs font-bold rounded-full uppercase tracking-wider">Popular</span>
+</div>
+<div class="mb-8">
+<h3 class="text-2xl font-black font-headline text-primary mb-1">English Speaking</h3>
+<p class="text-on-surface-variant font-medium mb-4">इंग्रजी संभाषण</p>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+<span>32 Lessons</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold text-primary">
+<span>Progress</span>
+<span>88%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim rounded-full w-[88%] shadow-[0_0_12px_rgba(255,184,111,0.5)]"></div>
+</div>
+</div>
+</div>
+<div class="group relative bg-surface-container-lowest rounded-2xl p-6 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,30,64,0.12)] border border-outline-variant/10 overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-fixed to-transparent opacity-10 -mr-16 -mt-16 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 bg-primary-container rounded-xl flex items-center justify-center text-tertiary-fixed shadow-lg">
+<span class="material-symbols-outlined text-3xl">functions</span>
+</div>
+</div>
+<div class="mb-8">
+<h3 class="text-2xl font-black font-headline text-primary mb-1">Quantitative Aptitude</h3>
+<p class="text-on-surface-variant font-medium mb-4">संख्यात्मक अभियोग्यता</p>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+<span>56 Lessons</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold text-primary">
+<span>Progress</span>
+<span>15%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim rounded-full w-[15%] shadow-[0_0_12px_rgba(255,184,111,0.5)]"></div>
+</div>
+</div>
+</div>
+<div class="group relative bg-surface-container-lowest rounded-2xl p-6 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,30,64,0.12)] border border-outline-variant/10 overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-secondary-container to-transparent opacity-10 -mr-16 -mt-16 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 bg-primary-container rounded-xl flex items-center justify-center text-tertiary-fixed shadow-lg">
+<span class="material-symbols-outlined text-3xl">psychology</span>
+</div>
+</div>
+<div class="mb-8">
+<h3 class="text-2xl font-black font-headline text-primary mb-1">Reasoning Ability</h3>
+<p class="text-on-surface-variant font-medium mb-4">तर्क करण्याची क्षमता</p>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+<span>42 Lessons</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold text-primary">
+<span>Progress</span>
+<span>45%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim rounded-full w-[45%] shadow-[0_0_12px_rgba(255,184,111,0.5)]"></div>
+</div>
+</div>
+</div>
+<div class="group relative bg-surface-container-lowest rounded-2xl p-6 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,30,64,0.12)] border border-outline-variant/10 overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-tertiary-fixed to-transparent opacity-10 -mr-16 -mt-16 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 bg-primary-container rounded-xl flex items-center justify-center text-tertiary-fixed shadow-lg">
+<span class="material-symbols-outlined text-3xl">public</span>
+</div>
+</div>
+<div class="mb-8">
+<h3 class="text-2xl font-black font-headline text-primary mb-1">General Awareness</h3>
+<p class="text-on-surface-variant font-medium mb-4">सामान्य जागरूकता</p>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+<span>88 Lessons</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold text-primary">
+<span>Progress</span>
+<span>10%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim rounded-full w-[10%] shadow-[0_0_12px_rgba(255,184,111,0.5)]"></div>
+</div>
+</div>
+</div>
+</div>
+<section class="mt-20">
+<div class="relative rounded-3xl overflow-hidden bg-primary-container p-12 text-on-primary">
+<div class="absolute top-0 right-0 w-full h-full">
+<img alt="Study Background" class="w-full h-full object-cover mix-blend-overlay opacity-20" data-alt="Abstract study environment with books and light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_Ll7VmhV37Ht3Sk4JDVXj3UmFtYT56Nkihyxz8TxJdJrJWdbCau77on0LXVXz-JH660MKYcpzweNLAW0spgjGESSY07wxhLHASujSm8fGJsxqEmFgIOotrLSHxT0Dl9dut3_od8CxaLCtxJqKJSgvqEWOcJoo_VuMZghv0-NdmBiYv4uJKF5fzpeDceKYQZ3dP3QLfC0jtq4SwSN1e5BzHIwge-Mlw4djBBQ5liAwBUL8x4AfhI3_PLoLGZmk3QoljBLcAhnRX3o"/>
+</div>
+<div class="relative z-10 max-w-xl">
+<h2 class="text-3xl md:text-4xl font-black font-headline mb-4 tracking-tight">Accelerate Your Learning Path</h2>
+<p class="text-primary-fixed mb-8 leading-relaxed">Join our daily live coaching sessions and mock drills designed to mimic real-world competitive environments.</p>
+<button class="bg-[#ffb86f] text-[#2c1600] px-8 py-4 rounded-xl font-bold hover:bg-[#ffdcbd] transition-all transform hover:scale-105 active:scale-95 shadow-xl">
+                        Explore Live Sessions
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-surface-container-low py-12 px-8 border-t border-outline-variant/15">
+<div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div>
+<span class="text-xl font-black text-primary tracking-tighter font-headline">Topper's Choice</span>
+<p class="text-on-surface-variant text-sm mt-2">The Academic Atelier • Excellence in Competitive Coaching</p>
+</div>
+<div class="flex gap-12">
+<a class="text-on-surface-variant hover:text-primary font-medium transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary font-medium transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary font-medium transition-colors" href="#">Support</a>
+</div>
+<p class="text-on-surface-variant/60 text-xs">© 2024 Topper's Choice. All intellectual rights reserved.</p>
+</div>
+</footer>
+<div class="fixed bottom-6 right-6 z-40 md:hidden">
+<button class="w-14 h-14 bg-tertiary-container text-on-tertiary-fixed rounded-full shadow-2xl flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+</body></html>

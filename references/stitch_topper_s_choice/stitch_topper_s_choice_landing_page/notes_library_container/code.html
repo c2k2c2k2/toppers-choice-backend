@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Course &amp; Subject Library | ScholarAtelier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container": "#edeeef",
+              "surface-container-high": "#e7e8e9",
+              "on-surface": "#191c1d",
+              "secondary-fixed-dim": "#bac7e1",
+              "tertiary-fixed-dim": "#ffb86f",
+              "on-primary-fixed": "#001b3c",
+              "surface": "#f8f9fa",
+              "inverse-surface": "#2e3132",
+              "background": "#f8f9fa",
+              "surface-container-low": "#f3f4f5",
+              "secondary-container": "#d6e3fe",
+              "primary-fixed-dim": "#a7c8ff",
+              "on-tertiary-container": "#e18600",
+              "on-secondary": "#ffffff",
+              "primary": "#001e40",
+              "on-secondary-fixed": "#0f1c2f",
+              "tertiary": "#301900",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d9dadb",
+              "on-primary": "#ffffff",
+              "surface-container-highest": "#e1e3e4",
+              "secondary-fixed": "#d6e3fe",
+              "inverse-primary": "#a7c8ff",
+              "on-surface-variant": "#43474f",
+              "surface-variant": "#e1e3e4",
+              "on-secondary-container": "#58657c",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#1f477b",
+              "outline": "#737780",
+              "on-tertiary": "#ffffff",
+              "tertiary-container": "#4e2b00",
+              "on-tertiary-fixed-variant": "#693c00",
+              "surface-tint": "#3a5f94",
+              "outline-variant": "#c3c6d1",
+              "surface-bright": "#f8f9fa",
+              "primary-container": "#003366",
+              "surface-container-lowest": "#ffffff",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2c1600",
+              "error-container": "#ffdad6",
+              "secondary": "#525f75",
+              "on-background": "#191c1d",
+              "primary-fixed": "#d5e3ff",
+              "tertiary-fixed": "#ffdcbd",
+              "on-secondary-fixed-variant": "#3b475d",
+              "on-primary-container": "#799dd6",
+              "inverse-on-surface": "#f0f1f2"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-[#f3f4f5] dark:bg-slate-900 sticky top-0 border-r-0 p-6 space-y-2">
+<div class="mb-10 px-2">
+<h1 class="font-headline font-black text-[#001e40] dark:text-white text-2xl tracking-tighter">The Atelier</h1>
+<p class="text-[10px] uppercase tracking-widest text-secondary font-bold">Excellence in Learning</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 rounded-xl transition-transform duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-[#003366] dark:text-amber-400 rounded-xl shadow-sm transition-transform duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-medium text-sm">My Courses</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 rounded-xl transition-transform duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+<span class="font-medium text-sm">Practice Tests</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 rounded-xl transition-transform duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-medium text-sm">Performance</span>
+</a>
+</nav>
+<div class="pt-6 border-t border-outline-variant/15 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 rounded-xl transition-transform duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-medium text-sm">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 rounded-xl transition-transform duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-medium text-sm">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 left-0 md:left-64 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,30,64,0.08)]">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<h2 class="text-xl font-headline font-bold text-[#001e40] dark:text-white">ScholarAtelier</h2>
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-slate-500 hover:text-[#001e40] font-medium text-sm transition-colors" href="#">Dashboard</a>
+<a class="text-[#003366] border-b-2 border-amber-500 pb-1 font-medium text-sm transition-colors" href="#">Courses</a>
+<a class="text-slate-500 hover:text-[#001e40] font-medium text-sm transition-colors" href="#">Practice</a>
+<a class="text-slate-500 hover:text-[#001e40] font-medium text-sm transition-colors" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex bg-surface-container-low rounded-full px-4 py-2 items-center gap-2">
+<span class="material-symbols-outlined text-outline text-lg">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 font-body" placeholder="Search modules..." type="text"/>
+</div>
+<button class="p-2 text-primary hover:bg-slate-100/50 rounded-lg transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-primary-container overflow-hidden border-2 border-white shadow-sm">
+<img alt="Student Profile" data-alt="professional portrait of a young male student wearing a blazer in a modern architectural setting with natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuPM1r9wkvoAPKto5BuHzZVafafmuIaEppvOde3T0lVWUHv-IFn4y4UqZZKtKUxOYNVk3WkOcw75HRK66RPpohs5o8OjjbPLLuhdW2_XjWbD7c-j_Gx1afvvLXwOX_UURaQyZJ1YUtCOv6uwRK3PempRjKKoC0yCmTIGBG5UXwWo50a0TR2USjEaGpqG1GPCBnprxTYeyRXmq_tb8QAQqhpo3etbr5oZhWQnqAEMjeu1DmWPPVEtnw6daqJqK0woSXkXh9JL7xQ7I"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="mt-24 p-8 max-w-[1440px] mx-auto w-full">
+<!-- Hero / Reader Entry Point -->
+<section class="relative mb-12 rounded-3xl overflow-hidden bg-primary-container min-h-[320px] flex items-center p-12">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-r from-primary to-primary-container/40"></div>
+<img alt="Background" class="w-full h-full object-cover mix-blend-overlay opacity-30" data-alt="abstract overhead shot of open books and fountain pens on a dark wooden desk with soft cinematic glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmilGMYGeSDkvuDJ6jvUtjgLodJozAPaQctGn93M9xzdVGWSeIS5zyTuFqKGwcmy80zIuGawic1QrrsFoU3dq098orFg2HgDpEyuJpDKfh4iJevomLGSfSQAoq-kCPSS5VrC3z-BYuqtQV_bgQXoD-fZAVk4xEqDUTXNxXNQD_eD1utmjJKhWNIsQPDsNbgtiVwAIPkWiSw_KlzaZiKwQOQV6M6HSneXPtg--6qUIjJj4pvYANn8xsTrTwfYITpKfrnDgyLLICPpQ"/>
+</div>
+<div class="relative z-10 max-w-2xl">
+<span class="inline-block px-4 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold tracking-widest uppercase mb-4">Academic Reels</span>
+<h1 class="text-4xl md:text-5xl font-headline font-extrabold text-white mb-6 leading-tight">Your knowledge, <br/>now in vertical motion.</h1>
+<p class="text-primary-fixed text-lg mb-8 font-body opacity-90">Experience the new vertical reader. Swipe through your PDF notes like a reel, perfectly optimized for deep focus on every page.</p>
+<button class="bg-tertiary-container hover:bg-tertiary-fixed text-on-tertiary-fixed px-8 py-4 rounded-md font-bold transition-all flex items-center gap-3 group">
+                        Enter Infinite Reader
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Subject Categories Tabs -->
+<div class="flex items-center gap-4 mb-8 overflow-x-auto pb-4 scrollbar-hide">
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-primary text-white font-medium text-sm shadow-md">All Subjects</button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-surface-container-lowest text-primary border border-outline-variant/15 font-medium text-sm hover:bg-surface-container-low transition-colors">MPSC Specialized</button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-surface-container-lowest text-primary border border-outline-variant/15 font-medium text-sm hover:bg-surface-container-low transition-colors">Banking Mastery</button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-surface-container-lowest text-primary border border-outline-variant/15 font-medium text-sm hover:bg-surface-container-low transition-colors">English Speaking</button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-surface-container-lowest text-primary border border-outline-variant/15 font-medium text-sm hover:bg-surface-container-low transition-colors">Current Affairs</button>
+</div>
+<!-- Library Grid -->
+<div class="space-y-16">
+<!-- MPSC Section -->
+<section>
+<div class="flex justify-between items-end mb-8">
+<div>
+<h3 class="text-2xl font-headline font-bold text-primary mb-1">MPSC Civil Services</h3>
+<p class="text-secondary text-sm">Deep-dive modules for Maharashtra Public Service Commission.</p>
+</div>
+<a class="text-primary font-bold text-sm flex items-center gap-1 group" href="#">
+                            View all MPSC
+                            <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">chevron_right</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="glass-card group p-6 rounded-2xl border border-white/40 shadow-[0_10px_40px_rgba(0,30,64,0.04)] hover:shadow-[0_20px_60px_rgba(0,30,64,0.1)] transition-all flex flex-col">
+<div class="aspect-[3/4] mb-6 rounded-xl overflow-hidden bg-surface shadow-inner">
+<img alt="History" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-500" data-alt="vintage cover page of an old historical book featuring gold leaf motifs and traditional scripts" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLWGMHETs41dTrgceCD7IeOsivDRzUavP725jGn6qkdbzNRVve22IJERdzyPu4HGLTT1ri3AslK0grxDC-7H4qvH7PfRN3NiKRiM_hV6md0LQYJkRPe1F02JjUty0rnCX8uVLRHwP01xjjvRqIb4PypvnegUtOy_O29SLsGib--jtzjo8swILPR8b_MwDiloQ8zsxWTcheZsjGyQTsi-Zsed3-3wxspSl3bcGsNY-m-XueuFb-xsVyv_sM2jwraj_BgTZD0Fa0CBE"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-3">
+<span class="bg-primary-container/10 text-primary-container text-[10px] font-bold px-2 py-0.5 rounded">HISTORY</span>
+<span class="text-outline text-[10px] flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">description</span> 142 Pages
+                                    </span>
+</div>
+<h4 class="font-headline font-bold text-lg text-primary mb-2">Modern Maharashtra: Political History (1818-1960)</h4>
+<p class="text-secondary text-sm line-clamp-2 font-body mb-6">Comprehensive analysis of political movements, leadership, and socio-economic shifts in modern Maharashtra.</p>
+</div>
+<button class="w-full bg-surface-container-lowest border border-outline-variant/20 hover:bg-primary hover:text-white py-3 rounded-lg font-bold text-sm text-primary transition-all flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-sm">visibility</span>
+                                Start Reading
+                            </button>
+</div>
+<!-- Card 2 -->
+<div class="glass-card group p-6 rounded-2xl border border-white/40 shadow-[0_10px_40px_rgba(0,30,64,0.04)] hover:shadow-[0_20px_60px_rgba(0,30,64,0.1)] transition-all flex flex-col">
+<div class="aspect-[3/4] mb-6 rounded-xl overflow-hidden bg-surface shadow-inner">
+<img alt="Geography" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-500" data-alt="topographical relief map detailing mountain ranges and rivers with high contrast lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZPplTF6FqVL8jb6cH5JzK37jeOk3X56W2Da88tMdAm8tpQRONF0aPjz1FhPWMdQZ7F02GJ3cYZlrytfj5CFga_v9UEzpKTPJtLXz1-pRueP5s5nXP8VpUUazObB1TDihapFE17pqfCo99TNmZKndoIi1tX2gpFWQ1yRO9UOSEVKGmhoIx8m1vjvRLyiCqErdrn1bqf4i3qDCOLHFD8pHfeqlVYBHFavW7YRPba-32gFNQZOK54guOnXDnQgILHaNhZHBPOaQXIwM"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-3">
+<span class="bg-primary-container/10 text-primary-container text-[10px] font-bold px-2 py-0.5 rounded">GEOGRAPHY</span>
+<span class="text-outline text-[10px] flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">description</span> 88 Pages
+                                    </span>
+</div>
+<h4 class="font-headline font-bold text-lg text-primary mb-2">Physical Geography of the Deccan Plateau</h4>
+<p class="text-secondary text-sm line-clamp-2 font-body mb-6">In-depth study of rock formations, river systems, and climatic zones of the Maharashtra region.</p>
+</div>
+<button class="w-full bg-surface-container-lowest border border-outline-variant/20 hover:bg-primary hover:text-white py-3 rounded-lg font-bold text-sm text-primary transition-all flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-sm">visibility</span>
+                                Start Reading
+                            </button>
+</div>
+<!-- Card 3 -->
+<div class="glass-card group p-6 rounded-2xl border border-white/40 shadow-[0_10px_40px_rgba(0,30,64,0.04)] hover:shadow-[0_20px_60px_rgba(0,30,64,0.1)] transition-all flex flex-col">
+<div class="aspect-[3/4] mb-6 rounded-xl overflow-hidden bg-surface shadow-inner">
+<img alt="Polity" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-500" data-alt="close up of a golden gavel on a leather-bound constitution book in a law library with soft bokeh" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr6XvwLVJkBtcqrgHfx1JguJGIi9fQRqwyaOTMUjY0jBNAQmyKvqldF6x86LclQ4veTXmXq681OUDN7E7dHuvpk1sRHjHbT3vjYwz1yIXjvFUmiZebJUkO4prInItm4I2stOp41Z2gOMwTIbdkNJ-ebfaIJlR8PT5iYNdq60OQfwIejGKrZl4jqpm6LM84K6AxNDxiHlmmkU2ENNjv_giBLmWU_EC4uRbViCM74UNZx6pZWb2vBUBhNDlIbFKj9qi97K5CDUxFDMA"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-3">
+<span class="bg-primary-container/10 text-primary-container text-[10px] font-bold px-2 py-0.5 rounded">POLITY</span>
+<span class="text-outline text-[10px] flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">description</span> 210 Pages
+                                    </span>
+</div>
+<h4 class="font-headline font-bold text-lg text-primary mb-2">Panchayati Raj and Local Self Government</h4>
+<p class="text-secondary text-sm line-clamp-2 font-body mb-6">Article by article breakdown of the 73rd and 74th Constitutional Amendments with case studies.</p>
+</div>
+<button class="w-full bg-surface-container-lowest border border-outline-variant/20 hover:bg-primary hover:text-white py-3 rounded-lg font-bold text-sm text-primary transition-all flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-sm">visibility</span>
+                                Start Reading
+                            </button>
+</div>
+</div>
+</section>
+<!-- Banking & Quantitative Aptitude -->
+<section>
+<div class="flex justify-between items-end mb-8">
+<div>
+<h3 class="text-2xl font-headline font-bold text-primary mb-1">Banking &amp; Finance Mastery</h3>
+<p class="text-secondary text-sm">Quant, Reasoning, and Financial awareness for IBPS &amp; SBI exams.</p>
+</div>
+<a class="text-primary font-bold text-sm flex items-center gap-1 group" href="#">
+                            Explore Banking
+                            <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">chevron_right</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Banking Card 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/10 hover:border-amber-500/50 transition-all flex flex-col group">
+<div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-700 mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">calculate</span>
+</div>
+<h5 class="font-headline font-bold text-primary mb-1">Speed Maths v2.0</h5>
+<p class="text-[12px] text-secondary font-body mb-4">Vedic maths tricks for cube roots and complex division.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">32 Pages</span>
+<button class="text-primary hover:text-amber-600 font-bold text-xs flex items-center gap-1">
+                                    Open PDF <span class="material-symbols-outlined text-xs">launch</span>
+</button>
+</div>
+</div>
+<!-- Banking Card 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/10 hover:border-amber-500/50 transition-all flex flex-col group">
+<div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-700 mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<h5 class="font-headline font-bold text-primary mb-1">RBI Monetary Policy</h5>
+<p class="text-[12px] text-secondary font-body mb-4">Latest updates on Repo, Reverse Repo and SLR rates.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">18 Pages</span>
+<button class="text-primary hover:text-amber-600 font-bold text-xs flex items-center gap-1">
+                                    Open PDF <span class="material-symbols-outlined text-xs">launch</span>
+</button>
+</div>
+</div>
+<!-- Banking Card 3 -->
+<div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/10 hover:border-amber-500/50 transition-all flex flex-col group">
+<div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-700 mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<h5 class="font-headline font-bold text-primary mb-1">Logical Reasoning</h5>
+<p class="text-[12px] text-secondary font-body mb-4">Seating arrangement and floor-based puzzles.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">56 Pages</span>
+<button class="text-primary hover:text-amber-600 font-bold text-xs flex items-center gap-1">
+                                    Open PDF <span class="material-symbols-outlined text-xs">launch</span>
+</button>
+</div>
+</div>
+<!-- Banking Card 4 -->
+<div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/10 hover:border-amber-500/50 transition-all flex flex-col group">
+<div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-700 mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">currency_exchange</span>
+</div>
+<h5 class="font-headline font-bold text-primary mb-1">Stock Market Basics</h5>
+<p class="text-[12px] text-secondary font-body mb-4">Intro to primary markets, IPOs and equity indices.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">42 Pages</span>
+<button class="text-primary hover:text-amber-600 font-bold text-xs flex items-center gap-1">
+                                    Open PDF <span class="material-symbols-outlined text-xs">launch</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- English Speaking -->
+<section class="mb-20">
+<div class="flex flex-col md:flex-row gap-12 items-center">
+<div class="flex-1">
+<h3 class="text-3xl font-headline font-extrabold text-primary mb-4 leading-tight">Master the Art of <br/>English Articulation</h3>
+<p class="text-secondary mb-8 text-lg font-body leading-relaxed">Our curated PDF guides are designed to help you transition from grammar basics to fluent, persuasive professional speaking.</p>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-4 rounded-xl bg-white/50 border border-outline-variant/10 hover:bg-white transition-colors cursor-pointer group">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold group-hover:bg-amber-500 transition-colors">01</div>
+<div>
+<h6 class="font-headline font-bold text-primary">The 100 Most Used Idioms</h6>
+<p class="text-xs text-secondary">Enhance your conversational flow with daily expressions.</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-outline group-hover:text-primary transition-colors">arrow_right_alt</span>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl bg-white/50 border border-outline-variant/10 hover:bg-white transition-colors cursor-pointer group">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold group-hover:bg-amber-500 transition-colors">02</div>
+<div>
+<h6 class="font-headline font-bold text-primary">Business Email Etiquette</h6>
+<p class="text-xs text-secondary">Master professional writing for the global corporate world.</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-outline group-hover:text-primary transition-colors">arrow_right_alt</span>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl bg-white/50 border border-outline-variant/10 hover:bg-white transition-colors cursor-pointer group">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold group-hover:bg-amber-500 transition-colors">03</div>
+<div>
+<h6 class="font-headline font-bold text-primary">Phonetics &amp; Pronunciation</h6>
+<p class="text-xs text-secondary">Voice coaching and accent neutralization modules.</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-outline group-hover:text-primary transition-colors">arrow_right_alt</span>
+</div>
+</div>
+</div>
+<div class="w-full md:w-[400px]">
+<div class="relative rounded-3xl overflow-hidden shadow-2xl">
+<img alt="Student Reading" class="w-full aspect-[4/5] object-cover" data-alt="candid lifestyle shot of a young student focused on a digital tablet in a minimalist cafe with warm sunlight streaming through the window" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCH4kbYc389hkdl1JvrGivoXjv0jaOXrZYvponuIw3fPn3i1hmfaQoF4d7xYeS-RZ_x7EeyxPtRAwTFqyzdBhJmXiEWKlBaY5r-5M8oGTPIhEa_i3Zq8_QUKu1lE7_drKes5_VK1twG7v5vVkViGZC6fU4FOqsqXVZ75lTMZEzTwNFjqFgPqMa3bq9RIaehnraWdJsgKDyvkASGk7Yk0Y2IXRT6r5DFVMEzkwW18vsTUlBztrzPfLt9wFbFnW5F4XIgIei7Y1lrGTQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex items-end p-8">
+<div>
+<p class="text-amber-400 font-bold text-sm mb-2">PRO TIP</p>
+<h4 class="text-white font-headline font-bold text-xl">Active Recall Reading</h4>
+<p class="text-white/80 text-sm mt-2">Pause after every 5 pages to summarize key points. It improves retention by 40%.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Mobile Nav Shell -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-950 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] px-6 py-4 flex justify-between items-center z-50">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[#003366]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="text-[10px] font-bold">Courses</span>
+</a>
+<div class="-mt-12 bg-primary rounded-full p-4 shadow-lg border-4 border-white text-white">
+<span class="material-symbols-outlined text-2xl">play_lesson</span>
+</div>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px] font-medium">History</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</nav>
+</main>
+<!-- Floating Action Button for Support (Contextual) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-tertiary-container text-on-tertiary-fixed rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform z-40 md:flex hidden">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</body></html>
