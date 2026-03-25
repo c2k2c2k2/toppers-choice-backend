@@ -135,6 +135,30 @@ enum ContentAccessType {
   PREMIUM
 }
 
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TEXT_INPUT
+}
+
+enum QuestionDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum QuestionStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum QuestionMediaUsage {
+  STATEMENT
+  OPTION
+  EXPLANATION
+}
+
 model Site {
   id                  String               @id @default(cuid())
   code                String               @unique
@@ -159,6 +183,7 @@ model Site {
   fileAssets          FileAsset[]
   fileAssetReferences FileAssetReference[]
   contentEntries      ContentEntry[]
+  questions           Question[]
   notes               Note[]
   noteViewSessions    NoteViewSession[]
   noteProgressRecords NoteProgress[]
@@ -217,6 +242,9 @@ model User {
   createdContentEntries   ContentEntry[]           @relation("ContentCreator")
   updatedContentEntries   ContentEntry[]           @relation("ContentUpdater")
   publishedContentEntries ContentEntry[]           @relation("ContentPublisher")
+  createdQuestions        Question[]               @relation("QuestionCreator")
+  updatedQuestions        Question[]               @relation("QuestionUpdater")
+  publishedQuestions      Question[]               @relation("QuestionPublisher")
   createdNotes            Note[]                   @relation("NoteCreator")
   updatedNotes            Note[]                   @relation("NoteUpdater")
   publishedNotes          Note[]                   @relation("NotePublisher")
@@ -420,6 +448,7 @@ model Medium {
   updatedAt      DateTime             @updatedAt
   site           Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
   contentEntries ContentEntryMedium[]
+  questions      Question[]
   notes          Note[]
 
   @@unique([siteId, code])
@@ -444,6 +473,7 @@ model Subject {
   updatedAt   DateTime          @updatedAt
   site        Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
   examTrack   ExamTrack         @relation(fields: [examTrackId], references: [id], onDelete: Cascade)
+  questions   Question[]
   topics      Topic[]
   notes       Note[]
 
@@ -472,6 +502,7 @@ model Topic {
   subject     Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   parent      Topic?            @relation("TopicHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
   children    Topic[]           @relation("TopicHierarchy")
+  questions   Question[]
   noteTopics  NoteTopic[]
 
   @@unique([siteId, subjectId, code])
@@ -503,36 +534,37 @@ model Tag {
 }
 
 model FileAsset {
-  id                  String               @id @default(cuid())
-  siteId              String
-  createdByUserId     String
-  confirmedByUserId   String?
-  purpose             FileAssetPurpose
-  accessLevel         FileAssetAccess      @default(PROTECTED)
-  status              FileAssetStatus      @default(PENDING_UPLOAD)
-  objectKey           String               @unique
-  originalFileName    String
-  extension           String?
-  contentType         String
-  declaredSizeBytes   Int?
-  sizeBytes           Int?
-  checksumSha256      String?
-  etag                String?
-  imageWidth          Int?
-  imageHeight         Int?
-  uploadExpiresAt     DateTime?
-  confirmedAt         DateTime?
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
-  site                Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  createdByUser       User                 @relation("FileAssetCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
-  confirmedByUser     User?                @relation("FileAssetConfirmer", fields: [confirmedByUserId], references: [id], onDelete: SetNull)
-  references          FileAssetReference[]
-  contentCoverEntries ContentEntry[]       @relation("ContentCoverAsset")
-  contentAttachments  ContentAttachment[]
-  contentNotes        Note[]               @relation("NoteContentAsset")
-  previewNotes        Note[]               @relation("NotePreviewAsset")
-  coverNotes          Note[]               @relation("NoteCoverAsset")
+  id                      String                   @id @default(cuid())
+  siteId                  String
+  createdByUserId         String
+  confirmedByUserId       String?
+  purpose                 FileAssetPurpose
+  accessLevel             FileAssetAccess          @default(PROTECTED)
+  status                  FileAssetStatus          @default(PENDING_UPLOAD)
+  objectKey               String                   @unique
+  originalFileName        String
+  extension               String?
+  contentType             String
+  declaredSizeBytes       Int?
+  sizeBytes               Int?
+  checksumSha256          String?
+  etag                    String?
+  imageWidth              Int?
+  imageHeight             Int?
+  uploadExpiresAt         DateTime?
+  confirmedAt             DateTime?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  site                    Site                     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  createdByUser           User                     @relation("FileAssetCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  confirmedByUser         User?                    @relation("FileAssetConfirmer", fields: [confirmedByUserId], references: [id], onDelete: SetNull)
+  references              FileAssetReference[]
+  contentCoverEntries     ContentEntry[]           @relation("ContentCoverAsset")
+  contentAttachments      ContentAttachment[]
+  questionMediaReferences QuestionMediaReference[]
+  contentNotes            Note[]                   @relation("NoteContentAsset")
+  previewNotes            Note[]                   @relation("NotePreviewAsset")
+  coverNotes              Note[]                   @relation("NoteCoverAsset")
 
   @@index([siteId, purpose, createdAt])
   @@index([siteId, status, createdAt])
@@ -640,6 +672,83 @@ model ContentAttachment {
   @@index([fileAssetId])
   @@index([contentEntryId, orderIndex])
   @@map("content_attachments")
+}
+
+model Question {
+  id                String                   @id @default(cuid())
+  siteId            String
+  code              String?
+  mediumId          String?
+  subjectId         String
+  topicId           String?
+  type              QuestionType
+  difficulty        QuestionDifficulty       @default(MEDIUM)
+  statementJson     Json
+  explanationJson   Json?
+  metadataJson      Json?
+  correctAnswerJson Json
+  searchText        String
+  hasMedia          Boolean                  @default(false)
+  status            QuestionStatus           @default(DRAFT)
+  createdByUserId   String
+  updatedByUserId   String
+  publishedByUserId String?
+  publishedAt       DateTime?
+  archivedAt        DateTime?
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  site              Site                     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  medium            Medium?                  @relation(fields: [mediumId], references: [id], onDelete: SetNull)
+  subject           Subject                  @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  topic             Topic?                   @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  createdByUser     User                     @relation("QuestionCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser     User                     @relation("QuestionUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  publishedByUser   User?                    @relation("QuestionPublisher", fields: [publishedByUserId], references: [id], onDelete: SetNull)
+  options           QuestionOption[]
+  mediaReferences   QuestionMediaReference[]
+
+  @@unique([siteId, code])
+  @@index([siteId, status, createdAt])
+  @@index([siteId, difficulty, status])
+  @@index([siteId, mediumId, status])
+  @@index([siteId, subjectId, status])
+  @@index([siteId, topicId, status])
+  @@map("questions")
+}
+
+model QuestionOption {
+  id          String   @id @default(cuid())
+  questionId  String
+  optionKey   String
+  orderIndex  Int      @default(0)
+  contentJson Json
+  metaJson    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, optionKey])
+  @@index([questionId, orderIndex])
+  @@map("question_options")
+}
+
+model QuestionMediaReference {
+  id          String             @id @default(cuid())
+  questionId  String
+  fileAssetId String
+  usage       QuestionMediaUsage
+  optionKey   String?
+  localeCode  String?
+  orderIndex  Int                @default(0)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  question    Question           @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  fileAsset   FileAsset          @relation(fields: [fileAssetId], references: [id], onDelete: Restrict)
+
+  @@unique([questionId, fileAssetId, usage, optionKey, localeCode])
+  @@index([fileAssetId])
+  @@index([questionId, usage, orderIndex])
+  @@map("question_media_references")
 }
 
 model Note {

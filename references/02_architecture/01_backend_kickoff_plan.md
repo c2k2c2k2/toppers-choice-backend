@@ -66,6 +66,7 @@ Move to database-driven configuration:
 - Generic file assets intentionally separate upload metadata from future content-reference authorization, allowing later modules to decide whether an asset is public, authenticated, or entitlement-protected without changing the storage provider seam.
 - Notes use dedicated preview PDF assets, short-lived note view sessions, and signed watermark payloads so premium preview rules stay explicit in data and raw source PDFs never become publicly addressable.
 - Structured non-note learning content uses one reusable `ContentEntry` foundation with family, format, schedule-aware publishing, featured ordering, exam-track/medium classification, and file attachments so guidance, English speaking, and current-affairs content do not fork into ad hoc tables.
+- The question bank keeps prompts, options, explanations, and import-friendly metadata reusable in one authoring model, with explicit media-reference rows and student-safe response shaping so future practice and test engines can share content without exposing answer keys.
 
 ## Backend Development Order
 1. Foundation, Prisma, site config, health, request context, Swagger

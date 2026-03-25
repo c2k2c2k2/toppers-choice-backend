@@ -1,7 +1,4 @@
-import {
-  FileAssetAccess,
-  FileAssetPurpose,
-} from '@prisma/client';
+import { FileAssetAccess, FileAssetPurpose } from '@prisma/client';
 
 type FilePurposeRule = {
   allowedContentTypes: string[];
@@ -25,7 +22,7 @@ export const FILE_PURPOSE_RULES: Record<FileAssetPurpose, FilePurposeRule> = {
   [FileAssetPurpose.QUESTION_IMAGE]: {
     allowedContentTypes: [...IMAGE_CONTENT_TYPES],
     maxSizeBytes: 10 * 1024 * 1024,
-    defaultAccessLevel: FileAssetAccess.PROTECTED,
+    defaultAccessLevel: FileAssetAccess.AUTHENTICATED,
   },
   [FileAssetPurpose.PROFILE_IMAGE]: {
     allowedContentTypes: [...IMAGE_CONTENT_TYPES],
@@ -59,7 +56,5 @@ export const FILE_EXTENSION_BY_CONTENT_TYPE: Record<string, string> = {
 };
 
 export function isInlineAssetContentType(contentType: string) {
-  return (
-    contentType === 'application/pdf' || contentType.startsWith('image/')
-  );
+  return contentType === 'application/pdf' || contentType.startsWith('image/');
 }
