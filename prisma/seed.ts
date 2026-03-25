@@ -18,6 +18,7 @@ import {
   SITE_PUBLIC_CONFIG_KEY,
 } from '../src/modules/site-settings/site-settings.constants';
 import { AUTH_RUNTIME_CONFIG_KEY } from '../src/modules/auth/auth.constants';
+import { PRACTICE_RUNTIME_CONFIG_KEY } from '../src/modules/practice/practice.constants';
 import {
   AUTHORIZATION_PERMISSION_DEFINITIONS,
   SYSTEM_ROLE_DEFINITIONS,
@@ -163,6 +164,26 @@ async function main() {
       watermark: {
         enabled: true,
         rotateMinutes: 5,
+      },
+    },
+  );
+
+  await upsertPublishedConfig(
+    site.id,
+    PRACTICE_RUNTIME_CONFIG_KEY,
+    1,
+    ConfigVisibility.INTERNAL,
+    {
+      sessions: {
+        defaultQuestionCount: 20,
+        maxQuestionCount: 100,
+      },
+      delivery: {
+        defaultBatchSize: 10,
+        maxBatchSize: 20,
+      },
+      analytics: {
+        trendWindowDays: 7,
       },
     },
   );

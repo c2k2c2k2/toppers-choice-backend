@@ -159,38 +159,62 @@ enum QuestionMediaUsage {
   EXPLANATION
 }
 
+enum PracticeMode {
+  TOPIC_WISE
+  MIXED
+}
+
+enum PracticeSessionStatus {
+  ACTIVE
+  COMPLETED
+  ABANDONED
+}
+
+enum PracticeQuestionEventType {
+  SERVED
+  SAVED
+  ANSWERED
+  REVEALED
+}
+
 model Site {
-  id                  String               @id @default(cuid())
-  code                String               @unique
-  slug                String               @unique
-  name                String
-  primaryDomain       String?
-  defaultLocale       String               @default("mr-IN")
-  timezone            String               @default("Asia/Kolkata")
-  status              SiteStatus           @default(ACTIVE)
-  isDefault           Boolean              @default(false)
-  configs             SiteConfigVersion[]
-  users               User[]
-  refreshSessions     RefreshSession[]
-  passwordResetTokens PasswordResetToken[]
-  roles               Role[]
-  auditLogs           AuditLog[]
-  examTracks          ExamTrack[]
-  mediums             Medium[]
-  subjects            Subject[]
-  topics              Topic[]
-  tags                Tag[]
-  fileAssets          FileAsset[]
-  fileAssetReferences FileAssetReference[]
-  contentEntries      ContentEntry[]
-  questions           Question[]
-  notes               Note[]
-  noteViewSessions    NoteViewSession[]
-  noteProgressRecords NoteProgress[]
-  noteAccessLogs      NoteAccessLog[]
-  noteSecuritySignals NoteSecuritySignal[]
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
+  id                       String                        @id @default(cuid())
+  code                     String                        @unique
+  slug                     String                        @unique
+  name                     String
+  primaryDomain            String?
+  defaultLocale            String                        @default("mr-IN")
+  timezone                 String                        @default("Asia/Kolkata")
+  status                   SiteStatus                    @default(ACTIVE)
+  isDefault                Boolean                       @default(false)
+  configs                  SiteConfigVersion[]
+  users                    User[]
+  refreshSessions          RefreshSession[]
+  passwordResetTokens      PasswordResetToken[]
+  roles                    Role[]
+  auditLogs                AuditLog[]
+  examTracks               ExamTrack[]
+  mediums                  Medium[]
+  subjects                 Subject[]
+  topics                   Topic[]
+  tags                     Tag[]
+  fileAssets               FileAsset[]
+  fileAssetReferences      FileAssetReference[]
+  contentEntries           ContentEntry[]
+  questions                Question[]
+  practiceSessions         PracticeSession[]
+  practiceSessionQuestions PracticeSessionQuestion[]
+  practiceQuestionEvents   PracticeQuestionEvent[]
+  questionPracticeStates   UserQuestionPracticeState[]
+  subjectPracticeProgress  UserSubjectPracticeProgress[]
+  topicPracticeProgress    UserTopicPracticeProgress[]
+  notes                    Note[]
+  noteViewSessions         NoteViewSession[]
+  noteProgressRecords      NoteProgress[]
+  noteAccessLogs           NoteAccessLog[]
+  noteSecuritySignals      NoteSecuritySignal[]
+  createdAt                DateTime                      @default(now())
+  updatedAt                DateTime                      @updatedAt
 
   @@index([isDefault, status])
   @@map("sites")
@@ -216,42 +240,48 @@ model SiteConfigVersion {
 }
 
 model User {
-  id                      String                   @id @default(cuid())
-  siteId                  String
-  email                   String
-  phone                   String?
-  fullName                String
-  passwordHash            String
-  userType                UserType
-  status                  UserStatus               @default(ACTIVE)
-  lastLoginAt             DateTime?
-  emailVerifiedAt         DateTime?
-  phoneVerifiedAt         DateTime?
-  createdAt               DateTime                 @default(now())
-  updatedAt               DateTime                 @updatedAt
-  site                    Site                     @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  refreshSessions         RefreshSession[]
-  passwordResetTokens     PasswordResetToken[]
-  userRoles               UserRole[]               @relation("UserRolesSubject")
-  roleAssignmentsMade     UserRole[]               @relation("UserRolesActor")
-  permissionOverrides     UserPermissionOverride[] @relation("UserPermissionOverrideSubject")
-  permissionOverridesMade UserPermissionOverride[] @relation("UserPermissionOverrideActor")
-  auditLogsAuthored       AuditLog[]               @relation("AuditLogsActor")
-  createdFileAssets       FileAsset[]              @relation("FileAssetCreator")
-  confirmedFileAssets     FileAsset[]              @relation("FileAssetConfirmer")
-  createdContentEntries   ContentEntry[]           @relation("ContentCreator")
-  updatedContentEntries   ContentEntry[]           @relation("ContentUpdater")
-  publishedContentEntries ContentEntry[]           @relation("ContentPublisher")
-  createdQuestions        Question[]               @relation("QuestionCreator")
-  updatedQuestions        Question[]               @relation("QuestionUpdater")
-  publishedQuestions      Question[]               @relation("QuestionPublisher")
-  createdNotes            Note[]                   @relation("NoteCreator")
-  updatedNotes            Note[]                   @relation("NoteUpdater")
-  publishedNotes          Note[]                   @relation("NotePublisher")
-  noteViewSessions        NoteViewSession[]
-  noteProgressRecords     NoteProgress[]
-  noteAccessLogs          NoteAccessLog[]
-  noteSecuritySignals     NoteSecuritySignal[]
+  id                       String                        @id @default(cuid())
+  siteId                   String
+  email                    String
+  phone                    String?
+  fullName                 String
+  passwordHash             String
+  userType                 UserType
+  status                   UserStatus                    @default(ACTIVE)
+  lastLoginAt              DateTime?
+  emailVerifiedAt          DateTime?
+  phoneVerifiedAt          DateTime?
+  createdAt                DateTime                      @default(now())
+  updatedAt                DateTime                      @updatedAt
+  site                     Site                          @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  refreshSessions          RefreshSession[]
+  passwordResetTokens      PasswordResetToken[]
+  userRoles                UserRole[]                    @relation("UserRolesSubject")
+  roleAssignmentsMade      UserRole[]                    @relation("UserRolesActor")
+  permissionOverrides      UserPermissionOverride[]      @relation("UserPermissionOverrideSubject")
+  permissionOverridesMade  UserPermissionOverride[]      @relation("UserPermissionOverrideActor")
+  auditLogsAuthored        AuditLog[]                    @relation("AuditLogsActor")
+  createdFileAssets        FileAsset[]                   @relation("FileAssetCreator")
+  confirmedFileAssets      FileAsset[]                   @relation("FileAssetConfirmer")
+  createdContentEntries    ContentEntry[]                @relation("ContentCreator")
+  updatedContentEntries    ContentEntry[]                @relation("ContentUpdater")
+  publishedContentEntries  ContentEntry[]                @relation("ContentPublisher")
+  createdQuestions         Question[]                    @relation("QuestionCreator")
+  updatedQuestions         Question[]                    @relation("QuestionUpdater")
+  publishedQuestions       Question[]                    @relation("QuestionPublisher")
+  createdNotes             Note[]                        @relation("NoteCreator")
+  updatedNotes             Note[]                        @relation("NoteUpdater")
+  publishedNotes           Note[]                        @relation("NotePublisher")
+  practiceSessions         PracticeSession[]
+  practiceSessionQuestions PracticeSessionQuestion[]
+  practiceQuestionEvents   PracticeQuestionEvent[]
+  questionPracticeStates   UserQuestionPracticeState[]
+  subjectPracticeProgress  UserSubjectPracticeProgress[]
+  topicPracticeProgress    UserTopicPracticeProgress[]
+  noteViewSessions         NoteViewSession[]
+  noteProgressRecords      NoteProgress[]
+  noteAccessLogs           NoteAccessLog[]
+  noteSecuritySignals      NoteSecuritySignal[]
 
   @@unique([siteId, email])
   @@index([siteId, userType, status])
@@ -411,21 +441,22 @@ model AuditLog {
 }
 
 model ExamTrack {
-  id             String                  @id @default(cuid())
-  siteId         String
-  code           String
-  slug           String
-  name           String
-  shortName      String?
-  description    String?
-  orderIndex     Int                     @default(0)
-  visibility     CatalogVisibility       @default(PUBLIC)
-  isActive       Boolean                 @default(true)
-  createdAt      DateTime                @default(now())
-  updatedAt      DateTime                @updatedAt
-  site           Site                    @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  contentEntries ContentEntryExamTrack[]
-  subjects       Subject[]
+  id               String                  @id @default(cuid())
+  siteId           String
+  code             String
+  slug             String
+  name             String
+  shortName        String?
+  description      String?
+  orderIndex       Int                     @default(0)
+  visibility       CatalogVisibility       @default(PUBLIC)
+  isActive         Boolean                 @default(true)
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  site             Site                    @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  contentEntries   ContentEntryExamTrack[]
+  subjects         Subject[]
+  practiceSessions PracticeSession[]
 
   @@unique([siteId, code])
   @@unique([siteId, slug])
@@ -435,21 +466,22 @@ model ExamTrack {
 }
 
 model Medium {
-  id             String               @id @default(cuid())
-  siteId         String
-  code           String
-  slug           String
-  name           String
-  description    String?
-  orderIndex     Int                  @default(0)
-  visibility     CatalogVisibility    @default(PUBLIC)
-  isActive       Boolean              @default(true)
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  site           Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  contentEntries ContentEntryMedium[]
-  questions      Question[]
-  notes          Note[]
+  id               String               @id @default(cuid())
+  siteId           String
+  code             String
+  slug             String
+  name             String
+  description      String?
+  orderIndex       Int                  @default(0)
+  visibility       CatalogVisibility    @default(PUBLIC)
+  isActive         Boolean              @default(true)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  site             Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  contentEntries   ContentEntryMedium[]
+  questions        Question[]
+  practiceSessions PracticeSession[]
+  notes            Note[]
 
   @@unique([siteId, code])
   @@unique([siteId, slug])
@@ -459,23 +491,26 @@ model Medium {
 }
 
 model Subject {
-  id          String            @id @default(cuid())
-  siteId      String
-  examTrackId String
-  code        String
-  slug        String
-  name        String
-  description String?
-  orderIndex  Int               @default(0)
-  visibility  CatalogVisibility @default(PUBLIC)
-  isActive    Boolean           @default(true)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  site        Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  examTrack   ExamTrack         @relation(fields: [examTrackId], references: [id], onDelete: Cascade)
-  questions   Question[]
-  topics      Topic[]
-  notes       Note[]
+  id                      String                        @id @default(cuid())
+  siteId                  String
+  examTrackId             String
+  code                    String
+  slug                    String
+  name                    String
+  description             String?
+  orderIndex              Int                           @default(0)
+  visibility              CatalogVisibility             @default(PUBLIC)
+  isActive                Boolean                       @default(true)
+  createdAt               DateTime                      @default(now())
+  updatedAt               DateTime                      @updatedAt
+  site                    Site                          @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  examTrack               ExamTrack                     @relation(fields: [examTrackId], references: [id], onDelete: Cascade)
+  questions               Question[]
+  practiceSessions        PracticeSession[]
+  subjectPracticeProgress UserSubjectPracticeProgress[]
+  topicPracticeProgress   UserTopicPracticeProgress[]
+  topics                  Topic[]
+  notes                   Note[]
 
   @@unique([siteId, examTrackId, code])
   @@unique([siteId, examTrackId, slug])
@@ -485,25 +520,27 @@ model Subject {
 }
 
 model Topic {
-  id          String            @id @default(cuid())
-  siteId      String
-  subjectId   String
-  parentId    String?
-  code        String
-  slug        String
-  name        String
-  description String?
-  orderIndex  Int               @default(0)
-  visibility  CatalogVisibility @default(PUBLIC)
-  isActive    Boolean           @default(true)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  site        Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  subject     Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  parent      Topic?            @relation("TopicHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
-  children    Topic[]           @relation("TopicHierarchy")
-  questions   Question[]
-  noteTopics  NoteTopic[]
+  id                    String                      @id @default(cuid())
+  siteId                String
+  subjectId             String
+  parentId              String?
+  code                  String
+  slug                  String
+  name                  String
+  description           String?
+  orderIndex            Int                         @default(0)
+  visibility            CatalogVisibility           @default(PUBLIC)
+  isActive              Boolean                     @default(true)
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+  site                  Site                        @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  subject               Subject                     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  parent                Topic?                      @relation("TopicHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children              Topic[]                     @relation("TopicHierarchy")
+  questions             Question[]
+  practiceSessions      PracticeSession[]
+  topicPracticeProgress UserTopicPracticeProgress[]
+  noteTopics            NoteTopic[]
 
   @@unique([siteId, subjectId, code])
   @@unique([siteId, subjectId, slug])
@@ -675,37 +712,40 @@ model ContentAttachment {
 }
 
 model Question {
-  id                String                   @id @default(cuid())
-  siteId            String
-  code              String?
-  mediumId          String?
-  subjectId         String
-  topicId           String?
-  type              QuestionType
-  difficulty        QuestionDifficulty       @default(MEDIUM)
-  statementJson     Json
-  explanationJson   Json?
-  metadataJson      Json?
-  correctAnswerJson Json
-  searchText        String
-  hasMedia          Boolean                  @default(false)
-  status            QuestionStatus           @default(DRAFT)
-  createdByUserId   String
-  updatedByUserId   String
-  publishedByUserId String?
-  publishedAt       DateTime?
-  archivedAt        DateTime?
-  createdAt         DateTime                 @default(now())
-  updatedAt         DateTime                 @updatedAt
-  site              Site                     @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  medium            Medium?                  @relation(fields: [mediumId], references: [id], onDelete: SetNull)
-  subject           Subject                  @relation(fields: [subjectId], references: [id], onDelete: Restrict)
-  topic             Topic?                   @relation(fields: [topicId], references: [id], onDelete: SetNull)
-  createdByUser     User                     @relation("QuestionCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
-  updatedByUser     User                     @relation("QuestionUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
-  publishedByUser   User?                    @relation("QuestionPublisher", fields: [publishedByUserId], references: [id], onDelete: SetNull)
-  options           QuestionOption[]
-  mediaReferences   QuestionMediaReference[]
+  id                       String                      @id @default(cuid())
+  siteId                   String
+  code                     String?
+  mediumId                 String?
+  subjectId                String
+  topicId                  String?
+  type                     QuestionType
+  difficulty               QuestionDifficulty          @default(MEDIUM)
+  statementJson            Json
+  explanationJson          Json?
+  metadataJson             Json?
+  correctAnswerJson        Json
+  searchText               String
+  hasMedia                 Boolean                     @default(false)
+  status                   QuestionStatus              @default(DRAFT)
+  createdByUserId          String
+  updatedByUserId          String
+  publishedByUserId        String?
+  publishedAt              DateTime?
+  archivedAt               DateTime?
+  createdAt                DateTime                    @default(now())
+  updatedAt                DateTime                    @updatedAt
+  site                     Site                        @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  medium                   Medium?                     @relation(fields: [mediumId], references: [id], onDelete: SetNull)
+  subject                  Subject                     @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  topic                    Topic?                      @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  createdByUser            User                        @relation("QuestionCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser            User                        @relation("QuestionUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  publishedByUser          User?                       @relation("QuestionPublisher", fields: [publishedByUserId], references: [id], onDelete: SetNull)
+  options                  QuestionOption[]
+  mediaReferences          QuestionMediaReference[]
+  practiceSessionQuestions PracticeSessionQuestion[]
+  practiceQuestionEvents   PracticeQuestionEvent[]
+  practiceStates           UserQuestionPracticeState[]
 
   @@unique([siteId, code])
   @@index([siteId, status, createdAt])
@@ -749,6 +789,176 @@ model QuestionMediaReference {
   @@index([fileAssetId])
   @@index([questionId, usage, orderIndex])
   @@map("question_media_references")
+}
+
+model PracticeSession {
+  id                  String                    @id @default(cuid())
+  siteId              String
+  userId              String
+  authSessionId       String?
+  mode                PracticeMode
+  status              PracticeSessionStatus     @default(ACTIVE)
+  examTrackId         String?
+  mediumId            String?
+  subjectId           String?
+  topicId             String?
+  difficulty          QuestionDifficulty?
+  questionCountTarget Int                       @default(20)
+  configJson          Json?
+  servedCount         Int                       @default(0)
+  answeredCount       Int                       @default(0)
+  correctCount        Int                       @default(0)
+  wrongCount          Int                       @default(0)
+  revealedCount       Int                       @default(0)
+  startedAt           DateTime                  @default(now())
+  lastActivityAt      DateTime?
+  endedAt             DateTime?
+  createdAt           DateTime                  @default(now())
+  updatedAt           DateTime                  @updatedAt
+  site                Site                      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user                User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examTrack           ExamTrack?                @relation(fields: [examTrackId], references: [id], onDelete: SetNull)
+  medium              Medium?                   @relation(fields: [mediumId], references: [id], onDelete: SetNull)
+  subject             Subject?                  @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  topic               Topic?                    @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  practiceQuestions   PracticeSessionQuestion[]
+  events              PracticeQuestionEvent[]
+
+  @@index([siteId, userId, status, startedAt])
+  @@index([siteId, mode, status, startedAt])
+  @@index([siteId, subjectId, status, startedAt])
+  @@index([siteId, topicId, status, startedAt])
+  @@map("practice_sessions")
+}
+
+model PracticeSessionQuestion {
+  id                    String                  @id @default(cuid())
+  siteId                String
+  userId                String
+  practiceSessionId     String
+  questionId            String
+  orderIndex            Int                     @default(0)
+  servedAt              DateTime                @default(now())
+  latestSavedAnswerJson Json?
+  lastSavedAt           DateTime?
+  answerJson            Json?
+  answeredAt            DateTime?
+  isCorrect             Boolean?
+  revealedAt            DateTime?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  site                  Site                    @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user                  User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  practiceSession       PracticeSession         @relation(fields: [practiceSessionId], references: [id], onDelete: Cascade)
+  question              Question                @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  events                PracticeQuestionEvent[]
+
+  @@unique([practiceSessionId, questionId])
+  @@index([siteId, userId, servedAt])
+  @@index([practiceSessionId, orderIndex])
+  @@index([questionId])
+  @@map("practice_session_questions")
+}
+
+model PracticeQuestionEvent {
+  id                        String                    @id @default(cuid())
+  siteId                    String
+  userId                    String
+  practiceSessionId         String
+  practiceSessionQuestionId String
+  questionId                String
+  eventType                 PracticeQuestionEventType
+  answerJson                Json?
+  isCorrect                 Boolean?
+  responseTimeMs            Int?
+  metaJson                  Json?
+  createdAt                 DateTime                  @default(now())
+  site                      Site                      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user                      User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  practiceSession           PracticeSession           @relation(fields: [practiceSessionId], references: [id], onDelete: Cascade)
+  practiceSessionQuestion   PracticeSessionQuestion   @relation(fields: [practiceSessionQuestionId], references: [id], onDelete: Cascade)
+  question                  Question                  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, userId, createdAt])
+  @@index([practiceSessionId, createdAt])
+  @@index([practiceSessionQuestionId, createdAt])
+  @@index([siteId, questionId, createdAt])
+  @@index([siteId, eventType, createdAt])
+  @@map("practice_question_events")
+}
+
+model UserQuestionPracticeState {
+  questionId     String
+  userId         String
+  siteId         String
+  seenCount      Int       @default(0)
+  answerCount    Int       @default(0)
+  correctCount   Int       @default(0)
+  wrongCount     Int       @default(0)
+  revealCount    Int       @default(0)
+  lastIsCorrect  Boolean?
+  lastServedAt   DateTime?
+  lastAnsweredAt DateTime?
+  lastRevealedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  question       Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  site           Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@id([questionId, userId])
+  @@index([siteId, userId, lastAnsweredAt])
+  @@index([siteId, userId, wrongCount])
+  @@index([siteId, userId, revealCount])
+  @@map("user_question_practice_states")
+}
+
+model UserSubjectPracticeProgress {
+  subjectId       String
+  userId          String
+  siteId          String
+  servedCount     Int       @default(0)
+  answeredCount   Int       @default(0)
+  correctCount    Int       @default(0)
+  wrongCount      Int       @default(0)
+  revealCount     Int       @default(0)
+  accuracyPercent Int       @default(0)
+  lastPracticedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  subject         Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  site            Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@id([subjectId, userId])
+  @@index([siteId, userId, lastPracticedAt])
+  @@index([siteId, subjectId, accuracyPercent])
+  @@map("user_subject_practice_progress")
+}
+
+model UserTopicPracticeProgress {
+  topicId         String
+  userId          String
+  siteId          String
+  subjectId       String
+  servedCount     Int       @default(0)
+  answeredCount   Int       @default(0)
+  correctCount    Int       @default(0)
+  wrongCount      Int       @default(0)
+  revealCount     Int       @default(0)
+  accuracyPercent Int       @default(0)
+  lastPracticedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  topic           Topic     @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  subject         Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  site            Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@id([topicId, userId])
+  @@index([siteId, userId, lastPracticedAt])
+  @@index([siteId, subjectId, userId, accuracyPercent])
+  @@map("user_topic_practice_progress")
 }
 
 model Note {

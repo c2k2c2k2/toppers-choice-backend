@@ -67,6 +67,7 @@ Move to database-driven configuration:
 - Notes use dedicated preview PDF assets, short-lived note view sessions, and signed watermark payloads so premium preview rules stay explicit in data and raw source PDFs never become publicly addressable.
 - Structured non-note learning content uses one reusable `ContentEntry` foundation with family, format, schedule-aware publishing, featured ordering, exam-track/medium classification, and file attachments so guidance, English speaking, and current-affairs content do not fork into ad hoc tables.
 - The question bank keeps prompts, options, explanations, and import-friendly metadata reusable in one authoring model, with explicit media-reference rows and student-safe response shaping so future practice and test engines can share content without exposing answer keys.
+- Practice uses explicit student-owned sessions, per-session served-question state, append-only interaction events, and per-question/per-subject/per-topic aggregates so dashboards and future analytics can reuse progress data without mixing practice flow into the test engine.
 
 ## Backend Development Order
 1. Foundation, Prisma, site config, health, request context, Swagger
