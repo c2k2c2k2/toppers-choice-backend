@@ -11,6 +11,7 @@ import { AuthorizationModule } from './modules/authorization/authorization.modul
 import { PolicyGuard } from './modules/authorization/policy.guard';
 import { AuthModule } from './modules/auth/auth.module';
 import { AccessTokenGuard } from './modules/auth/guards/access-token.guard';
+import { ContentModule } from './modules/content/content.module';
 import { FilesModule } from './modules/files/files.module';
 import { HealthModule } from './modules/health/health.module';
 import { NotesModule } from './modules/notes/notes.module';
@@ -38,6 +39,7 @@ import { UsersModule } from './modules/users/users.module';
     AuthorizationModule,
     TaxonomyModule,
     FilesModule,
+    ContentModule,
     NotesModule,
   ],
   providers: [

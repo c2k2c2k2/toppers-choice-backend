@@ -72,6 +72,21 @@ export const AUTHORIZATION_PERMISSION_DEFINITIONS = [
     description: 'Publish notes.',
   },
   {
+    key: 'content.structured.read',
+    category: 'content.structured',
+    description: 'View structured content management records.',
+  },
+  {
+    key: 'content.structured.manage',
+    category: 'content.structured',
+    description: 'Create and edit structured content entries.',
+  },
+  {
+    key: 'content.structured.publish',
+    category: 'content.structured',
+    description: 'Publish structured content entries.',
+  },
+  {
     key: 'content.cms.read',
     category: 'content.cms',
     description: 'View CMS records.',
@@ -169,7 +184,8 @@ export const SYSTEM_ROLE_DEFINITIONS = [
   {
     code: 'admin.site_admin',
     name: 'Site Admin',
-    description: 'Broad site administration access excluding only future security super-controls.',
+    description:
+      'Broad site administration access excluding only future security super-controls.',
     userType: UserType.ADMIN,
     isSystem: true,
     permissionKeys: [
@@ -184,6 +200,9 @@ export const SYSTEM_ROLE_DEFINITIONS = [
       'content.notes.read',
       'content.notes.manage',
       'content.notes.publish',
+      'content.structured.read',
+      'content.structured.manage',
+      'content.structured.publish',
       'content.cms.read',
       'content.cms.manage',
       'content.cms.publish',
@@ -213,6 +232,9 @@ export const SYSTEM_ROLE_DEFINITIONS = [
       'content.notes.read',
       'content.notes.manage',
       'content.notes.publish',
+      'content.structured.read',
+      'content.structured.manage',
+      'content.structured.publish',
       'content.cms.read',
       'content.cms.manage',
       'content.cms.publish',
@@ -233,6 +255,9 @@ export const SYSTEM_ROLE_DEFINITIONS = [
       'content.notes.read',
       'content.notes.manage',
       'content.notes.publish',
+      'content.structured.read',
+      'content.structured.manage',
+      'content.structured.publish',
       'content.files.read',
       'content.files.manage',
       'academics.taxonomy.read',
@@ -277,6 +302,8 @@ export const SYSTEM_ROLE_DEFINITIONS = [
     permissionKeys: [
       'content.notes.read',
       'content.notes.manage',
+      'content.structured.read',
+      'content.structured.manage',
       'content.cms.read',
       'content.cms.manage',
       'content.files.read',

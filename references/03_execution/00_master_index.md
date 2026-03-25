@@ -42,7 +42,7 @@
 - [x] `references/03_execution/04_backend_authorization_roles_permissions_and_audit.md`
 - [x] `references/03_execution/05_backend_taxonomy_catalog_files_and_asset_delivery.md`
 - [x] `references/03_execution/06_backend_notes_preview_and_secure_streaming.md`
-- [ ] `references/03_execution/07_backend_structured_content_modules.md`
+- [x] `references/03_execution/07_backend_structured_content_modules.md`
 - [ ] `references/03_execution/08_backend_question_bank_and_media.md`
 - [ ] `references/03_execution/09_backend_practice_engine_and_progress.md`
 - [ ] `references/03_execution/10_backend_test_engine_and_attempts.md`

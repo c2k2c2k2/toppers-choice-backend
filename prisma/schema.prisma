@@ -110,6 +110,31 @@ enum SecuritySignalSeverity {
   HIGH
 }
 
+enum ContentFamily {
+  CAREER_GUIDANCE
+  INTERVIEW_GUIDANCE
+  ENGLISH_SPEAKING
+  CURRENT_AFFAIRS
+  MONTHLY_UPDATE
+}
+
+enum ContentFormat {
+  ARTICLE
+  LESSON
+  FEED_ITEM
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ContentAccessType {
+  FREE
+  PREMIUM
+}
+
 model Site {
   id                  String               @id @default(cuid())
   code                String               @unique
@@ -133,6 +158,7 @@ model Site {
   tags                Tag[]
   fileAssets          FileAsset[]
   fileAssetReferences FileAssetReference[]
+  contentEntries      ContentEntry[]
   notes               Note[]
   noteViewSessions    NoteViewSession[]
   noteProgressRecords NoteProgress[]
@@ -188,6 +214,9 @@ model User {
   auditLogsAuthored       AuditLog[]               @relation("AuditLogsActor")
   createdFileAssets       FileAsset[]              @relation("FileAssetCreator")
   confirmedFileAssets     FileAsset[]              @relation("FileAssetConfirmer")
+  createdContentEntries   ContentEntry[]           @relation("ContentCreator")
+  updatedContentEntries   ContentEntry[]           @relation("ContentUpdater")
+  publishedContentEntries ContentEntry[]           @relation("ContentPublisher")
   createdNotes            Note[]                   @relation("NoteCreator")
   updatedNotes            Note[]                   @relation("NoteUpdater")
   publishedNotes          Note[]                   @relation("NotePublisher")
@@ -354,20 +383,21 @@ model AuditLog {
 }
 
 model ExamTrack {
-  id          String            @id @default(cuid())
-  siteId      String
-  code        String
-  slug        String
-  name        String
-  shortName   String?
-  description String?
-  orderIndex  Int               @default(0)
-  visibility  CatalogVisibility @default(PUBLIC)
-  isActive    Boolean           @default(true)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  site        Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  subjects    Subject[]
+  id             String                  @id @default(cuid())
+  siteId         String
+  code           String
+  slug           String
+  name           String
+  shortName      String?
+  description    String?
+  orderIndex     Int                     @default(0)
+  visibility     CatalogVisibility       @default(PUBLIC)
+  isActive       Boolean                 @default(true)
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+  site           Site                    @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  contentEntries ContentEntryExamTrack[]
+  subjects       Subject[]
 
   @@unique([siteId, code])
   @@unique([siteId, slug])
@@ -377,19 +407,20 @@ model ExamTrack {
 }
 
 model Medium {
-  id          String            @id @default(cuid())
-  siteId      String
-  code        String
-  slug        String
-  name        String
-  description String?
-  orderIndex  Int               @default(0)
-  visibility  CatalogVisibility @default(PUBLIC)
-  isActive    Boolean           @default(true)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  site        Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  notes       Note[]
+  id             String               @id @default(cuid())
+  siteId         String
+  code           String
+  slug           String
+  name           String
+  description    String?
+  orderIndex     Int                  @default(0)
+  visibility     CatalogVisibility    @default(PUBLIC)
+  isActive       Boolean              @default(true)
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  site           Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  contentEntries ContentEntryMedium[]
+  notes          Note[]
 
   @@unique([siteId, code])
   @@unique([siteId, slug])
@@ -472,34 +503,36 @@ model Tag {
 }
 
 model FileAsset {
-  id                String               @id @default(cuid())
-  siteId            String
-  createdByUserId   String
-  confirmedByUserId String?
-  purpose           FileAssetPurpose
-  accessLevel       FileAssetAccess      @default(PROTECTED)
-  status            FileAssetStatus      @default(PENDING_UPLOAD)
-  objectKey         String               @unique
-  originalFileName  String
-  extension         String?
-  contentType       String
-  declaredSizeBytes Int?
-  sizeBytes         Int?
-  checksumSha256    String?
-  etag              String?
-  imageWidth        Int?
-  imageHeight       Int?
-  uploadExpiresAt   DateTime?
-  confirmedAt       DateTime?
-  createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @updatedAt
-  site              Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  createdByUser     User                 @relation("FileAssetCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
-  confirmedByUser   User?                @relation("FileAssetConfirmer", fields: [confirmedByUserId], references: [id], onDelete: SetNull)
-  references        FileAssetReference[]
-  contentNotes      Note[]               @relation("NoteContentAsset")
-  previewNotes      Note[]               @relation("NotePreviewAsset")
-  coverNotes        Note[]               @relation("NoteCoverAsset")
+  id                  String               @id @default(cuid())
+  siteId              String
+  createdByUserId     String
+  confirmedByUserId   String?
+  purpose             FileAssetPurpose
+  accessLevel         FileAssetAccess      @default(PROTECTED)
+  status              FileAssetStatus      @default(PENDING_UPLOAD)
+  objectKey           String               @unique
+  originalFileName    String
+  extension           String?
+  contentType         String
+  declaredSizeBytes   Int?
+  sizeBytes           Int?
+  checksumSha256      String?
+  etag                String?
+  imageWidth          Int?
+  imageHeight         Int?
+  uploadExpiresAt     DateTime?
+  confirmedAt         DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  site                Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  createdByUser       User                 @relation("FileAssetCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  confirmedByUser     User?                @relation("FileAssetConfirmer", fields: [confirmedByUserId], references: [id], onDelete: SetNull)
+  references          FileAssetReference[]
+  contentCoverEntries ContentEntry[]       @relation("ContentCoverAsset")
+  contentAttachments  ContentAttachment[]
+  contentNotes        Note[]               @relation("NoteContentAsset")
+  previewNotes        Note[]               @relation("NotePreviewAsset")
+  coverNotes          Note[]               @relation("NoteCoverAsset")
 
   @@index([siteId, purpose, createdAt])
   @@index([siteId, status, createdAt])
@@ -524,6 +557,89 @@ model FileAssetReference {
   @@index([siteId, resourceType, resourceId])
   @@index([fileAssetId, accessLevel])
   @@map("file_asset_references")
+}
+
+model ContentEntry {
+  id                 String                  @id @default(cuid())
+  siteId             String
+  family             ContentFamily
+  format             ContentFormat           @default(ARTICLE)
+  visibility         CatalogVisibility       @default(PUBLIC)
+  accessType         ContentAccessType       @default(FREE)
+  slug               String
+  title              String
+  excerpt            String?
+  bodyJson           Json
+  metaJson           Json?
+  coverImageAssetId  String?
+  orderIndex         Int                     @default(0)
+  isFeatured         Boolean                 @default(false)
+  featuredOrderIndex Int?
+  readingTimeMinutes Int?
+  status             ContentStatus           @default(DRAFT)
+  createdByUserId    String
+  updatedByUserId    String
+  publishedByUserId  String?
+  publishedAt        DateTime?
+  archivedAt         DateTime?
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  site               Site                    @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  coverImageAsset    FileAsset?              @relation("ContentCoverAsset", fields: [coverImageAssetId], references: [id], onDelete: SetNull)
+  createdByUser      User                    @relation("ContentCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser      User                    @relation("ContentUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  publishedByUser    User?                   @relation("ContentPublisher", fields: [publishedByUserId], references: [id], onDelete: SetNull)
+  examTrackLinks     ContentEntryExamTrack[]
+  mediumLinks        ContentEntryMedium[]
+  attachments        ContentAttachment[]
+
+  @@unique([siteId, slug])
+  @@index([siteId, family, status, publishedAt])
+  @@index([siteId, visibility, status, publishedAt])
+  @@index([siteId, accessType, status])
+  @@index([siteId, isFeatured, featuredOrderIndex])
+  @@map("content_entries")
+}
+
+model ContentEntryExamTrack {
+  contentEntryId String
+  examTrackId    String
+  createdAt      DateTime     @default(now())
+  contentEntry   ContentEntry @relation(fields: [contentEntryId], references: [id], onDelete: Cascade)
+  examTrack      ExamTrack    @relation(fields: [examTrackId], references: [id], onDelete: Cascade)
+
+  @@id([contentEntryId, examTrackId])
+  @@index([examTrackId])
+  @@map("content_entry_exam_tracks")
+}
+
+model ContentEntryMedium {
+  contentEntryId String
+  mediumId       String
+  createdAt      DateTime     @default(now())
+  contentEntry   ContentEntry @relation(fields: [contentEntryId], references: [id], onDelete: Cascade)
+  medium         Medium       @relation(fields: [mediumId], references: [id], onDelete: Cascade)
+
+  @@id([contentEntryId, mediumId])
+  @@index([mediumId])
+  @@map("content_entry_mediums")
+}
+
+model ContentAttachment {
+  id             String       @id @default(cuid())
+  contentEntryId String
+  fileAssetId    String
+  label          String?
+  orderIndex     Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  contentEntry   ContentEntry @relation(fields: [contentEntryId], references: [id], onDelete: Cascade)
+  fileAsset      FileAsset    @relation(fields: [fileAssetId], references: [id], onDelete: Restrict)
+
+  @@unique([contentEntryId, fileAssetId])
+  @@index([fileAssetId])
+  @@index([contentEntryId, orderIndex])
+  @@map("content_attachments")
 }
 
 model Note {
