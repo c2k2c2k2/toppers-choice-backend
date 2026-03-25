@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { AuthorizationModule } from '../authorization/authorization.module';
+import { PaymentsModule } from '../payments/payments.module';
 import { SiteSettingsModule } from '../site-settings/site-settings.module';
 import { AdminNotesController } from './admin-notes.controller';
 import { NotesController } from './notes.controller';
@@ -10,7 +11,7 @@ import { NotesService } from './notes.service';
 import { NoteViewSessionsController } from './note-view-sessions.controller';
 
 @Module({
-  imports: [AuthModule, AuthorizationModule, SiteSettingsModule],
+  imports: [AuthModule, AuthorizationModule, PaymentsModule, SiteSettingsModule],
   controllers: [
     AdminNotesController,
     NotesController,

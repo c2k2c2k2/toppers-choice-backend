@@ -17,6 +17,10 @@ export type EnvironmentVariables = {
   OBJECT_STORAGE_ACCESS_KEY_ID?: string;
   OBJECT_STORAGE_SECRET_ACCESS_KEY?: string;
   OBJECT_STORAGE_FORCE_PATH_STYLE: boolean;
+  PHONEPE_API_BASE_URL?: string;
+  PHONEPE_MERCHANT_ID?: string;
+  PHONEPE_SALT_KEY?: string;
+  PHONEPE_SALT_INDEX?: string;
 };
 
 const NODE_ENV_VALUES = ['development', 'test', 'production'] as const;
@@ -96,6 +100,14 @@ export function validateEnvironment(
     true,
     errors,
   );
+  const phonePeApiBaseUrl = parseOptionalUrl(
+    config.PHONEPE_API_BASE_URL,
+    'PHONEPE_API_BASE_URL',
+    errors,
+  );
+  const phonePeMerchantId = parseOptionalString(config.PHONEPE_MERCHANT_ID);
+  const phonePeSaltKey = parseOptionalString(config.PHONEPE_SALT_KEY);
+  const phonePeSaltIndex = parseOptionalString(config.PHONEPE_SALT_INDEX);
 
   if (!databaseUrl && nodeEnv === 'production') {
     errors.push('DATABASE_URL is required when NODE_ENV=production.');
@@ -117,6 +129,25 @@ export function validateEnvironment(
   ) {
     errors.push(
       'OBJECT_STORAGE_BUCKET, OBJECT_STORAGE_ACCESS_KEY_ID, and OBJECT_STORAGE_SECRET_ACCESS_KEY are required when OBJECT_STORAGE_ENDPOINT is set.',
+    );
+  }
+
+  const phonePeConfigValues = [
+    phonePeApiBaseUrl,
+    phonePeMerchantId,
+    phonePeSaltKey,
+    phonePeSaltIndex,
+  ];
+  const hasAnyPhonePeConfig = phonePeConfigValues.some(
+    (value) => typeof value === 'string' && value.length > 0,
+  );
+  const hasAllPhonePeConfig = phonePeConfigValues.every(
+    (value) => typeof value === 'string' && value.length > 0,
+  );
+
+  if (hasAnyPhonePeConfig && !hasAllPhonePeConfig) {
+    errors.push(
+      'PHONEPE_API_BASE_URL, PHONEPE_MERCHANT_ID, PHONEPE_SALT_KEY, and PHONEPE_SALT_INDEX must all be provided together when PhonePe is configured.',
     );
   }
 
@@ -143,6 +174,10 @@ export function validateEnvironment(
     OBJECT_STORAGE_ACCESS_KEY_ID: objectStorageAccessKeyId,
     OBJECT_STORAGE_SECRET_ACCESS_KEY: objectStorageSecretAccessKey,
     OBJECT_STORAGE_FORCE_PATH_STYLE: objectStorageForcePathStyle,
+    PHONEPE_API_BASE_URL: phonePeApiBaseUrl,
+    PHONEPE_MERCHANT_ID: phonePeMerchantId,
+    PHONEPE_SALT_KEY: phonePeSaltKey,
+    PHONEPE_SALT_INDEX: phonePeSaltIndex,
   };
 }
 

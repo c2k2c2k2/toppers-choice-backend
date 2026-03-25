@@ -69,6 +69,7 @@ Move to database-driven configuration:
 - The question bank keeps prompts, options, explanations, and import-friendly metadata reusable in one authoring model, with explicit media-reference rows and student-safe response shaping so future practice and test engines can share content without exposing answer keys.
 - Practice uses explicit student-owned sessions, per-session served-question state, append-only interaction events, and per-question/per-subject/per-topic aggregates so dashboards and future analytics can reuse progress data without mixing practice flow into the test engine.
 - Tests use authored fixed question sets plus immutable per-attempt question snapshots, so timed submissions, score breakdowns, and later analytics stay stable even if the source question bank is edited after an attempt begins.
+- Plans and premium access use site-scoped `Plan` plus `PlanEntitlement` templates, explicit `Subscription` and `Entitlement` grant rows, and normalized `PaymentOrder`/`PaymentTransaction`/`PaymentEvent` records behind a provider adapter so notes, structured content, practice, and tests all resolve access through one entitlement service while checkout remains swappable across providers.
 
 ## Backend Development Order
 1. Foundation, Prisma, site config, health, request context, Swagger

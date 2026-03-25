@@ -98,6 +98,7 @@ export class PracticeService {
       ]);
 
     const access = await this.practiceEntitlementService.canUsePractice(
+      user.siteId,
       user.userId,
       resolvedScope,
     );

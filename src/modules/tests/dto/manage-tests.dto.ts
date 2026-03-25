@@ -18,7 +18,12 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { TestAttemptStatus, TestFamily, TestStatus } from '@prisma/client';
+import {
+  TestAccessType,
+  TestAttemptStatus,
+  TestFamily,
+  TestStatus,
+} from '@prisma/client';
 import {
   normalizeOptionalCode,
   normalizeOptionalText,
@@ -156,6 +161,11 @@ class TestMutationBaseDto {
   @IsEnum(TestFamily)
   family!: TestFamily;
 
+  @ApiPropertyOptional({ enum: TestAccessType, default: TestAccessType.FREE })
+  @IsOptional()
+  @IsEnum(TestAccessType)
+  accessType?: TestAccessType;
+
   @ApiPropertyOptional({ example: 'cmag4track001' })
   @IsOptional()
   @IsString()
@@ -254,6 +264,11 @@ export class ListPublishedTestsQueryDto {
   @IsOptional()
   @IsEnum(TestFamily)
   family?: TestFamily;
+
+  @ApiPropertyOptional({ enum: TestAccessType })
+  @IsOptional()
+  @IsEnum(TestAccessType)
+  accessType?: TestAccessType;
 
   @ApiPropertyOptional({ example: 'cmag4track001' })
   @IsOptional()

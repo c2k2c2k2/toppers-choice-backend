@@ -1180,8 +1180,9 @@ export class NotesService {
 
     const hasPremiumAccess =
       await this.notesEntitlementService.canAccessPremiumNote(
+        user.siteId,
         user.userId,
-        note.id,
+        note,
       );
     if (hasPremiumAccess) {
       return {

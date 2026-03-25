@@ -15,6 +15,7 @@ import { ContentModule } from './modules/content/content.module';
 import { FilesModule } from './modules/files/files.module';
 import { HealthModule } from './modules/health/health.module';
 import { NotesModule } from './modules/notes/notes.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 import { PracticeModule } from './modules/practice/practice.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { SiteSettingsModule } from './modules/site-settings/site-settings.module';
@@ -45,6 +46,7 @@ import { UsersModule } from './modules/users/users.module';
     ContentModule,
     NotesModule,
     QuestionsModule,
+    PaymentsModule,
     PracticeModule,
     TestsModule,
   ],

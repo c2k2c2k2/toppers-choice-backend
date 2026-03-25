@@ -1,5 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { TestAttemptStatus, TestFamily, TestStatus } from '@prisma/client';
+import {
+  TestAccessType,
+  TestAttemptStatus,
+  TestFamily,
+  TestStatus,
+} from '@prisma/client';
 import {
   QuestionExamTrackSummaryDto,
   QuestionMediumSummaryDto,
@@ -55,6 +60,20 @@ export class TestQuestionDefinitionResponseDto {
   question!: TestQuestionSourceSummaryDto;
 }
 
+export class TestAccessSummaryResponseDto {
+  @ApiProperty({ enum: ['FULL', 'LOCKED'] })
+  mode!: 'FULL' | 'LOCKED';
+
+  @ApiProperty()
+  canAttempt!: boolean;
+
+  @ApiProperty()
+  requiresEntitlement!: boolean;
+
+  @ApiPropertyOptional({ nullable: true })
+  reason!: string | null;
+}
+
 export class TestSummaryResponseDto {
   @ApiProperty()
   id!: string;
@@ -73,6 +92,9 @@ export class TestSummaryResponseDto {
 
   @ApiProperty({ enum: TestFamily })
   family!: TestFamily;
+
+  @ApiProperty({ enum: TestAccessType })
+  accessType!: TestAccessType;
 
   @ApiPropertyOptional({ nullable: true })
   examTrackId!: string | null;
@@ -130,6 +152,9 @@ export class TestSummaryResponseDto {
 
   @ApiPropertyOptional({ type: QuestionTaxonomySummaryDto, nullable: true })
   subject!: QuestionTaxonomySummaryDto | null;
+
+  @ApiProperty({ type: TestAccessSummaryResponseDto })
+  access!: TestAccessSummaryResponseDto;
 }
 
 export class AdminTestDetailResponseDto extends TestSummaryResponseDto {

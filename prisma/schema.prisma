@@ -189,10 +189,78 @@ enum TestStatus {
   ARCHIVED
 }
 
+enum TestAccessType {
+  FREE
+  PREMIUM
+}
+
 enum TestAttemptStatus {
   ACTIVE
   SUBMITTED
   AUTO_SUBMITTED
+}
+
+enum PlanStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum EntitlementKind {
+  NOTES_PREMIUM
+  CONTENT_PREMIUM
+  PRACTICE_PREMIUM
+  TESTS_PREMIUM
+  ALL_PREMIUM
+}
+
+enum EntitlementSourceType {
+  PLAN_PURCHASE
+  ADMIN_GRANT
+  SYSTEM_ADJUSTMENT
+}
+
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  REVOKED
+}
+
+enum PaymentProvider {
+  PHONEPE_STANDARD
+}
+
+enum PaymentOrderStatus {
+  CREATED
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+  EXPIRED
+}
+
+enum PaymentTransactionStatus {
+  INITIATED
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum PaymentEventStatus {
+  RECEIVED
+  PROCESSED
+  IGNORED
+  FAILED
+}
+
+enum PaymentEventSource {
+  CHECKOUT_RESPONSE
+  CALLBACK
+  STATUS_POLL
+  RECONCILIATION
 }
 
 model Site {
@@ -211,6 +279,13 @@ model Site {
   passwordResetTokens      PasswordResetToken[]
   roles                    Role[]
   auditLogs                AuditLog[]
+  plans                    Plan[]
+  planEntitlements         PlanEntitlement[]
+  subscriptions            Subscription[]
+  entitlements             Entitlement[]
+  paymentOrders            PaymentOrder[]
+  paymentTransactions      PaymentTransaction[]
+  paymentEvents            PaymentEvent[]
   examTracks               ExamTrack[]
   mediums                  Medium[]
   subjects                 Subject[]
@@ -291,6 +366,12 @@ model User {
   createdQuestions         Question[]                    @relation("QuestionCreator")
   updatedQuestions         Question[]                    @relation("QuestionUpdater")
   publishedQuestions       Question[]                    @relation("QuestionPublisher")
+  createdPlans             Plan[]                        @relation("PlanCreator")
+  updatedPlans             Plan[]                        @relation("PlanUpdater")
+  subscriptions            Subscription[]
+  entitlements             Entitlement[]                 @relation("EntitlementSubject")
+  grantedEntitlements      Entitlement[]                 @relation("EntitlementGrantActor")
+  paymentOrders            PaymentOrder[]
   createdNotes             Note[]                        @relation("NoteCreator")
   updatedNotes             Note[]                        @relation("NoteUpdater")
   publishedNotes           Note[]                        @relation("NotePublisher")
@@ -464,6 +545,195 @@ model AuditLog {
   @@index([siteId, resourceType, resourceId, createdAt])
   @@index([actorUserId, createdAt])
   @@map("audit_logs")
+}
+
+model Plan {
+  id               String            @id @default(cuid())
+  siteId           String
+  code             String
+  slug             String
+  name             String
+  shortDescription String?
+  description      String?
+  pricePaise       Int
+  currencyCode     String            @default("INR")
+  durationDays     Int
+  sortOrder        Int               @default(0)
+  status           PlanStatus        @default(INACTIVE)
+  metadataJson     Json?
+  createdByUserId  String
+  updatedByUserId  String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  site             Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  createdByUser    User              @relation("PlanCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser    User              @relation("PlanUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  planEntitlements PlanEntitlement[]
+  subscriptions    Subscription[]
+  paymentOrders    PaymentOrder[]
+  grantedByPlan    Entitlement[]
+
+  @@unique([siteId, code])
+  @@unique([siteId, slug])
+  @@index([siteId, status, sortOrder])
+  @@map("plans")
+}
+
+model PlanEntitlement {
+  id              String          @id @default(cuid())
+  siteId          String
+  planId          String
+  entitlementKind EntitlementKind
+  scopeJson       Json?
+  orderIndex      Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  site            Site            @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  plan            Plan            @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, entitlementKind])
+  @@index([planId, orderIndex])
+  @@map("plan_entitlements")
+}
+
+model Subscription {
+  id             String             @id @default(cuid())
+  siteId         String
+  userId         String
+  planId         String
+  paymentOrderId String?            @unique
+  status         SubscriptionStatus @default(PENDING)
+  startsAt       DateTime
+  endsAt         DateTime
+  cancelledAt    DateTime?
+  revokedAt      DateTime?
+  revokedReason  String?
+  metadataJson   Json?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  site           Site               @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan           Plan               @relation(fields: [planId], references: [id], onDelete: Restrict)
+  paymentOrder   PaymentOrder?      @relation(fields: [paymentOrderId], references: [id], onDelete: SetNull)
+  entitlements   Entitlement[]
+
+  @@index([siteId, userId, status, endsAt])
+  @@index([siteId, planId, status, startsAt])
+  @@map("subscriptions")
+}
+
+model Entitlement {
+  id              String                @id @default(cuid())
+  siteId          String
+  userId          String
+  planId          String?
+  subscriptionId  String?
+  paymentOrderId  String?
+  grantedByUserId String?
+  sourceType      EntitlementSourceType
+  kind            EntitlementKind
+  scopeJson       Json?
+  startsAt        DateTime
+  endsAt          DateTime?
+  revokedAt       DateTime?
+  revokedReason   String?
+  metadataJson    Json?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  site            Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user            User                  @relation("EntitlementSubject", fields: [userId], references: [id], onDelete: Cascade)
+  plan            Plan?                 @relation(fields: [planId], references: [id], onDelete: SetNull)
+  subscription    Subscription?         @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  paymentOrder    PaymentOrder?         @relation(fields: [paymentOrderId], references: [id], onDelete: SetNull)
+  grantedByUser   User?                 @relation("EntitlementGrantActor", fields: [grantedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([siteId, userId, kind, startsAt, endsAt])
+  @@index([siteId, userId, revokedAt, endsAt])
+  @@index([subscriptionId])
+  @@index([paymentOrderId])
+  @@map("entitlements")
+}
+
+model PaymentOrder {
+  id                  String               @id @default(cuid())
+  siteId              String
+  userId              String
+  planId              String
+  provider            PaymentProvider
+  merchantOrderCode   String               @unique
+  amountPaise         Int
+  currencyCode        String               @default("INR")
+  status              PaymentOrderStatus   @default(CREATED)
+  redirectUrl         String?
+  providerOrderId     String?
+  providerReferenceId String?
+  providerStatus      String?
+  callbackConfirmedAt DateTime?
+  confirmedAt         DateTime?
+  failedAt            DateTime?
+  expiresAt           DateTime?
+  lastCheckedAt       DateTime?
+  metadataJson        Json?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  site                Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                Plan                 @relation(fields: [planId], references: [id], onDelete: Restrict)
+  subscription        Subscription?
+  entitlements        Entitlement[]
+  transactions        PaymentTransaction[]
+  events              PaymentEvent[]
+
+  @@index([siteId, userId, status, createdAt])
+  @@index([siteId, planId, status, createdAt])
+  @@index([siteId, provider, status, createdAt])
+  @@map("payment_orders")
+}
+
+model PaymentTransaction {
+  id                    String                   @id @default(cuid())
+  siteId                String
+  paymentOrderId        String                   @unique
+  provider              PaymentProvider
+  providerTransactionId String?                  @unique
+  providerReferenceId   String?
+  status                PaymentTransactionStatus
+  amountPaise           Int
+  currencyCode          String                   @default("INR")
+  occurredAt            DateTime?
+  responseJson          Json?
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  site                  Site                     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  paymentOrder          PaymentOrder             @relation(fields: [paymentOrderId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, provider, status, createdAt])
+  @@map("payment_transactions")
+}
+
+model PaymentEvent {
+  id              String             @id @default(cuid())
+  siteId          String
+  paymentOrderId  String?
+  provider        PaymentProvider
+  source          PaymentEventSource
+  eventType       String
+  dedupeKey       String             @unique
+  providerEventId String?
+  status          PaymentEventStatus @default(RECEIVED)
+  payloadJson     Json
+  headersJson     Json?
+  errorMessage    String?
+  receivedAt      DateTime           @default(now())
+  processedAt     DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  site            Site               @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  paymentOrder    PaymentOrder?      @relation(fields: [paymentOrderId], references: [id], onDelete: SetNull)
+
+  @@index([siteId, provider, source, receivedAt])
+  @@index([paymentOrderId, receivedAt])
+  @@map("payment_events")
 }
 
 model ExamTrack {
@@ -1002,6 +1272,7 @@ model Test {
   instructionsJson       Json?
   configJson             Json?
   family                 TestFamily
+  accessType             TestAccessType        @default(FREE)
   examTrackId            String?
   mediumId               String?
   subjectId              String?
@@ -1034,6 +1305,7 @@ model Test {
   @@unique([siteId, code])
   @@unique([siteId, slug])
   @@index([siteId, family, status, publishedAt])
+  @@index([siteId, accessType, status, publishedAt])
   @@index([siteId, subjectId, status, publishedAt])
   @@index([siteId, examTrackId, status, publishedAt])
   @@index([siteId, availableFrom, availableUntil, status])

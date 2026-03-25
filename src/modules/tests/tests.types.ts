@@ -1,4 +1,9 @@
-import { Prisma, QuestionDifficulty, QuestionType } from '@prisma/client';
+import {
+  Prisma,
+  QuestionDifficulty,
+  QuestionType,
+  TestAccessType,
+} from '@prisma/client';
 import { isTestLive } from './tests.utils';
 
 const taxonomySummarySelect = {
@@ -56,6 +61,7 @@ export const testSummarySelect = Prisma.validator<Prisma.TestSelect>()({
   instructionsJson: true,
   configJson: true,
   family: true,
+  accessType: true,
   examTrackId: true,
   mediumId: true,
   subjectId: true,
@@ -165,6 +171,13 @@ export type TestAttemptDetailRecord = Prisma.TestAttemptGetPayload<{
   select: typeof testAttemptDetailSelect;
 }>;
 
+export type TestAccessSummary = {
+  mode: 'FULL' | 'LOCKED';
+  canAttempt: boolean;
+  requiresEntitlement: boolean;
+  reason: string | null;
+};
+
 function asRecord(value: Prisma.JsonValue | null) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return null;
@@ -190,7 +203,10 @@ function parseAttemptSnapshot(value: Prisma.JsonValue) {
   };
 }
 
-export function mapTestSummary(record: TestSummaryRecord) {
+export function mapTestSummary(
+  record: TestSummaryRecord,
+  access: TestAccessSummary = getAdminTestAccessSummary(),
+) {
   return {
     id: record.id,
     code: record.code,
@@ -198,6 +214,7 @@ export function mapTestSummary(record: TestSummaryRecord) {
     title: record.title,
     shortDescription: record.shortDescription,
     family: record.family,
+    accessType: record.accessType,
     examTrackId: record.examTrackId,
     mediumId: record.mediumId,
     subjectId: record.subjectId,
@@ -222,12 +239,13 @@ export function mapTestSummary(record: TestSummaryRecord) {
     examTrack: record.examTrack,
     medium: record.medium,
     subject: record.subject,
+    access,
   };
 }
 
 export function mapAdminTestDetail(record: TestDetailRecord) {
   return {
-    ...mapTestSummary(record),
+    ...mapTestSummary(record, getAdminTestAccessSummary()),
     instructionsJson: asRecord(record.instructionsJson),
     configJson: asRecord(record.configJson),
     questions: record.questions.map((item) => ({
@@ -256,10 +274,43 @@ export function mapAdminTestDetail(record: TestDetailRecord) {
   };
 }
 
-export function mapStudentTestDetail(record: TestSummaryRecord) {
+export function mapStudentTestDetail(
+  record: TestSummaryRecord,
+  access: TestAccessSummary,
+) {
   return {
-    ...mapTestSummary(record),
+    ...mapTestSummary(record, access),
     instructionsJson: asRecord(record.instructionsJson),
+  };
+}
+
+export function getAdminTestAccessSummary(): TestAccessSummary {
+  return {
+    mode: 'FULL',
+    canAttempt: true,
+    requiresEntitlement: false,
+    reason: null,
+  };
+}
+
+export function getFreeTestAccessSummary(): TestAccessSummary {
+  return {
+    mode: 'FULL',
+    canAttempt: true,
+    requiresEntitlement: false,
+    reason: null,
+  };
+}
+
+export function getPremiumTestAccessSummary(
+  allowed: boolean,
+  reason: string | null,
+): TestAccessSummary {
+  return {
+    mode: allowed ? 'FULL' : 'LOCKED',
+    canAttempt: allowed,
+    requiresEntitlement: true,
+    reason: allowed ? null : reason,
   };
 }
 

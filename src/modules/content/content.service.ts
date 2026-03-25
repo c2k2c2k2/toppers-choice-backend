@@ -715,8 +715,9 @@ export class ContentService {
     if (entry.accessType === ContentAccessType.PREMIUM) {
       const hasPremiumAccess =
         await this.contentEntitlementService.canAccessPremiumContent(
+          user.siteId,
           user.userId,
-          entry.id,
+          entry,
         );
 
       if (hasPremiumAccess) {

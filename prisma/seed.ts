@@ -23,6 +23,7 @@ import {
   AUTHORIZATION_PERMISSION_DEFINITIONS,
   SYSTEM_ROLE_DEFINITIONS,
 } from '../src/modules/authorization/authorization.constants';
+import { PAYMENTS_RUNTIME_CONFIG_KEY } from '../src/modules/payments/payments.constants';
 
 const prisma = new PrismaClient();
 const scrypt = promisify(scryptCallback);
@@ -184,6 +185,37 @@ async function main() {
       },
       analytics: {
         trendWindowDays: 7,
+      },
+    },
+  );
+
+  await upsertPublishedConfig(
+    site.id,
+    PAYMENTS_RUNTIME_CONFIG_KEY,
+    1,
+    ConfigVisibility.INTERNAL,
+    {
+      providerSelection: {
+        activeProvider: 'PHONEPE_STANDARD',
+      },
+      currency: {
+        defaultCurrencyCode: 'INR',
+      },
+      checkout: {
+        orderExpiryMinutes: 30,
+        subscriptionMode: 'EXTEND_ACTIVE',
+      },
+      practice: {
+        premiumRequired: false,
+      },
+      providers: {
+        phonepe: {
+          payPath: '/pg/v1/pay',
+          statusPathTemplate: '/pg/v1/status/{merchantId}/{merchantOrderCode}',
+          callbackPath: '/api/v1/payments/providers/phonepe/callback',
+          returnPath: '/payments/result',
+          redirectMode: 'REDIRECT',
+        },
       },
     },
   );

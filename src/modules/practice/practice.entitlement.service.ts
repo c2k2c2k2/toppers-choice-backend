@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PracticeMode, QuestionDifficulty } from '@prisma/client';
+import { EntitlementsService } from '../payments/entitlements.service';
 
 type PracticeAccessScope = {
   mode: PracticeMode;
@@ -12,12 +13,22 @@ type PracticeAccessScope = {
 
 @Injectable()
 export class PracticeEntitlementService {
-  async canUsePractice(_userId: string, _scope: PracticeAccessScope) {
-    // B11 introduces plan-backed entitlements. Until then, practice remains
-    // available to authenticated students through this explicit seam.
-    return {
-      allowed: true,
-      reason: null as string | null,
-    };
+  constructor(
+    private readonly entitlementsService: EntitlementsService,
+  ) {}
+
+  async canUsePractice(
+    siteId: string,
+    userId: string,
+    scope: PracticeAccessScope,
+  ) {
+    return this.entitlementsService.canUsePractice(siteId, userId, {
+      mode: scope.mode,
+      examTrackId: scope.examTrackId,
+      mediumId: scope.mediumId,
+      subjectId: scope.subjectId,
+      topicId: scope.topicId,
+      difficulty: scope.difficulty,
+    });
   }
 }

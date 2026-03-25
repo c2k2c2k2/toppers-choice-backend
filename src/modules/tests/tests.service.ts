@@ -10,6 +10,7 @@ import {
   Prisma,
   QuestionStatus,
   QuestionType,
+  TestAccessType,
   TestAttemptStatus,
   TestFamily,
   TestStatus,
@@ -32,6 +33,9 @@ import type {
   UpdateTestDto,
 } from './dto/manage-tests.dto';
 import {
+  getAdminTestAccessSummary,
+  getFreeTestAccessSummary,
+  getPremiumTestAccessSummary,
   mapAdminTestDetail,
   mapStudentTestDetail,
   mapTestAttemptDetail,
@@ -105,7 +109,9 @@ export class TestsService {
     ]);
 
     return {
-      items: items.map((item) => mapTestSummary(item)),
+      items: items.map((item) =>
+        mapTestSummary(item, getAdminTestAccessSummary()),
+      ),
       total,
     };
   }
@@ -157,6 +163,7 @@ export class TestsService {
               ? Prisma.DbNull
               : (input.configJson as Prisma.InputJsonValue),
           family: scope.family,
+          accessType: input.accessType ?? TestAccessType.FREE,
           examTrackId: scope.examTrackId,
           mediumId: scope.mediumId,
           subjectId: scope.subjectId,
@@ -279,6 +286,7 @@ export class TestsService {
                 ? Prisma.DbNull
                 : (input.configJson as Prisma.InputJsonValue),
           family: nextScope.family,
+          accessType: input.accessType,
           examTrackId:
             input.examTrackId === undefined ? undefined : nextScope.examTrackId,
           mediumId:
@@ -402,7 +410,11 @@ export class TestsService {
     ]);
 
     return {
-      items: items.map((item) => mapTestSummary(item)),
+      items: await Promise.all(
+        items.map(async (item) =>
+          mapTestSummary(item, await this.resolveTestAccessSummary(user, item)),
+        ),
+      ),
       total,
     };
   }
@@ -423,7 +435,10 @@ export class TestsService {
       });
     }
 
-    return mapStudentTestDetail(test);
+    return mapStudentTestDetail(
+      test,
+      await this.resolveTestAccessSummary(user, test),
+    );
   }
 
   async startAttempt(user: AuthenticatedUser, testId: string) {
@@ -461,8 +476,16 @@ export class TestsService {
     }
 
     const access = await this.testsEntitlementService.canAccessTest(
+      user.siteId,
       user.userId,
-      test.id,
+      {
+        id: test.id,
+        accessType: test.accessType,
+        family: test.family,
+        examTrackId: test.examTrackId,
+        mediumId: test.mediumId,
+        subjectId: test.subjectId,
+      },
     );
     if (!access.allowed) {
       throw new ForbiddenException({
@@ -746,6 +769,7 @@ export class TestsService {
     return {
       siteId,
       family: query.family,
+      accessType: query.accessType,
       examTrackId: query.examTrackId,
       mediumId: query.mediumId,
       subjectId: query.subjectId,
@@ -867,6 +891,37 @@ export class TestsService {
       mediumId: input.mediumId ?? null,
       subjectId: resolvedSubjectId,
     };
+  }
+
+  private async resolveTestAccessSummary(
+    user: AuthenticatedUser,
+    test: Pick<
+      TestSummaryRecord,
+      'id' | 'accessType' | 'family' | 'examTrackId' | 'mediumId' | 'subjectId'
+    >,
+  ) {
+    if (user.userType === UserType.ADMIN) {
+      return getAdminTestAccessSummary();
+    }
+
+    if (test.accessType === TestAccessType.FREE) {
+      return getFreeTestAccessSummary();
+    }
+
+    const access = await this.testsEntitlementService.canAccessTest(
+      user.siteId,
+      user.userId,
+      {
+        id: test.id,
+        accessType: test.accessType,
+        family: test.family,
+        examTrackId: test.examTrackId,
+        mediumId: test.mediumId,
+        subjectId: test.subjectId,
+      },
+    );
+
+    return getPremiumTestAccessSummary(access.allowed, access.reason);
   }
 
   private normalizeTestQuestionInputs(inputs: TestQuestionInputDto[]) {
