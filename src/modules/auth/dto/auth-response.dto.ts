@@ -2,6 +2,7 @@ import {
   RefreshSessionStatus,
 } from '@prisma/client';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { UserAccessResponseDto } from '../../authorization/dto/user-access-response.dto';
 import { UserIdentityResponseDto } from '../../users/dto/user-identity-response.dto';
 
 export class AuthTokenBundleResponseDto {
@@ -28,6 +29,9 @@ export class AuthResponseDto {
   @ApiProperty({ type: UserIdentityResponseDto })
   user!: UserIdentityResponseDto;
 
+  @ApiProperty({ type: UserAccessResponseDto })
+  access!: UserAccessResponseDto;
+
   @ApiProperty({ type: AuthTokenBundleResponseDto })
   tokens!: AuthTokenBundleResponseDto;
 }
@@ -38,6 +42,9 @@ export class AuthMeResponseDto {
 
   @ApiProperty()
   sessionId!: string;
+
+  @ApiProperty({ type: UserAccessResponseDto })
+  access!: UserAccessResponseDto;
 }
 
 export class RefreshSessionResponseDto {

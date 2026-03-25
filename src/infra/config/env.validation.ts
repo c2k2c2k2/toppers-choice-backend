@@ -11,6 +11,12 @@ export type EnvironmentVariables = {
   APP_BASE_URL?: string;
   CORS_ORIGINS: string[];
   SITE_SETTINGS_CACHE_TTL_MS: number;
+  OBJECT_STORAGE_ENDPOINT?: string;
+  OBJECT_STORAGE_REGION: string;
+  OBJECT_STORAGE_BUCKET?: string;
+  OBJECT_STORAGE_ACCESS_KEY_ID?: string;
+  OBJECT_STORAGE_SECRET_ACCESS_KEY?: string;
+  OBJECT_STORAGE_FORCE_PATH_STYLE: boolean;
 };
 
 const NODE_ENV_VALUES = ['development', 'test', 'production'] as const;
@@ -70,6 +76,26 @@ export function validateEnvironment(
     errors,
     { min: 1_000 },
   );
+  const objectStorageEndpoint = parseOptionalUrl(
+    config.OBJECT_STORAGE_ENDPOINT,
+    'OBJECT_STORAGE_ENDPOINT',
+    errors,
+  );
+  const objectStorageRegion =
+    parseOptionalString(config.OBJECT_STORAGE_REGION) ?? 'us-east-1';
+  const objectStorageBucket = parseOptionalString(config.OBJECT_STORAGE_BUCKET);
+  const objectStorageAccessKeyId = parseOptionalString(
+    config.OBJECT_STORAGE_ACCESS_KEY_ID,
+  );
+  const objectStorageSecretAccessKey = parseOptionalString(
+    config.OBJECT_STORAGE_SECRET_ACCESS_KEY,
+  );
+  const objectStorageForcePathStyle = parseBoolean(
+    config.OBJECT_STORAGE_FORCE_PATH_STYLE,
+    'OBJECT_STORAGE_FORCE_PATH_STYLE',
+    true,
+    errors,
+  );
 
   if (!databaseUrl && nodeEnv === 'production') {
     errors.push('DATABASE_URL is required when NODE_ENV=production.');
@@ -81,6 +107,17 @@ export function validateEnvironment(
     !databaseUrl.startsWith('postgresql://')
   ) {
     errors.push('DATABASE_URL must be a PostgreSQL connection string.');
+  }
+
+  if (
+    objectStorageEndpoint &&
+    (!objectStorageBucket ||
+      !objectStorageAccessKeyId ||
+      !objectStorageSecretAccessKey)
+  ) {
+    errors.push(
+      'OBJECT_STORAGE_BUCKET, OBJECT_STORAGE_ACCESS_KEY_ID, and OBJECT_STORAGE_SECRET_ACCESS_KEY are required when OBJECT_STORAGE_ENDPOINT is set.',
+    );
   }
 
   if (errors.length > 0) {
@@ -100,6 +137,12 @@ export function validateEnvironment(
     APP_BASE_URL: appBaseUrl,
     CORS_ORIGINS: corsOrigins,
     SITE_SETTINGS_CACHE_TTL_MS: cacheTtl,
+    OBJECT_STORAGE_ENDPOINT: objectStorageEndpoint,
+    OBJECT_STORAGE_REGION: objectStorageRegion,
+    OBJECT_STORAGE_BUCKET: objectStorageBucket,
+    OBJECT_STORAGE_ACCESS_KEY_ID: objectStorageAccessKeyId,
+    OBJECT_STORAGE_SECRET_ACCESS_KEY: objectStorageSecretAccessKey,
+    OBJECT_STORAGE_FORCE_PATH_STYLE: objectStorageForcePathStyle,
   };
 }
 

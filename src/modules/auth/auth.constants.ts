@@ -6,3 +6,4 @@ export const PASSWORD_RESET_CODE_TTL_MINUTES_PATH =
   'passwordReset.codeTtlMinutes';
 export const PASSWORD_RESET_MAX_ATTEMPTS_PATH = 'passwordReset.maxAttempts';
 export const PASSWORD_RESET_CODE_LENGTH = 6;
+export const NOTE_VIEW_TOKEN_TTL_MINUTES_FALLBACK = 20;

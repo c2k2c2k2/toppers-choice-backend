@@ -39,9 +39,9 @@
 - [x] `references/03_execution/01_backend_platform_foundation_and_conventions.md`
 - [x] `references/03_execution/02_backend_site_settings_and_seed_baseline.md`
 - [x] `references/03_execution/03_backend_auth_students_admins_and_sessions.md`
-- [ ] `references/03_execution/04_backend_authorization_roles_permissions_and_audit.md`
-- [ ] `references/03_execution/05_backend_taxonomy_catalog_files_and_asset_delivery.md`
-- [ ] `references/03_execution/06_backend_notes_preview_and_secure_streaming.md`
+- [x] `references/03_execution/04_backend_authorization_roles_permissions_and_audit.md`
+- [x] `references/03_execution/05_backend_taxonomy_catalog_files_and_asset_delivery.md`
+- [x] `references/03_execution/06_backend_notes_preview_and_secure_streaming.md`
 - [ ] `references/03_execution/07_backend_structured_content_modules.md`
 - [ ] `references/03_execution/08_backend_question_bank_and_media.md`
 - [ ] `references/03_execution/09_backend_practice_engine_and_progress.md`

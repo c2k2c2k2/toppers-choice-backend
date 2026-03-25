@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -14,16 +13,16 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiErrorResponseDto } from '../../common/dto/api-error-response.dto';
+import { Audit } from '../authorization/decorators/audit.decorator';
+import { Policy } from '../authorization/decorators/policy.decorator';
 import { PasswordHasherService } from '../auth/password-hasher.service';
 import { CreateStudentUserDto } from './dto/create-student-user.dto';
 import { UserIdentityResponseDto } from './dto/user-identity-response.dto';
-import { AdminUserTypeGuard } from './admin-user-type.guard';
 import { mapUserIdentity } from './users.types';
 import { UsersService } from './users.service';
 
 @ApiTags('admin-users')
 @ApiBearerAuth('access-token')
-@UseGuards(AdminUserTypeGuard)
 @Controller('admin/users/students')
 export class AdminStudentsController {
   constructor(
@@ -32,6 +31,13 @@ export class AdminStudentsController {
   ) {}
 
   @Post()
+  @Policy('admin.users.students.create')
+  @Audit({
+    action: 'admin.users.students.create',
+    resourceType: 'user',
+    resourceIdResponseField: 'id',
+    includeBodyKeys: ['fullName', 'email'],
+  })
   @ApiCreatedResponse({ type: UserIdentityResponseDto })
   @ApiBadRequestResponse({ type: ApiErrorResponseDto })
   @ApiUnauthorizedResponse({ type: ApiErrorResponseDto })

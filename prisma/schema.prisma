@@ -45,39 +45,118 @@ enum TokenPurpose {
   PASSWORD_RESET
 }
 
+enum CatalogVisibility {
+  PUBLIC
+  AUTHENTICATED
+  INTERNAL
+}
+
+enum FileAssetPurpose {
+  NOTE_PDF
+  CMS_IMAGE
+  QUESTION_IMAGE
+  PROFILE_IMAGE
+  CONTENT_IMAGE
+  GENERIC_PDF
+  GENERIC_IMAGE
+}
+
+enum FileAssetStatus {
+  PENDING_UPLOAD
+  READY
+  REVOKED
+}
+
+enum FileAssetAccess {
+  PUBLIC
+  AUTHENTICATED
+  PROTECTED
+  ADMIN_ONLY
+}
+
+enum NoteStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum NoteAccessType {
+  FREE
+  PREVIEWABLE_PREMIUM
+  PREMIUM_ONLY
+}
+
+enum NoteViewSessionStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+}
+
+enum NoteViewAccessMode {
+  FULL
+  PREVIEW
+}
+
+enum NoteAccessLogEventType {
+  VIEW_SESSION_CREATED
+  WATERMARK_FETCHED
+  CONTENT_STREAMED
+  PROGRESS_UPDATED
+}
+
+enum SecuritySignalSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
 model Site {
-  id            String              @id @default(cuid())
-  code          String              @unique
-  slug          String              @unique
-  name          String
-  primaryDomain String?
-  defaultLocale String              @default("mr-IN")
-  timezone      String              @default("Asia/Kolkata")
-  status        SiteStatus          @default(ACTIVE)
-  isDefault     Boolean             @default(false)
-  configs       SiteConfigVersion[]
-  users         User[]
-  refreshSessions RefreshSession[]
+  id                  String               @id @default(cuid())
+  code                String               @unique
+  slug                String               @unique
+  name                String
+  primaryDomain       String?
+  defaultLocale       String               @default("mr-IN")
+  timezone            String               @default("Asia/Kolkata")
+  status              SiteStatus           @default(ACTIVE)
+  isDefault           Boolean              @default(false)
+  configs             SiteConfigVersion[]
+  users               User[]
+  refreshSessions     RefreshSession[]
   passwordResetTokens PasswordResetToken[]
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
+  roles               Role[]
+  auditLogs           AuditLog[]
+  examTracks          ExamTrack[]
+  mediums             Medium[]
+  subjects            Subject[]
+  topics              Topic[]
+  tags                Tag[]
+  fileAssets          FileAsset[]
+  fileAssetReferences FileAssetReference[]
+  notes               Note[]
+  noteViewSessions    NoteViewSession[]
+  noteProgressRecords NoteProgress[]
+  noteAccessLogs      NoteAccessLog[]
+  noteSecuritySignals NoteSecuritySignal[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
 
   @@index([isDefault, status])
   @@map("sites")
 }
 
 model SiteConfigVersion {
-  id         String           @id @default(cuid())
-  siteId     String
-  configKey  String
-  version    Int
-  status     ConfigStatus     @default(DRAFT)
-  visibility ConfigVisibility @default(INTERNAL)
-  configJson Json
+  id          String           @id @default(cuid())
+  siteId      String
+  configKey   String
+  version     Int
+  status      ConfigStatus     @default(DRAFT)
+  visibility  ConfigVisibility @default(INTERNAL)
+  configJson  Json
   publishedAt DateTime?
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
-  site       Site             @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  site        Site             @relation(fields: [siteId], references: [id], onDelete: Cascade)
 
   @@unique([siteId, configKey, version])
   @@index([siteId, configKey, status])
@@ -86,22 +165,36 @@ model SiteConfigVersion {
 }
 
 model User {
-  id                String               @id @default(cuid())
-  siteId            String
-  email             String
-  phone             String?
-  fullName          String
-  passwordHash      String
-  userType          UserType
-  status            UserStatus           @default(ACTIVE)
-  lastLoginAt       DateTime?
-  emailVerifiedAt   DateTime?
-  phoneVerifiedAt   DateTime?
-  createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @updatedAt
-  site              Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  refreshSessions   RefreshSession[]
-  passwordResetTokens PasswordResetToken[]
+  id                      String                   @id @default(cuid())
+  siteId                  String
+  email                   String
+  phone                   String?
+  fullName                String
+  passwordHash            String
+  userType                UserType
+  status                  UserStatus               @default(ACTIVE)
+  lastLoginAt             DateTime?
+  emailVerifiedAt         DateTime?
+  phoneVerifiedAt         DateTime?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  site                    Site                     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  refreshSessions         RefreshSession[]
+  passwordResetTokens     PasswordResetToken[]
+  userRoles               UserRole[]               @relation("UserRolesSubject")
+  roleAssignmentsMade     UserRole[]               @relation("UserRolesActor")
+  permissionOverrides     UserPermissionOverride[] @relation("UserPermissionOverrideSubject")
+  permissionOverridesMade UserPermissionOverride[] @relation("UserPermissionOverrideActor")
+  auditLogsAuthored       AuditLog[]               @relation("AuditLogsActor")
+  createdFileAssets       FileAsset[]              @relation("FileAssetCreator")
+  confirmedFileAssets     FileAsset[]              @relation("FileAssetConfirmer")
+  createdNotes            Note[]                   @relation("NoteCreator")
+  updatedNotes            Note[]                   @relation("NoteUpdater")
+  publishedNotes          Note[]                   @relation("NotePublisher")
+  noteViewSessions        NoteViewSession[]
+  noteProgressRecords     NoteProgress[]
+  noteAccessLogs          NoteAccessLog[]
+  noteSecuritySignals     NoteSecuritySignal[]
 
   @@unique([siteId, email])
   @@index([siteId, userType, status])
@@ -137,25 +230,451 @@ model RefreshSession {
 }
 
 model PasswordResetToken {
-  id               String       @id @default(cuid())
-  siteId           String
-  userId           String
-  email            String
-  purpose          TokenPurpose @default(PASSWORD_RESET)
-  codeHash         String
-  expiresAt        DateTime
-  consumedAt       DateTime?
-  invalidatedAt    DateTime?
-  attemptCount     Int          @default(0)
-  lastAttemptAt    DateTime?
-  requestedIp      String?
+  id                 String       @id @default(cuid())
+  siteId             String
+  userId             String
+  email              String
+  purpose            TokenPurpose @default(PASSWORD_RESET)
+  codeHash           String
+  expiresAt          DateTime
+  consumedAt         DateTime?
+  invalidatedAt      DateTime?
+  attemptCount       Int          @default(0)
+  lastAttemptAt      DateTime?
+  requestedIp        String?
   requestedUserAgent String?
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
-  site             Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  site               Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user               User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, purpose, expiresAt])
   @@index([siteId, email, purpose, expiresAt])
   @@map("password_reset_tokens")
+}
+
+model Permission {
+  id                      String                   @id @default(cuid())
+  key                     String                   @unique
+  category                String
+  description             String?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  rolePermissions         RolePermission[]
+  userPermissionOverrides UserPermissionOverride[]
+
+  @@index([category, key])
+  @@map("permissions")
+}
+
+model Role {
+  id              String           @id @default(cuid())
+  siteId          String
+  code            String
+  name            String
+  description     String?
+  userType        UserType         @default(ADMIN)
+  isSystem        Boolean          @default(false)
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  site            Site             @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  rolePermissions RolePermission[]
+  userRoles       UserRole[]
+
+  @@unique([siteId, code])
+  @@index([siteId, userType, isActive])
+  @@map("roles")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  createdAt    DateTime   @default(now())
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  userId           String
+  roleId           String
+  assignedByUserId String?
+  assignedAt       DateTime @default(now())
+  user             User     @relation("UserRolesSubject", fields: [userId], references: [id], onDelete: Cascade)
+  role             Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  assignedByUser   User?    @relation("UserRolesActor", fields: [assignedByUserId], references: [id], onDelete: SetNull)
+
+  @@id([userId, roleId])
+  @@index([roleId])
+  @@index([assignedByUserId])
+  @@map("user_roles")
+}
+
+model UserPermissionOverride {
+  userId           String
+  permissionId     String
+  isAllowed        Boolean
+  reason           String?
+  assignedByUserId String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  user             User       @relation("UserPermissionOverrideSubject", fields: [userId], references: [id], onDelete: Cascade)
+  permission       Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  assignedByUser   User?      @relation("UserPermissionOverrideActor", fields: [assignedByUserId], references: [id], onDelete: SetNull)
+
+  @@id([userId, permissionId])
+  @@index([permissionId])
+  @@index([assignedByUserId])
+  @@map("user_permission_overrides")
+}
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  siteId       String
+  actorUserId  String?
+  action       String
+  resourceType String
+  resourceId   String?
+  metaJson     Json?
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+  site         Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  actorUser    User?    @relation("AuditLogsActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([siteId, createdAt])
+  @@index([siteId, action, createdAt])
+  @@index([siteId, resourceType, resourceId, createdAt])
+  @@index([actorUserId, createdAt])
+  @@map("audit_logs")
+}
+
+model ExamTrack {
+  id          String            @id @default(cuid())
+  siteId      String
+  code        String
+  slug        String
+  name        String
+  shortName   String?
+  description String?
+  orderIndex  Int               @default(0)
+  visibility  CatalogVisibility @default(PUBLIC)
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  site        Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  subjects    Subject[]
+
+  @@unique([siteId, code])
+  @@unique([siteId, slug])
+  @@index([siteId, isActive, orderIndex])
+  @@index([siteId, visibility, orderIndex])
+  @@map("exam_tracks")
+}
+
+model Medium {
+  id          String            @id @default(cuid())
+  siteId      String
+  code        String
+  slug        String
+  name        String
+  description String?
+  orderIndex  Int               @default(0)
+  visibility  CatalogVisibility @default(PUBLIC)
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  site        Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  notes       Note[]
+
+  @@unique([siteId, code])
+  @@unique([siteId, slug])
+  @@index([siteId, isActive, orderIndex])
+  @@index([siteId, visibility, orderIndex])
+  @@map("mediums")
+}
+
+model Subject {
+  id          String            @id @default(cuid())
+  siteId      String
+  examTrackId String
+  code        String
+  slug        String
+  name        String
+  description String?
+  orderIndex  Int               @default(0)
+  visibility  CatalogVisibility @default(PUBLIC)
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  site        Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  examTrack   ExamTrack         @relation(fields: [examTrackId], references: [id], onDelete: Cascade)
+  topics      Topic[]
+  notes       Note[]
+
+  @@unique([siteId, examTrackId, code])
+  @@unique([siteId, examTrackId, slug])
+  @@index([siteId, examTrackId, isActive, orderIndex])
+  @@index([siteId, visibility, orderIndex])
+  @@map("subjects")
+}
+
+model Topic {
+  id          String            @id @default(cuid())
+  siteId      String
+  subjectId   String
+  parentId    String?
+  code        String
+  slug        String
+  name        String
+  description String?
+  orderIndex  Int               @default(0)
+  visibility  CatalogVisibility @default(PUBLIC)
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  site        Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  subject     Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  parent      Topic?            @relation("TopicHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Topic[]           @relation("TopicHierarchy")
+  noteTopics  NoteTopic[]
+
+  @@unique([siteId, subjectId, code])
+  @@unique([siteId, subjectId, slug])
+  @@index([siteId, visibility, orderIndex])
+  @@index([subjectId, parentId, orderIndex])
+  @@map("topics")
+}
+
+model Tag {
+  id          String            @id @default(cuid())
+  siteId      String
+  code        String
+  slug        String
+  name        String
+  description String?
+  orderIndex  Int               @default(0)
+  visibility  CatalogVisibility @default(PUBLIC)
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  site        Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@unique([siteId, code])
+  @@unique([siteId, slug])
+  @@index([siteId, isActive, orderIndex])
+  @@index([siteId, visibility, orderIndex])
+  @@map("tags")
+}
+
+model FileAsset {
+  id                String               @id @default(cuid())
+  siteId            String
+  createdByUserId   String
+  confirmedByUserId String?
+  purpose           FileAssetPurpose
+  accessLevel       FileAssetAccess      @default(PROTECTED)
+  status            FileAssetStatus      @default(PENDING_UPLOAD)
+  objectKey         String               @unique
+  originalFileName  String
+  extension         String?
+  contentType       String
+  declaredSizeBytes Int?
+  sizeBytes         Int?
+  checksumSha256    String?
+  etag              String?
+  imageWidth        Int?
+  imageHeight       Int?
+  uploadExpiresAt   DateTime?
+  confirmedAt       DateTime?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  site              Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  createdByUser     User                 @relation("FileAssetCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  confirmedByUser   User?                @relation("FileAssetConfirmer", fields: [confirmedByUserId], references: [id], onDelete: SetNull)
+  references        FileAssetReference[]
+  contentNotes      Note[]               @relation("NoteContentAsset")
+  previewNotes      Note[]               @relation("NotePreviewAsset")
+  coverNotes        Note[]               @relation("NoteCoverAsset")
+
+  @@index([siteId, purpose, createdAt])
+  @@index([siteId, status, createdAt])
+  @@index([createdByUserId, createdAt])
+  @@map("file_assets")
+}
+
+model FileAssetReference {
+  id           String           @id @default(cuid())
+  siteId       String
+  fileAssetId  String
+  resourceType String
+  resourceId   String
+  slot         String?
+  accessLevel  FileAssetAccess?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  site         Site             @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  fileAsset    FileAsset        @relation(fields: [fileAssetId], references: [id], onDelete: Cascade)
+
+  @@unique([fileAssetId, resourceType, resourceId, slot])
+  @@index([siteId, resourceType, resourceId])
+  @@index([fileAssetId, accessLevel])
+  @@map("file_asset_references")
+}
+
+model Note {
+  id                 String               @id @default(cuid())
+  siteId             String
+  subjectId          String
+  mediumId           String?
+  slug               String
+  title              String
+  shortDescription   String?
+  description        String?
+  fullFileAssetId    String
+  previewFileAssetId String?
+  coverImageAssetId  String?
+  accessType         NoteAccessType       @default(FREE)
+  previewPageCount   Int?
+  pageCount          Int
+  orderIndex         Int                  @default(0)
+  status             NoteStatus           @default(DRAFT)
+  createdByUserId    String
+  updatedByUserId    String
+  publishedByUserId  String?
+  publishedAt        DateTime?
+  archivedAt         DateTime?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  site               Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  subject            Subject              @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  medium             Medium?              @relation(fields: [mediumId], references: [id], onDelete: SetNull)
+  fullFileAsset      FileAsset            @relation("NoteContentAsset", fields: [fullFileAssetId], references: [id], onDelete: Restrict)
+  previewFileAsset   FileAsset?           @relation("NotePreviewAsset", fields: [previewFileAssetId], references: [id], onDelete: SetNull)
+  coverImageAsset    FileAsset?           @relation("NoteCoverAsset", fields: [coverImageAssetId], references: [id], onDelete: SetNull)
+  createdByUser      User                 @relation("NoteCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser      User                 @relation("NoteUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  publishedByUser    User?                @relation("NotePublisher", fields: [publishedByUserId], references: [id], onDelete: SetNull)
+  noteTopics         NoteTopic[]
+  viewSessions       NoteViewSession[]
+  progressRecords    NoteProgress[]
+  accessLogs         NoteAccessLog[]
+  securitySignals    NoteSecuritySignal[]
+
+  @@unique([siteId, slug])
+  @@index([siteId, status, orderIndex])
+  @@index([siteId, subjectId, status, orderIndex])
+  @@index([siteId, accessType, status])
+  @@map("notes")
+}
+
+model NoteTopic {
+  noteId    String
+  topicId   String
+  createdAt DateTime @default(now())
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, topicId])
+  @@index([topicId])
+  @@map("note_topics")
+}
+
+model NoteViewSession {
+  id               String                @id @default(cuid())
+  siteId           String
+  noteId           String
+  userId           String
+  authSessionId    String?
+  tokenHash        String                @unique
+  status           NoteViewSessionStatus @default(ACTIVE)
+  accessMode       NoteViewAccessMode
+  previewPageCount Int?
+  watermarkSeed    String
+  ipAddress        String?
+  userAgent        String?
+  lastAccessedAt   DateTime?
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  revokedReason    String?
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  site             Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  note             Note                  @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessLogs       NoteAccessLog[]
+  securitySignals  NoteSecuritySignal[]
+
+  @@index([siteId, noteId, userId, createdAt])
+  @@index([siteId, status, expiresAt])
+  @@map("note_view_sessions")
+}
+
+model NoteProgress {
+  siteId            String
+  noteId            String
+  userId            String
+  lastPageViewed    Int       @default(0)
+  maxPageViewed     Int       @default(0)
+  completionPercent Int       @default(0)
+  lastViewedAt      DateTime?
+  completedAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  site              Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  note              Note      @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, userId])
+  @@index([siteId, userId, lastViewedAt])
+  @@map("note_progress")
+}
+
+model NoteAccessLog {
+  id                String                 @id @default(cuid())
+  siteId            String
+  noteId            String
+  userId            String?
+  noteViewSessionId String?
+  eventType         NoteAccessLogEventType
+  rangeStart        Int?
+  rangeEnd          Int?
+  bytesServed       Int?
+  ipAddress         String?
+  userAgent         String?
+  metaJson          Json?
+  createdAt         DateTime               @default(now())
+  site              Site                   @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  note              Note                   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user              User?                  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  noteViewSession   NoteViewSession?       @relation(fields: [noteViewSessionId], references: [id], onDelete: SetNull)
+
+  @@index([siteId, noteId, createdAt])
+  @@index([siteId, userId, createdAt])
+  @@index([noteViewSessionId, createdAt])
+  @@map("note_access_logs")
+}
+
+model NoteSecuritySignal {
+  id                String                 @id @default(cuid())
+  siteId            String
+  noteId            String
+  userId            String?
+  noteViewSessionId String?
+  signalKey         String
+  severity          SecuritySignalSeverity @default(LOW)
+  metaJson          Json?
+  createdAt         DateTime               @default(now())
+  site              Site                   @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  note              Note                   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user              User?                  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  noteViewSession   NoteViewSession?       @relation(fields: [noteViewSessionId], references: [id], onDelete: SetNull)
+
+  @@index([siteId, noteId, createdAt])
+  @@index([siteId, signalKey, createdAt])
+  @@map("note_security_signals")
 }

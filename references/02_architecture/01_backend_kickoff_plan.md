@@ -59,6 +59,12 @@ Move to database-driven configuration:
 - Health uses separate liveness and readiness checks, where readiness reflects database availability instead of assuming the app is fully ready when Nest boots.
 - Request IDs, global validation, consistent API errors, and Swagger are treated as platform infrastructure rather than feature-module concerns.
 - Auth token lifetimes and password-reset challenge limits are runtime config data in internal site config, while JWT signing secrets remain environment-managed secrets.
+- Authorization is DB-backed through site-scoped roles, global permission keys, role assignments, and direct user permission overrides, so admin types remain dynamic instead of code-enum locked.
+- Admin write routes should use policy metadata plus audit metadata rather than controller-local permission branches, keeping access control and audit capture reusable across modules.
+- Taxonomy is modeled as site-scoped master data with explicit ordering, slugs, visibility, and active state so landing, student, CMS, and assessment modules can reuse the same catalog foundation.
+- Private file assets use database metadata plus MinIO-backed object storage, with upload initialization and all read delivery flowing through backend APIs so raw bucket URLs never become product contracts.
+- Generic file assets intentionally separate upload metadata from future content-reference authorization, allowing later modules to decide whether an asset is public, authenticated, or entitlement-protected without changing the storage provider seam.
+- Notes use dedicated preview PDF assets, short-lived note view sessions, and signed watermark payloads so premium preview rules stay explicit in data and raw source PDFs never become publicly addressable.
 
 ## Backend Development Order
 1. Foundation, Prisma, site config, health, request context, Swagger

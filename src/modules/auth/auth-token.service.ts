@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import {
   AccessTokenPayload,
+  NoteViewTokenPayload,
   RefreshTokenPayload,
 } from './auth.types';
 
@@ -45,6 +46,22 @@ export class AuthTokenService {
     );
   }
 
+  async issueNoteViewToken(
+    payload: Omit<NoteViewTokenPayload, 'tokenType'>,
+    expiresInMinutes: number,
+  ) {
+    return this.jwtService.signAsync(
+      {
+        ...payload,
+        tokenType: 'note_view',
+      },
+      {
+        secret: this.getAccessSecret(),
+        expiresIn: `${expiresInMinutes}m`,
+      },
+    );
+  }
+
   async verifyAccessToken(token: string) {
     return this.verifyToken<AccessTokenPayload>(
       token,
@@ -60,6 +77,15 @@ export class AuthTokenService {
       'refresh',
       this.getRefreshSecret(),
       'REFRESH_TOKEN_INVALID',
+    );
+  }
+
+  async verifyNoteViewToken(token: string) {
+    return this.verifyToken<NoteViewTokenPayload>(
+      token,
+      'note_view',
+      this.getAccessSecret(),
+      'NOTE_VIEW_TOKEN_INVALID',
     );
   }
 

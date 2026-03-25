@@ -10,6 +10,8 @@ import {
 } from '@prisma/client';
 import { ActionMessageResponseDto } from '../../common/dto/action-message-response.dto';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { AuthorizationService } from '../authorization/authorization.service';
+import { AuthorizationAccessSummary } from '../authorization/authorization.types';
 import { UsersService } from '../users/users.service';
 import { mapUserIdentity } from '../users/users.types';
 import { AuthSettingsService } from './auth-settings.service';
@@ -27,6 +29,7 @@ import { createOtpCode, hashOpaqueToken } from './auth.utils';
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly authorizationService: AuthorizationService,
     private readonly usersService: UsersService,
     private readonly passwordHasherService: PasswordHasherService,
     private readonly sessionService: SessionService,
@@ -42,9 +45,14 @@ export class AuthService {
     });
     const activeUser = await this.usersService.markLastLogin(user.id);
     const session = await this.sessionService.createSession(activeUser, metadata);
+    const access = await this.authorizationService.getUserAccessSummary(
+      activeUser.id,
+      activeUser.siteId,
+    );
 
     return {
       user: mapUserIdentity(activeUser),
+      access: this.mapAccessSummary(access),
       tokens: this.mapTokenBundle(session.tokens),
     };
   }
@@ -73,9 +81,14 @@ export class AuthService {
 
     const activeUser = await this.usersService.markLastLogin(user.id);
     const session = await this.sessionService.createSession(activeUser, metadata);
+    const access = await this.authorizationService.getUserAccessSummary(
+      activeUser.id,
+      activeUser.siteId,
+    );
 
     return {
       user: mapUserIdentity(activeUser),
+      access: this.mapAccessSummary(access),
       tokens: this.mapTokenBundle(session.tokens),
     };
   }
@@ -85,9 +98,14 @@ export class AuthService {
       body.refreshToken,
       metadata,
     );
+    const access = await this.authorizationService.getUserAccessSummary(
+      session.user.id,
+      session.user.siteId,
+    );
 
     return {
       user: session.user,
+      access: this.mapAccessSummary(access),
       tokens: this.mapTokenBundle(session.tokens),
     };
   }
@@ -102,10 +120,15 @@ export class AuthService {
 
   async me(user: AuthenticatedUser) {
     const identity = await this.usersService.getIdentityById(user.userId);
+    const access = await this.authorizationService.getUserAccessSummary(
+      identity.id,
+      identity.siteId,
+    );
 
     return {
       user: mapUserIdentity(identity),
       sessionId: user.sessionId,
+      access: this.mapAccessSummary(access),
     };
   }
 
@@ -339,6 +362,22 @@ export class AuthService {
       accessTokenExpiresAt: tokens.accessTokenExpiresAt.toISOString(),
       refreshTokenExpiresAt: tokens.refreshTokenExpiresAt.toISOString(),
       sessionId: tokens.sessionId,
+    };
+  }
+
+  private mapAccessSummary(access: AuthorizationAccessSummary) {
+    return {
+      userId: access.userId,
+      siteId: access.siteId,
+      userType: access.userType,
+      roles: access.roles,
+      directOverrides: access.directOverrides.map((override) => ({
+        permissionKey: override.permissionKey,
+        isAllowed: override.isAllowed,
+        reason: override.reason,
+        updatedAt: override.updatedAt.toISOString(),
+      })),
+      effectivePermissionKeys: access.effectivePermissionKeys,
     };
   }
 }

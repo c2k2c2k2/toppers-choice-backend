@@ -17,6 +17,15 @@ export type RefreshTokenPayload = {
   tokenType: 'refresh';
 };
 
+export type NoteViewTokenPayload = {
+  sub: string;
+  siteId: string;
+  noteId: string;
+  noteViewSessionId: string;
+  accessMode: 'FULL' | 'PREVIEW';
+  tokenType: 'note_view';
+};
+
 export type RequestSessionMetadata = {
   ipAddress: string | null;
   userAgent: string | null;

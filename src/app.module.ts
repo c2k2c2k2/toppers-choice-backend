@@ -1,13 +1,21 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { validateEnvironment } from './infra/config/env.validation';
 import { PrismaModule } from './infra/prisma/prisma.module';
 import { RequestContextModule } from './infra/request-context/request-context.module';
+import { StorageModule } from './infra/storage/storage.module';
+import { AuditInterceptor } from './modules/authorization/interceptors/audit.interceptor';
+import { AuthorizationModule } from './modules/authorization/authorization.module';
+import { PolicyGuard } from './modules/authorization/policy.guard';
 import { AuthModule } from './modules/auth/auth.module';
+import { AccessTokenGuard } from './modules/auth/guards/access-token.guard';
+import { FilesModule } from './modules/files/files.module';
 import { HealthModule } from './modules/health/health.module';
+import { NotesModule } from './modules/notes/notes.module';
 import { SiteSettingsModule } from './modules/site-settings/site-settings.module';
+import { TaxonomyModule } from './modules/taxonomy/taxonomy.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -22,15 +30,32 @@ import { UsersModule } from './modules/users/users.module';
     }),
     RequestContextModule,
     PrismaModule,
+    StorageModule,
     HealthModule,
     SiteSettingsModule,
     UsersModule,
     AuthModule,
+    AuthorizationModule,
+    TaxonomyModule,
+    FilesModule,
+    NotesModule,
   ],
   providers: [
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PolicyGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: AuditInterceptor,
     },
   ],
 })

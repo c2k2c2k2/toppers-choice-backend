@@ -41,6 +41,16 @@ export function setupSwagger(
         },
         'access-token',
       )
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description:
+            'Short-lived note view token returned by POST /notes/:noteId/view-session.',
+        },
+        'note-view-token',
+      )
       .build(),
     {
       extraModels: [
