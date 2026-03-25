@@ -19,6 +19,7 @@ import { PracticeModule } from './modules/practice/practice.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { SiteSettingsModule } from './modules/site-settings/site-settings.module';
 import { TaxonomyModule } from './modules/taxonomy/taxonomy.module';
+import { TestsModule } from './modules/tests/tests.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -45,6 +46,7 @@ import { UsersModule } from './modules/users/users.module';
     NotesModule,
     QuestionsModule,
     PracticeModule,
+    TestsModule,
   ],
   providers: [
     {

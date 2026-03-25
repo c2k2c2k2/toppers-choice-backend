@@ -177,6 +177,24 @@ enum PracticeQuestionEventType {
   REVEALED
 }
 
+enum TestFamily {
+  SUBJECT_WISE
+  MIXED
+  EXAM_STYLE
+}
+
+enum TestStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum TestAttemptStatus {
+  ACTIVE
+  SUBMITTED
+  AUTO_SUBMITTED
+}
+
 model Site {
   id                       String                        @id @default(cuid())
   code                     String                        @unique
@@ -208,6 +226,10 @@ model Site {
   questionPracticeStates   UserQuestionPracticeState[]
   subjectPracticeProgress  UserSubjectPracticeProgress[]
   topicPracticeProgress    UserTopicPracticeProgress[]
+  tests                    Test[]
+  testQuestions            TestQuestion[]
+  testAttempts             TestAttempt[]
+  testAttemptQuestions     TestAttemptQuestion[]
   notes                    Note[]
   noteViewSessions         NoteViewSession[]
   noteProgressRecords      NoteProgress[]
@@ -278,6 +300,10 @@ model User {
   questionPracticeStates   UserQuestionPracticeState[]
   subjectPracticeProgress  UserSubjectPracticeProgress[]
   topicPracticeProgress    UserTopicPracticeProgress[]
+  createdTests             Test[]                        @relation("TestCreator")
+  updatedTests             Test[]                        @relation("TestUpdater")
+  publishedTests           Test[]                        @relation("TestPublisher")
+  testAttempts             TestAttempt[]
   noteViewSessions         NoteViewSession[]
   noteProgressRecords      NoteProgress[]
   noteAccessLogs           NoteAccessLog[]
@@ -457,6 +483,7 @@ model ExamTrack {
   contentEntries   ContentEntryExamTrack[]
   subjects         Subject[]
   practiceSessions PracticeSession[]
+  tests            Test[]
 
   @@unique([siteId, code])
   @@unique([siteId, slug])
@@ -481,6 +508,7 @@ model Medium {
   contentEntries   ContentEntryMedium[]
   questions        Question[]
   practiceSessions PracticeSession[]
+  tests            Test[]
   notes            Note[]
 
   @@unique([siteId, code])
@@ -509,6 +537,7 @@ model Subject {
   practiceSessions        PracticeSession[]
   subjectPracticeProgress UserSubjectPracticeProgress[]
   topicPracticeProgress   UserTopicPracticeProgress[]
+  tests                   Test[]
   topics                  Topic[]
   notes                   Note[]
 
@@ -746,6 +775,8 @@ model Question {
   practiceSessionQuestions PracticeSessionQuestion[]
   practiceQuestionEvents   PracticeQuestionEvent[]
   practiceStates           UserQuestionPracticeState[]
+  testQuestions            TestQuestion[]
+  testAttemptQuestions     TestAttemptQuestion[]
 
   @@unique([siteId, code])
   @@index([siteId, status, createdAt])
@@ -959,6 +990,153 @@ model UserTopicPracticeProgress {
   @@index([siteId, userId, lastPracticedAt])
   @@index([siteId, subjectId, userId, accuracyPercent])
   @@map("user_topic_practice_progress")
+}
+
+model Test {
+  id                     String                @id @default(cuid())
+  siteId                 String
+  code                   String?
+  slug                   String
+  title                  String
+  shortDescription       String?
+  instructionsJson       Json?
+  configJson             Json?
+  family                 TestFamily
+  examTrackId            String?
+  mediumId               String?
+  subjectId              String?
+  durationMinutes        Int
+  maxAttempts            Int                   @default(1)
+  randomizeQuestionOrder Boolean               @default(false)
+  questionCount          Int                   @default(0)
+  maxScore               Float                 @default(0)
+  availableFrom          DateTime?
+  availableUntil         DateTime?
+  status                 TestStatus            @default(DRAFT)
+  createdByUserId        String
+  updatedByUserId        String
+  publishedByUserId      String?
+  publishedAt            DateTime?
+  archivedAt             DateTime?
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+  site                   Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  examTrack              ExamTrack?            @relation(fields: [examTrackId], references: [id], onDelete: SetNull)
+  medium                 Medium?               @relation(fields: [mediumId], references: [id], onDelete: SetNull)
+  subject                Subject?              @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  createdByUser          User                  @relation("TestCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser          User                  @relation("TestUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  publishedByUser        User?                 @relation("TestPublisher", fields: [publishedByUserId], references: [id], onDelete: SetNull)
+  questions              TestQuestion[]
+  attempts               TestAttempt[]
+  attemptQuestions       TestAttemptQuestion[]
+
+  @@unique([siteId, code])
+  @@unique([siteId, slug])
+  @@index([siteId, family, status, publishedAt])
+  @@index([siteId, subjectId, status, publishedAt])
+  @@index([siteId, examTrackId, status, publishedAt])
+  @@index([siteId, availableFrom, availableUntil, status])
+  @@map("tests")
+}
+
+model TestQuestion {
+  id            String   @id @default(cuid())
+  siteId        String
+  testId        String
+  questionId    String
+  orderIndex    Int      @default(0)
+  positiveMarks Float    @default(1)
+  negativeMarks Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  site          Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  test          Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
+  question      Question @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@unique([testId, questionId])
+  @@index([siteId, questionId])
+  @@index([testId, orderIndex])
+  @@map("test_questions")
+}
+
+model TestAttempt {
+  id                  String                @id @default(cuid())
+  siteId              String
+  testId              String
+  userId              String
+  authSessionId       String?
+  attemptNumber       Int
+  status              TestAttemptStatus     @default(ACTIVE)
+  testSnapshotJson    Json
+  durationMinutes     Int
+  questionCount       Int
+  answeredCount       Int                   @default(0)
+  correctCount        Int                   @default(0)
+  wrongCount          Int                   @default(0)
+  skippedCount        Int                   @default(0)
+  score               Float                 @default(0)
+  maxScore            Float                 @default(0)
+  percentage          Int                   @default(0)
+  timeTakenSeconds    Int?
+  resultSummaryJson   Json?
+  resultBreakdownJson Json?
+  startedAt           DateTime              @default(now())
+  expiresAt           DateTime
+  lastSavedAt         DateTime?
+  submittedAt         DateTime?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  site                Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  test                Test                  @relation(fields: [testId], references: [id], onDelete: Cascade)
+  user                User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questions           TestAttemptQuestion[]
+
+  @@unique([testId, userId, attemptNumber])
+  @@index([siteId, userId, startedAt])
+  @@index([siteId, testId, status, startedAt])
+  @@index([siteId, userId, status, expiresAt])
+  @@map("test_attempts")
+}
+
+model TestAttemptQuestion {
+  id                    String             @id @default(cuid())
+  siteId                String
+  testAttemptId         String
+  testId                String
+  questionId            String
+  orderIndex            Int                @default(0)
+  questionCodeSnapshot  String?
+  questionTypeSnapshot  QuestionType
+  difficultySnapshot    QuestionDifficulty
+  examTrackIdSnapshot   String
+  mediumIdSnapshot      String?
+  subjectIdSnapshot     String
+  topicIdSnapshot       String?
+  positiveMarks         Float
+  negativeMarks         Float
+  questionSnapshotJson  Json
+  correctAnswerJson     Json
+  explanationJson       Json?
+  latestSavedAnswerJson Json?
+  finalAnswerJson       Json?
+  lastSavedAt           DateTime?
+  answeredAt            DateTime?
+  isCorrect             Boolean?
+  awardedMarks          Float?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  site                  Site               @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  testAttempt           TestAttempt        @relation(fields: [testAttemptId], references: [id], onDelete: Cascade)
+  test                  Test               @relation(fields: [testId], references: [id], onDelete: Cascade)
+  question              Question           @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@unique([testAttemptId, questionId])
+  @@index([siteId, questionId])
+  @@index([siteId, subjectIdSnapshot])
+  @@index([siteId, topicIdSnapshot])
+  @@index([testAttemptId, orderIndex])
+  @@map("test_attempt_questions")
 }
 
 model Note {

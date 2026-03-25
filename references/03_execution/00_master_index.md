@@ -45,7 +45,7 @@
 - [x] `references/03_execution/07_backend_structured_content_modules.md`
 - [x] `references/03_execution/08_backend_question_bank_and_media.md`
 - [x] `references/03_execution/09_backend_practice_engine_and_progress.md`
-- [~] `references/03_execution/10_backend_test_engine_and_attempts.md`
+- [x] `references/03_execution/10_backend_test_engine_and_attempts.md`
 - [ ] `references/03_execution/11_backend_plans_entitlements_and_payment_adapter.md`
 - [ ] `references/03_execution/12_backend_cms_notifications_analytics_search_and_admin_ops.md`
 
