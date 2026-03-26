@@ -14,6 +14,7 @@ import {
   UserType,
 } from '@prisma/client';
 import { randomBytes } from 'node:crypto';
+import { IdempotencyService } from '../../infra/idempotency/idempotency.service';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuthenticatedUser } from '../auth/auth.types';
 import { SiteSettingsService } from '../site-settings/site-settings.service';
@@ -42,9 +43,34 @@ export class PaymentsService {
     private readonly paymentGatewayService: PaymentGatewayService,
     private readonly entitlementsService: EntitlementsService,
     private readonly siteSettingsService: SiteSettingsService,
+    private readonly idempotencyService: IdempotencyService,
   ) {}
 
-  async createCheckout(user: AuthenticatedUser, input: CreateCheckoutDto) {
+  async createCheckout(
+    user: AuthenticatedUser,
+    input: CreateCheckoutDto,
+    idempotencyKey?: string | null,
+  ) {
+    this.assertStudentUser(user);
+
+    return this.idempotencyService.execute(
+      {
+        siteId: user.siteId,
+        userId: user.userId,
+        scope: 'payments.checkout',
+        key: idempotencyKey,
+        requestBody: input,
+        resourceType: 'payment_order',
+        ttlMinutes: 120,
+      },
+      async () => this.createCheckoutInternal(user, input),
+    );
+  }
+
+  private async createCheckoutInternal(
+    user: AuthenticatedUser,
+    input: CreateCheckoutDto,
+  ) {
     this.assertStudentUser(user);
 
     const plan = await this.plansService.getActivePlanByCheckoutInput(

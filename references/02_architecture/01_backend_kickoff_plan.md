@@ -70,6 +70,10 @@ Move to database-driven configuration:
 - Practice uses explicit student-owned sessions, per-session served-question state, append-only interaction events, and per-question/per-subject/per-topic aggregates so dashboards and future analytics can reuse progress data without mixing practice flow into the test engine.
 - Tests use authored fixed question sets plus immutable per-attempt question snapshots, so timed submissions, score breakdowns, and later analytics stay stable even if the source question bank is edited after an attempt begins.
 - Plans and premium access use site-scoped `Plan` plus `PlanEntitlement` templates, explicit `Subscription` and `Entitlement` grant rows, and normalized `PaymentOrder`/`PaymentTransaction`/`PaymentEvent` records behind a provider adapter so notes, structured content, practice, and tests all resolve access through one entitlement service while checkout remains swappable across providers.
+- CMS uses site-scoped `CmsPage`, `CmsBanner`, `CmsAnnouncement`, and `CmsSection` records with publish-state and surface/placement metadata, so landing and student home resolvers stay DB-managed instead of drifting into hardcoded frontend content.
+- Notifications use `NotificationTemplate`, `NotificationBroadcast`, `NotificationMessage`, and `NotificationPreference` rows so in-app delivery works immediately while email/SMS remain future provider seams rather than controller rewrites.
+- Dashboard analytics, grouped search, and admin ops intentionally read from the normalized transactional tables first instead of waiting for a separate warehouse layer, keeping launch reporting and operational support available without a second data pipeline.
+- High-risk launch flows use lightweight hardening primitives: DB-backed idempotency records for retry-safe checkout and broadcast dispatch, route-level throttling on search endpoints, CSV export limits from runtime config, and admin visibility into note security signals.
 
 ## Backend Development Order
 1. Foundation, Prisma, site config, health, request context, Swagger

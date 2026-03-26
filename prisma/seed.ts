@@ -18,12 +18,16 @@ import {
   SITE_PUBLIC_CONFIG_KEY,
 } from '../src/modules/site-settings/site-settings.constants';
 import { AUTH_RUNTIME_CONFIG_KEY } from '../src/modules/auth/auth.constants';
+import { CMS_RUNTIME_CONFIG_KEY } from '../src/modules/cms/cms.constants';
 import { PRACTICE_RUNTIME_CONFIG_KEY } from '../src/modules/practice/practice.constants';
 import {
   AUTHORIZATION_PERMISSION_DEFINITIONS,
   SYSTEM_ROLE_DEFINITIONS,
 } from '../src/modules/authorization/authorization.constants';
 import { PAYMENTS_RUNTIME_CONFIG_KEY } from '../src/modules/payments/payments.constants';
+import { NOTIFICATIONS_RUNTIME_CONFIG_KEY } from '../src/modules/notifications/notifications.constants';
+import { SEARCH_RUNTIME_CONFIG_KEY } from '../src/modules/search/search.constants';
+import { ADMIN_OPS_RUNTIME_CONFIG_KEY } from '../src/modules/admin-ops/admin-ops.constants';
 
 const prisma = new PrismaClient();
 const scrypt = promisify(scryptCallback);
@@ -96,11 +100,13 @@ async function main() {
     {
       features: {
         landing: true,
+        cms: true,
         notes: true,
         practice: true,
         tests: true,
         currentAffairs: true,
         englishSpeaking: true,
+        search: true,
       },
       experience: {
         defaultMedium: 'mr',
@@ -222,16 +228,81 @@ async function main() {
 
   await upsertPublishedConfig(
     site.id,
+    CMS_RUNTIME_CONFIG_KEY,
+    1,
+    ConfigVisibility.INTERNAL,
+    {
+      resolver: {
+        maxPages: 8,
+        maxBanners: 8,
+        maxAnnouncements: 10,
+        maxSections: 12,
+      },
+    },
+  );
+
+  await upsertPublishedConfig(
+    site.id,
+    NOTIFICATIONS_RUNTIME_CONFIG_KEY,
+    1,
+    ConfigVisibility.INTERNAL,
+    {
+      feed: {
+        maxItems: 25,
+      },
+      broadcast: {
+        maxRecipients: 5000,
+      },
+    },
+  );
+
+  await upsertPublishedConfig(
+    site.id,
+    SEARCH_RUNTIME_CONFIG_KEY,
+    1,
+    ConfigVisibility.INTERNAL,
+    {
+      public: {
+        maxResults: 12,
+      },
+      student: {
+        maxResults: 16,
+      },
+      admin: {
+        maxResults: 20,
+      },
+    },
+  );
+
+  await upsertPublishedConfig(
+    site.id,
+    ADMIN_OPS_RUNTIME_CONFIG_KEY,
+    1,
+    ConfigVisibility.INTERNAL,
+    {
+      exports: {
+        maxRows: 5000,
+      },
+      security: {
+        defaultSignalRows: 50,
+      },
+    },
+  );
+
+  await upsertPublishedConfig(
+    site.id,
     ACCESS_ROLE_PLACEHOLDER_CONFIG_KEY,
     1,
     ConfigVisibility.INTERNAL,
     {
       adminRoles: [
         'admin.super_admin',
+        'admin.site_admin',
         'admin.content_manager',
         'admin.academic_manager',
         'admin.finance_manager',
         'admin.support_manager',
+        'admin.data_entry_operator',
       ],
       studentRoles: ['student'],
       note: 'Legacy placeholder record retained for tracker continuity. Actual roles and permissions are now stored in authorization tables.',

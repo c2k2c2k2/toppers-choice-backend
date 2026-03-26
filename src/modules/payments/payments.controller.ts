@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post, Req } from '@nestjs/common';
 import type { Request } from 'express';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiHeader,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -24,12 +25,19 @@ export class PaymentsController {
 
   @Post('checkout')
   @ApiBearerAuth('access-token')
+  @ApiHeader({
+    name: 'x-idempotency-key',
+    required: false,
+    description:
+      'Recommended for retry-safe checkout creation to prevent duplicate payment orders.',
+  })
   @ApiCreatedResponse({ type: CheckoutResponseDto })
   async createCheckout(
     @CurrentUser() user: AuthenticatedUser,
     @Body() body: CreateCheckoutDto,
+    @Headers('x-idempotency-key') idempotencyKey?: string,
   ) {
-    return this.paymentsService.createCheckout(user, body);
+    return this.paymentsService.createCheckout(user, body, idempotencyKey);
   }
 
   @Get('orders/:orderId/status')

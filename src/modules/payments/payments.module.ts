@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { IdempotencyModule } from '../../infra/idempotency/idempotency.module';
 import { AuthorizationModule } from '../authorization/authorization.module';
 import { SiteSettingsModule } from '../site-settings/site-settings.module';
 import { AdminEntitlementsController } from './admin-entitlements.controller';
@@ -15,7 +16,7 @@ import { PublicPlansController } from './public-plans.controller';
 import { PhonePePaymentProviderService } from './providers/phonepe-payment-provider.service';
 
 @Module({
-  imports: [AuthorizationModule, SiteSettingsModule],
+  imports: [AuthorizationModule, SiteSettingsModule, IdempotencyModule],
   controllers: [
     PublicPlansController,
     AdminPlansController,

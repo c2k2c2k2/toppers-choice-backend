@@ -162,9 +162,49 @@ export const AUTHORIZATION_PERMISSION_DEFINITIONS = [
     description: 'Manage payment records and operational actions.',
   },
   {
+    key: 'notifications.read',
+    category: 'notifications',
+    description: 'View notification templates, broadcasts, and messages.',
+  },
+  {
+    key: 'notifications.manage',
+    category: 'notifications',
+    description: 'Create and edit notification templates and broadcasts.',
+  },
+  {
+    key: 'notifications.send',
+    category: 'notifications',
+    description: 'Dispatch and cancel notification delivery jobs.',
+  },
+  {
     key: 'analytics.read',
     category: 'analytics',
     description: 'View analytics and reporting data.',
+  },
+  {
+    key: 'admin.search.read',
+    category: 'admin.search',
+    description: 'Search across internal admin resources.',
+  },
+  {
+    key: 'admin.ops.read',
+    category: 'admin.ops',
+    description: 'View operational dashboard and health data.',
+  },
+  {
+    key: 'admin.ops.export',
+    category: 'admin.ops',
+    description: 'Export operational CSV reports.',
+  },
+  {
+    key: 'admin.ops.support',
+    category: 'admin.ops',
+    description: 'Run support and recovery actions.',
+  },
+  {
+    key: 'admin.security.read',
+    category: 'admin.security',
+    description: 'View security and abuse-detection signals.',
   },
 ] as const;
 
@@ -218,7 +258,15 @@ export const SYSTEM_ROLE_DEFINITIONS = [
       'academics.tests.publish',
       'payments.read',
       'payments.manage',
+      'notifications.read',
+      'notifications.manage',
+      'notifications.send',
       'analytics.read',
+      'admin.search.read',
+      'admin.ops.read',
+      'admin.ops.export',
+      'admin.ops.support',
+      'admin.security.read',
     ],
   },
   {
@@ -241,7 +289,12 @@ export const SYSTEM_ROLE_DEFINITIONS = [
       'content.files.read',
       'content.files.manage',
       'academics.taxonomy.read',
+      'notifications.read',
+      'notifications.manage',
+      'notifications.send',
       'analytics.read',
+      'admin.search.read',
+      'admin.ops.read',
     ],
   },
   {
@@ -269,6 +322,8 @@ export const SYSTEM_ROLE_DEFINITIONS = [
       'academics.tests.manage',
       'academics.tests.publish',
       'analytics.read',
+      'admin.search.read',
+      'admin.ops.read',
     ],
   },
   {
@@ -277,7 +332,14 @@ export const SYSTEM_ROLE_DEFINITIONS = [
     description: 'Payments and financial reporting access.',
     userType: UserType.ADMIN,
     isSystem: true,
-    permissionKeys: ['payments.read', 'payments.manage', 'analytics.read'],
+    permissionKeys: [
+      'payments.read',
+      'payments.manage',
+      'analytics.read',
+      'admin.search.read',
+      'admin.ops.read',
+      'admin.ops.export',
+    ],
   },
   {
     code: 'admin.support_manager',
@@ -291,6 +353,13 @@ export const SYSTEM_ROLE_DEFINITIONS = [
       'admin.users.students.create',
       'admin.users.roles.read',
       'admin.audit.read',
+      'notifications.read',
+      'notifications.send',
+      'analytics.read',
+      'admin.search.read',
+      'admin.ops.read',
+      'admin.ops.support',
+      'admin.security.read',
     ],
   },
   {
@@ -310,6 +379,7 @@ export const SYSTEM_ROLE_DEFINITIONS = [
       'content.files.manage',
       'academics.taxonomy.read',
       'academics.taxonomy.manage',
+      'notifications.read',
     ],
   },
 ] as const;

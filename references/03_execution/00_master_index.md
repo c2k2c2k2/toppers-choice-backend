@@ -47,7 +47,7 @@
 - [x] `references/03_execution/09_backend_practice_engine_and_progress.md`
 - [x] `references/03_execution/10_backend_test_engine_and_attempts.md`
 - [x] `references/03_execution/11_backend_plans_entitlements_and_payment_adapter.md`
-- [ ] `references/03_execution/12_backend_cms_notifications_analytics_search_and_admin_ops.md`
+- [x] `references/03_execution/12_backend_cms_notifications_analytics_search_and_admin_ops.md`
 
 ## Tracker Rules
 - Mark a prompt `[~]` when work starts and `[x]` only when implementation, verification, and any required reference updates are finished.

@@ -263,6 +263,78 @@ enum PaymentEventSource {
   RECONCILIATION
 }
 
+enum CmsRecordStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum CmsBannerPlacement {
+  LANDING_HOME
+  STUDENT_HOME
+  COMMON
+}
+
+enum CmsSectionSurface {
+  LANDING_HOME
+  STUDENT_HOME
+}
+
+enum CmsSectionType {
+  RICH_TEXT
+  CONTENT_FEED
+  PLAN_HIGHLIGHTS
+  CTA_GROUP
+}
+
+enum CmsAnnouncementLevel {
+  INFO
+  SUCCESS
+  WARNING
+  CRITICAL
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  SMS
+}
+
+enum NotificationTemplateStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum NotificationBroadcastStatus {
+  DRAFT
+  QUEUED
+  SENT
+  CANCELLED
+  FAILED
+}
+
+enum NotificationMessageStatus {
+  PENDING
+  DELIVERED
+  READ
+  FAILED
+  CANCELLED
+}
+
+enum NotificationAudienceType {
+  ALL_STUDENTS
+  ALL_ADMINS
+  USER_IDS
+  ACTIVE_SUBSCRIBERS
+}
+
+enum IdempotencyRecordStatus {
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
 model Site {
   id                       String                        @id @default(cuid())
   code                     String                        @unique
@@ -286,6 +358,15 @@ model Site {
   paymentOrders            PaymentOrder[]
   paymentTransactions      PaymentTransaction[]
   paymentEvents            PaymentEvent[]
+  cmsPages                 CmsPage[]
+  cmsBanners               CmsBanner[]
+  cmsAnnouncements         CmsAnnouncement[]
+  cmsSections              CmsSection[]
+  notificationTemplates    NotificationTemplate[]
+  notificationBroadcasts   NotificationBroadcast[]
+  notificationMessages     NotificationMessage[]
+  notificationPreferences  NotificationPreference[]
+  idempotencyRecords       IdempotencyRecord[]
   examTracks               ExamTrack[]
   mediums                  Medium[]
   subjects                 Subject[]
@@ -337,58 +418,78 @@ model SiteConfigVersion {
 }
 
 model User {
-  id                       String                        @id @default(cuid())
-  siteId                   String
-  email                    String
-  phone                    String?
-  fullName                 String
-  passwordHash             String
-  userType                 UserType
-  status                   UserStatus                    @default(ACTIVE)
-  lastLoginAt              DateTime?
-  emailVerifiedAt          DateTime?
-  phoneVerifiedAt          DateTime?
-  createdAt                DateTime                      @default(now())
-  updatedAt                DateTime                      @updatedAt
-  site                     Site                          @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  refreshSessions          RefreshSession[]
-  passwordResetTokens      PasswordResetToken[]
-  userRoles                UserRole[]                    @relation("UserRolesSubject")
-  roleAssignmentsMade      UserRole[]                    @relation("UserRolesActor")
-  permissionOverrides      UserPermissionOverride[]      @relation("UserPermissionOverrideSubject")
-  permissionOverridesMade  UserPermissionOverride[]      @relation("UserPermissionOverrideActor")
-  auditLogsAuthored        AuditLog[]                    @relation("AuditLogsActor")
-  createdFileAssets        FileAsset[]                   @relation("FileAssetCreator")
-  confirmedFileAssets      FileAsset[]                   @relation("FileAssetConfirmer")
-  createdContentEntries    ContentEntry[]                @relation("ContentCreator")
-  updatedContentEntries    ContentEntry[]                @relation("ContentUpdater")
-  publishedContentEntries  ContentEntry[]                @relation("ContentPublisher")
-  createdQuestions         Question[]                    @relation("QuestionCreator")
-  updatedQuestions         Question[]                    @relation("QuestionUpdater")
-  publishedQuestions       Question[]                    @relation("QuestionPublisher")
-  createdPlans             Plan[]                        @relation("PlanCreator")
-  updatedPlans             Plan[]                        @relation("PlanUpdater")
-  subscriptions            Subscription[]
-  entitlements             Entitlement[]                 @relation("EntitlementSubject")
-  grantedEntitlements      Entitlement[]                 @relation("EntitlementGrantActor")
-  paymentOrders            PaymentOrder[]
-  createdNotes             Note[]                        @relation("NoteCreator")
-  updatedNotes             Note[]                        @relation("NoteUpdater")
-  publishedNotes           Note[]                        @relation("NotePublisher")
-  practiceSessions         PracticeSession[]
-  practiceSessionQuestions PracticeSessionQuestion[]
-  practiceQuestionEvents   PracticeQuestionEvent[]
-  questionPracticeStates   UserQuestionPracticeState[]
-  subjectPracticeProgress  UserSubjectPracticeProgress[]
-  topicPracticeProgress    UserTopicPracticeProgress[]
-  createdTests             Test[]                        @relation("TestCreator")
-  updatedTests             Test[]                        @relation("TestUpdater")
-  publishedTests           Test[]                        @relation("TestPublisher")
-  testAttempts             TestAttempt[]
-  noteViewSessions         NoteViewSession[]
-  noteProgressRecords      NoteProgress[]
-  noteAccessLogs           NoteAccessLog[]
-  noteSecuritySignals      NoteSecuritySignal[]
+  id                               String                        @id @default(cuid())
+  siteId                           String
+  email                            String
+  phone                            String?
+  fullName                         String
+  passwordHash                     String
+  userType                         UserType
+  status                           UserStatus                    @default(ACTIVE)
+  lastLoginAt                      DateTime?
+  emailVerifiedAt                  DateTime?
+  phoneVerifiedAt                  DateTime?
+  createdAt                        DateTime                      @default(now())
+  updatedAt                        DateTime                      @updatedAt
+  site                             Site                          @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  refreshSessions                  RefreshSession[]
+  passwordResetTokens              PasswordResetToken[]
+  userRoles                        UserRole[]                    @relation("UserRolesSubject")
+  roleAssignmentsMade              UserRole[]                    @relation("UserRolesActor")
+  permissionOverrides              UserPermissionOverride[]      @relation("UserPermissionOverrideSubject")
+  permissionOverridesMade          UserPermissionOverride[]      @relation("UserPermissionOverrideActor")
+  auditLogsAuthored                AuditLog[]                    @relation("AuditLogsActor")
+  createdFileAssets                FileAsset[]                   @relation("FileAssetCreator")
+  confirmedFileAssets              FileAsset[]                   @relation("FileAssetConfirmer")
+  createdContentEntries            ContentEntry[]                @relation("ContentCreator")
+  updatedContentEntries            ContentEntry[]                @relation("ContentUpdater")
+  publishedContentEntries          ContentEntry[]                @relation("ContentPublisher")
+  createdQuestions                 Question[]                    @relation("QuestionCreator")
+  updatedQuestions                 Question[]                    @relation("QuestionUpdater")
+  publishedQuestions               Question[]                    @relation("QuestionPublisher")
+  createdPlans                     Plan[]                        @relation("PlanCreator")
+  updatedPlans                     Plan[]                        @relation("PlanUpdater")
+  subscriptions                    Subscription[]
+  entitlements                     Entitlement[]                 @relation("EntitlementSubject")
+  grantedEntitlements              Entitlement[]                 @relation("EntitlementGrantActor")
+  paymentOrders                    PaymentOrder[]
+  createdCmsPages                  CmsPage[]                     @relation("CmsPageCreator")
+  updatedCmsPages                  CmsPage[]                     @relation("CmsPageUpdater")
+  publishedCmsPages                CmsPage[]                     @relation("CmsPagePublisher")
+  createdCmsBanners                CmsBanner[]                   @relation("CmsBannerCreator")
+  updatedCmsBanners                CmsBanner[]                   @relation("CmsBannerUpdater")
+  publishedCmsBanners              CmsBanner[]                   @relation("CmsBannerPublisher")
+  createdCmsAnnouncements          CmsAnnouncement[]             @relation("CmsAnnouncementCreator")
+  updatedCmsAnnouncements          CmsAnnouncement[]             @relation("CmsAnnouncementUpdater")
+  publishedCmsAnnouncements        CmsAnnouncement[]             @relation("CmsAnnouncementPublisher")
+  createdCmsSections               CmsSection[]                  @relation("CmsSectionCreator")
+  updatedCmsSections               CmsSection[]                  @relation("CmsSectionUpdater")
+  publishedCmsSections             CmsSection[]                  @relation("CmsSectionPublisher")
+  createdNotificationTemplates     NotificationTemplate[]        @relation("NotificationTemplateCreator")
+  updatedNotificationTemplates     NotificationTemplate[]        @relation("NotificationTemplateUpdater")
+  createdNotificationBroadcasts    NotificationBroadcast[]       @relation("NotificationBroadcastCreator")
+  updatedNotificationBroadcasts    NotificationBroadcast[]       @relation("NotificationBroadcastUpdater")
+  dispatchedNotificationBroadcasts NotificationBroadcast[]       @relation("NotificationBroadcastDispatcher")
+  notificationMessages             NotificationMessage[]
+  notificationPreferences          NotificationPreference[]
+  idempotencyRecords               IdempotencyRecord[]
+  createdNotes                     Note[]                        @relation("NoteCreator")
+  updatedNotes                     Note[]                        @relation("NoteUpdater")
+  publishedNotes                   Note[]                        @relation("NotePublisher")
+  practiceSessions                 PracticeSession[]
+  practiceSessionQuestions         PracticeSessionQuestion[]
+  practiceQuestionEvents           PracticeQuestionEvent[]
+  questionPracticeStates           UserQuestionPracticeState[]
+  subjectPracticeProgress          UserSubjectPracticeProgress[]
+  topicPracticeProgress            UserTopicPracticeProgress[]
+  createdTests                     Test[]                        @relation("TestCreator")
+  updatedTests                     Test[]                        @relation("TestUpdater")
+  publishedTests                   Test[]                        @relation("TestPublisher")
+  testAttempts                     TestAttempt[]
+  noteViewSessions                 NoteViewSession[]
+  noteProgressRecords              NoteProgress[]
+  noteAccessLogs                   NoteAccessLog[]
+  noteSecuritySignals              NoteSecuritySignal[]
 
   @@unique([siteId, email])
   @@index([siteId, userType, status])
@@ -898,6 +999,9 @@ model FileAsset {
   contentCoverEntries     ContentEntry[]           @relation("ContentCoverAsset")
   contentAttachments      ContentAttachment[]
   questionMediaReferences QuestionMediaReference[]
+  cmsPageCoverAssets      CmsPage[]                @relation("CmsPageCoverAsset")
+  cmsBannerImageAssets    CmsBanner[]              @relation("CmsBannerImageAsset")
+  cmsSectionImageAssets   CmsSection[]             @relation("CmsSectionImageAsset")
   contentNotes            Note[]                   @relation("NoteContentAsset")
   previewNotes            Note[]                   @relation("NotePreviewAsset")
   coverNotes              Note[]                   @relation("NoteCoverAsset")
@@ -1562,4 +1666,260 @@ model NoteSecuritySignal {
   @@index([siteId, noteId, createdAt])
   @@index([siteId, signalKey, createdAt])
   @@map("note_security_signals")
+}
+
+model CmsPage {
+  id                String            @id @default(cuid())
+  siteId            String
+  slug              String
+  title             String
+  summary           String?
+  bodyJson          Json
+  seoJson           Json?
+  visibility        CatalogVisibility @default(PUBLIC)
+  coverImageAssetId String?
+  orderIndex        Int               @default(0)
+  status            CmsRecordStatus   @default(DRAFT)
+  createdByUserId   String
+  updatedByUserId   String
+  publishedByUserId String?
+  publishedAt       DateTime?
+  archivedAt        DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  site              Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  coverImageAsset   FileAsset?        @relation("CmsPageCoverAsset", fields: [coverImageAssetId], references: [id], onDelete: SetNull)
+  createdByUser     User              @relation("CmsPageCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser     User              @relation("CmsPageUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  publishedByUser   User?             @relation("CmsPagePublisher", fields: [publishedByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([siteId, slug])
+  @@index([siteId, status, visibility, publishedAt])
+  @@index([siteId, orderIndex, createdAt])
+  @@map("cms_pages")
+}
+
+model CmsBanner {
+  id                String             @id @default(cuid())
+  siteId            String
+  placement         CmsBannerPlacement
+  title             String
+  subtitle          String?
+  body              String?
+  ctaLabel          String?
+  ctaHref           String?
+  imageAssetId      String?
+  visibility        CatalogVisibility  @default(PUBLIC)
+  orderIndex        Int                @default(0)
+  startsAt          DateTime?
+  endsAt            DateTime?
+  metaJson          Json?
+  status            CmsRecordStatus    @default(DRAFT)
+  createdByUserId   String
+  updatedByUserId   String
+  publishedByUserId String?
+  publishedAt       DateTime?
+  archivedAt        DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  site              Site               @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  imageAsset        FileAsset?         @relation("CmsBannerImageAsset", fields: [imageAssetId], references: [id], onDelete: SetNull)
+  createdByUser     User               @relation("CmsBannerCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser     User               @relation("CmsBannerUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  publishedByUser   User?              @relation("CmsBannerPublisher", fields: [publishedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([siteId, placement, status, visibility, orderIndex])
+  @@index([siteId, startsAt, endsAt, publishedAt])
+  @@map("cms_banners")
+}
+
+model CmsAnnouncement {
+  id                String               @id @default(cuid())
+  siteId            String
+  title             String
+  body              String
+  linkLabel         String?
+  linkHref          String?
+  level             CmsAnnouncementLevel @default(INFO)
+  visibility        CatalogVisibility    @default(PUBLIC)
+  isPinned          Boolean              @default(false)
+  orderIndex        Int                  @default(0)
+  startsAt          DateTime?
+  endsAt            DateTime?
+  metaJson          Json?
+  status            CmsRecordStatus      @default(DRAFT)
+  createdByUserId   String
+  updatedByUserId   String
+  publishedByUserId String?
+  publishedAt       DateTime?
+  archivedAt        DateTime?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  site              Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  createdByUser     User                 @relation("CmsAnnouncementCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser     User                 @relation("CmsAnnouncementUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  publishedByUser   User?                @relation("CmsAnnouncementPublisher", fields: [publishedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([siteId, status, visibility, isPinned, orderIndex])
+  @@index([siteId, startsAt, endsAt, publishedAt])
+  @@map("cms_announcements")
+}
+
+model CmsSection {
+  id                String            @id @default(cuid())
+  siteId            String
+  surface           CmsSectionSurface
+  code              String
+  title             String
+  subtitle          String?
+  type              CmsSectionType
+  bodyJson          Json?
+  configJson        Json?
+  imageAssetId      String?
+  visibility        CatalogVisibility @default(PUBLIC)
+  orderIndex        Int               @default(0)
+  status            CmsRecordStatus   @default(DRAFT)
+  createdByUserId   String
+  updatedByUserId   String
+  publishedByUserId String?
+  publishedAt       DateTime?
+  archivedAt        DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  site              Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  imageAsset        FileAsset?        @relation("CmsSectionImageAsset", fields: [imageAssetId], references: [id], onDelete: SetNull)
+  createdByUser     User              @relation("CmsSectionCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser     User              @relation("CmsSectionUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  publishedByUser   User?             @relation("CmsSectionPublisher", fields: [publishedByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([siteId, surface, code])
+  @@index([siteId, surface, status, visibility, orderIndex])
+  @@map("cms_sections")
+}
+
+model NotificationTemplate {
+  id              String                     @id @default(cuid())
+  siteId          String
+  key             String
+  name            String
+  channel         NotificationChannel        @default(IN_APP)
+  subjectTemplate String?
+  titleTemplate   String
+  bodyTemplate    String
+  metaJson        Json?
+  status          NotificationTemplateStatus @default(ACTIVE)
+  createdByUserId String
+  updatedByUserId String
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+  site            Site                       @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  createdByUser   User                       @relation("NotificationTemplateCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser   User                       @relation("NotificationTemplateUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  broadcasts      NotificationBroadcast[]
+  messages        NotificationMessage[]
+
+  @@unique([siteId, key])
+  @@index([siteId, channel, status, name])
+  @@map("notification_templates")
+}
+
+model NotificationBroadcast {
+  id                 String                      @id @default(cuid())
+  siteId             String
+  templateId         String?
+  audienceType       NotificationAudienceType
+  channel            NotificationChannel         @default(IN_APP)
+  title              String
+  body               String
+  filtersJson        Json?
+  payloadJson        Json?
+  scheduledAt        DateTime?
+  dispatchedAt       DateTime?
+  cancelledAt        DateTime?
+  status             NotificationBroadcastStatus @default(DRAFT)
+  recipientCount     Int                         @default(0)
+  deliveredCount     Int                         @default(0)
+  readCount          Int                         @default(0)
+  createdByUserId    String
+  updatedByUserId    String
+  dispatchedByUserId String?
+  createdAt          DateTime                    @default(now())
+  updatedAt          DateTime                    @updatedAt
+  site               Site                        @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  template           NotificationTemplate?       @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  createdByUser      User                        @relation("NotificationBroadcastCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser      User                        @relation("NotificationBroadcastUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  dispatchedByUser   User?                       @relation("NotificationBroadcastDispatcher", fields: [dispatchedByUserId], references: [id], onDelete: SetNull)
+  messages           NotificationMessage[]
+
+  @@index([siteId, status, createdAt])
+  @@index([siteId, audienceType, status, dispatchedAt])
+  @@map("notification_broadcasts")
+}
+
+model NotificationMessage {
+  id            String                    @id @default(cuid())
+  siteId        String
+  userId        String
+  templateId    String?
+  broadcastId   String?
+  channel       NotificationChannel       @default(IN_APP)
+  title         String
+  body          String
+  payloadJson   Json?
+  status        NotificationMessageStatus @default(PENDING)
+  deliveredAt   DateTime?
+  readAt        DateTime?
+  failedAt      DateTime?
+  failureReason String?
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+  site          Site                      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user          User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  template      NotificationTemplate?     @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  broadcast     NotificationBroadcast?    @relation(fields: [broadcastId], references: [id], onDelete: SetNull)
+
+  @@index([siteId, userId, status, createdAt])
+  @@index([siteId, broadcastId, createdAt])
+  @@map("notification_messages")
+}
+
+model NotificationPreference {
+  siteId    String
+  userId    String
+  channel   NotificationChannel
+  isEnabled Boolean             @default(true)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  site      Site                @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, channel])
+  @@index([siteId, channel, isEnabled])
+  @@map("notification_preferences")
+}
+
+model IdempotencyRecord {
+  id           String                  @id @default(cuid())
+  siteId       String
+  userId       String?
+  scope        String
+  key          String
+  requestHash  String
+  status       IdempotencyRecordStatus @default(IN_PROGRESS)
+  responseJson Json?
+  resourceType String?
+  resourceId   String?
+  errorCode    String?
+  completedAt  DateTime?
+  expiresAt    DateTime?
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+  site         Site                    @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user         User?                   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([siteId, scope, key])
+  @@index([siteId, status, createdAt])
+  @@index([siteId, userId, createdAt])
+  @@map("idempotency_records")
 }
