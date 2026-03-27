@@ -75,14 +75,19 @@ class CmsPageBaseDto {
   @MaxLength(180)
   title!: string;
 
-  @ApiPropertyOptional({ example: 'Landing page content for the guidance section.' })
+  @ApiPropertyOptional({
+    example: 'Landing page content for the guidance section.',
+  })
   @Transform(({ value }) => normalizeOptionalText(value))
   @IsOptional()
   @IsString()
   @MaxLength(500)
   summary?: string;
 
-  @ApiProperty({ type: Object, example: { blocks: [{ type: 'paragraph', text: '...' }] } })
+  @ApiProperty({
+    type: Object,
+    example: { blocks: [{ type: 'paragraph', text: '...' }] },
+  })
   @IsObject()
   bodyJson!: Record<string, unknown>;
 
@@ -91,7 +96,10 @@ class CmsPageBaseDto {
   @IsObject()
   seoJson?: Record<string, unknown>;
 
-  @ApiPropertyOptional({ enum: CatalogVisibility, default: CatalogVisibility.PUBLIC })
+  @ApiPropertyOptional({
+    enum: CatalogVisibility,
+    default: CatalogVisibility.PUBLIC,
+  })
   @IsOptional()
   @IsEnum(CatalogVisibility)
   visibility?: CatalogVisibility;
@@ -124,7 +132,9 @@ class CmsBannerBaseDto {
   @MaxLength(180)
   title!: string;
 
-  @ApiPropertyOptional({ example: 'Study smarter with curated PDFs and test series.' })
+  @ApiPropertyOptional({
+    example: 'Study smarter with curated PDFs and test series.',
+  })
   @Transform(({ value }) => normalizeOptionalText(value))
   @IsOptional()
   @IsString()
@@ -157,7 +167,10 @@ class CmsBannerBaseDto {
   @IsString()
   imageAssetId?: string;
 
-  @ApiPropertyOptional({ enum: CatalogVisibility, default: CatalogVisibility.PUBLIC })
+  @ApiPropertyOptional({
+    enum: CatalogVisibility,
+    default: CatalogVisibility.PUBLIC,
+  })
   @IsOptional()
   @IsEnum(CatalogVisibility)
   visibility?: CatalogVisibility;
@@ -196,7 +209,9 @@ class CmsAnnouncementBaseDto {
   @MaxLength(180)
   title!: string;
 
-  @ApiProperty({ example: 'Secure your seat before the weekend closes admissions.' })
+  @ApiProperty({
+    example: 'Secure your seat before the weekend closes admissions.',
+  })
   @Transform(({ value }) => normalizeOptionalText(value))
   @IsString()
   @MinLength(2)
@@ -217,12 +232,18 @@ class CmsAnnouncementBaseDto {
   @MaxLength(240)
   linkHref?: string;
 
-  @ApiPropertyOptional({ enum: CmsAnnouncementLevel, default: CmsAnnouncementLevel.INFO })
+  @ApiPropertyOptional({
+    enum: CmsAnnouncementLevel,
+    default: CmsAnnouncementLevel.INFO,
+  })
   @IsOptional()
   @IsEnum(CmsAnnouncementLevel)
   level?: CmsAnnouncementLevel;
 
-  @ApiPropertyOptional({ enum: CatalogVisibility, default: CatalogVisibility.PUBLIC })
+  @ApiPropertyOptional({
+    enum: CatalogVisibility,
+    default: CatalogVisibility.PUBLIC,
+  })
   @IsOptional()
   @IsEnum(CatalogVisibility)
   visibility?: CatalogVisibility;
@@ -296,7 +317,10 @@ class CmsSectionBaseDto {
   @IsObject()
   bodyJson?: Record<string, unknown>;
 
-  @ApiPropertyOptional({ type: Object, example: { family: 'CAREER_GUIDANCE', limit: 4 } })
+  @ApiPropertyOptional({
+    type: Object,
+    example: { family: 'CAREER_GUIDANCE', limit: 4 },
+  })
   @IsOptional()
   @IsObject()
   configJson?: Record<string, unknown>;
@@ -306,7 +330,10 @@ class CmsSectionBaseDto {
   @IsString()
   imageAssetId?: string;
 
-  @ApiPropertyOptional({ enum: CatalogVisibility, default: CatalogVisibility.PUBLIC })
+  @ApiPropertyOptional({
+    enum: CatalogVisibility,
+    default: CatalogVisibility.PUBLIC,
+  })
   @IsOptional()
   @IsEnum(CatalogVisibility)
   visibility?: CatalogVisibility;

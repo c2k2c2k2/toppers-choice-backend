@@ -59,10 +59,7 @@ export class ThrottleGuard implements CanActivate {
     return true;
   }
 
-  private buildBucketKey(
-    request: ThrottleRequest,
-    metadata: ThrottleMetadata,
-  ) {
+  private buildBucketKey(request: ThrottleRequest, metadata: ThrottleMetadata) {
     const actorKey =
       request.user?.userId ??
       request.ip ??

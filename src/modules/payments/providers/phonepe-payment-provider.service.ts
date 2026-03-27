@@ -4,11 +4,7 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  Prisma,
-  PaymentOrderStatus,
-  PaymentProvider,
-} from '@prisma/client';
+import { Prisma, PaymentOrderStatus, PaymentProvider } from '@prisma/client';
 import { createHash } from 'node:crypto';
 import type { PaymentProviderAdapter } from '../payment-provider.interface';
 import { PaymentSettingsService } from '../payment-settings.service';
@@ -212,8 +208,7 @@ export class PhonePePaymentProviderService implements PaymentProviderAdapter {
       providerEventId,
       eventType,
       dedupeKey: `phonepe:${merchantOrderCode ?? 'unknown'}:${
-        providerEventId ??
-        createHash('sha256').update(dedupeSeed).digest('hex')
+        providerEventId ?? createHash('sha256').update(dedupeSeed).digest('hex')
       }`,
       payloadJson: normalizedPayload,
       headersJson: normalizedHeaders,
@@ -337,7 +332,11 @@ export class PhonePePaymentProviderService implements PaymentProviderAdapter {
       return (currentValue as JsonRecord)[segment];
     }, value);
 
-    if (candidate && typeof candidate === 'object' && !Array.isArray(candidate)) {
+    if (
+      candidate &&
+      typeof candidate === 'object' &&
+      !Array.isArray(candidate)
+    ) {
       return candidate as JsonRecord;
     }
 

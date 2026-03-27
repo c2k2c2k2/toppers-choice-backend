@@ -1,5 +1,12 @@
 import { Transform } from 'class-transformer';
-import { IsArray, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import {
+  IsArray,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateRoleDto {
@@ -24,9 +31,7 @@ export class CreateRoleDto {
 
   @ApiPropertyOptional({ example: 'Handles a custom operational workflow.' })
   @IsOptional()
-  @Transform(({ value }) =>
-    typeof value === 'string' ? value.trim() : value,
-  )
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @MaxLength(500)
   description?: string;

@@ -3,10 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import {
-  RefreshSessionStatus,
-  UserStatus,
-} from '@prisma/client';
+import { RefreshSessionStatus, UserStatus } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import {
@@ -16,9 +13,7 @@ import {
 } from '../users/users.types';
 import { AuthSettingsService } from './auth-settings.service';
 import { AuthTokenService } from './auth-token.service';
-import {
-  RefreshSessionResponseDto,
-} from './dto/auth-response.dto';
+import { RefreshSessionResponseDto } from './dto/auth-response.dto';
 import { RequestSessionMetadata, TokenBundle } from './auth.types';
 import { hashOpaqueToken } from './auth.utils';
 
@@ -46,7 +41,8 @@ export class SessionService {
     refreshToken: string,
     metadata: RequestSessionMetadata,
   ): Promise<SessionIssueResult> {
-    const payload = await this.authTokenService.verifyRefreshToken(refreshToken);
+    const payload =
+      await this.authTokenService.verifyRefreshToken(refreshToken);
     const now = new Date();
     const presentedTokenHash = hashOpaqueToken(refreshToken);
     const session = await this.prisma.refreshSession.findUnique({

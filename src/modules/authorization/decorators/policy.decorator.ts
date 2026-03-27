@@ -1,5 +1,8 @@
 import { SetMetadata } from '@nestjs/common';
-import { DEFAULT_ADMIN_POLICY, POLICY_METADATA_KEY } from '../authorization.constants';
+import {
+  DEFAULT_ADMIN_POLICY,
+  POLICY_METADATA_KEY,
+} from '../authorization.constants';
 import { PolicyRequirement } from '../authorization.types';
 
 export function Policy(

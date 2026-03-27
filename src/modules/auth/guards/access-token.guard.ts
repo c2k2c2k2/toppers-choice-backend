@@ -6,10 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import {
-  RefreshSessionStatus,
-  UserStatus,
-} from '@prisma/client';
+import { RefreshSessionStatus, UserStatus } from '@prisma/client';
 import type { Request } from 'express';
 import { PrismaService } from '../../../infra/prisma/prisma.service';
 import { userIdentitySelect } from '../../users/users.types';

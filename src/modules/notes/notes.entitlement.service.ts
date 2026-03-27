@@ -5,14 +5,15 @@ import { NoteRecord } from './notes.types';
 
 @Injectable()
 export class NotesEntitlementService {
-  constructor(
-    private readonly entitlementsService: EntitlementsService,
-  ) {}
+  constructor(private readonly entitlementsService: EntitlementsService) {}
 
   async canAccessPremiumNote(
     siteId: string,
     userId: string,
-    note: Pick<NoteRecord, 'id' | 'subjectId' | 'mediumId' | 'subject' | 'noteTopics'>,
+    note: Pick<
+      NoteRecord,
+      'id' | 'subjectId' | 'mediumId' | 'subject' | 'noteTopics'
+    >,
   ) {
     return this.entitlementsService.hasEntitlement(
       siteId,

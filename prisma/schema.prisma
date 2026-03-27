@@ -387,6 +387,8 @@ model Site {
   testAttempts             TestAttempt[]
   testAttemptQuestions     TestAttemptQuestion[]
   notes                    Note[]
+  noteIndexEntries         NoteIndexEntry[]
+  noteBookmarks            NoteBookmark[]
   noteViewSessions         NoteViewSession[]
   noteProgressRecords      NoteProgress[]
   noteAccessLogs           NoteAccessLog[]
@@ -476,6 +478,9 @@ model User {
   createdNotes                     Note[]                        @relation("NoteCreator")
   updatedNotes                     Note[]                        @relation("NoteUpdater")
   publishedNotes                   Note[]                        @relation("NotePublisher")
+  createdNoteIndexEntries          NoteIndexEntry[]              @relation("NoteIndexEntryCreator")
+  updatedNoteIndexEntries          NoteIndexEntry[]              @relation("NoteIndexEntryUpdater")
+  noteBookmarks                    NoteBookmark[]
   practiceSessions                 PracticeSession[]
   practiceSessionQuestions         PracticeSessionQuestion[]
   practiceQuestionEvents           PracticeQuestionEvent[]
@@ -1549,6 +1554,8 @@ model Note {
   updatedByUser      User                 @relation("NoteUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
   publishedByUser    User?                @relation("NotePublisher", fields: [publishedByUserId], references: [id], onDelete: SetNull)
   noteTopics         NoteTopic[]
+  indexEntries       NoteIndexEntry[]
+  bookmarks          NoteBookmark[]
   viewSessions       NoteViewSession[]
   progressRecords    NoteProgress[]
   accessLogs         NoteAccessLog[]
@@ -1571,6 +1578,51 @@ model NoteTopic {
   @@id([noteId, topicId])
   @@index([topicId])
   @@map("note_topics")
+}
+
+model NoteIndexEntry {
+  id              String         @id @default(cuid())
+  siteId          String
+  noteId          String
+  serialLabel     String?
+  title           String
+  titleFontHint   String?
+  pageNumber      Int
+  indentLevel     Int            @default(0)
+  orderIndex      Int            @default(0)
+  createdByUserId String
+  updatedByUserId String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  site            Site           @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  note            Note           @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  createdByUser   User           @relation("NoteIndexEntryCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  updatedByUser   User           @relation("NoteIndexEntryUpdater", fields: [updatedByUserId], references: [id], onDelete: Restrict)
+  bookmarks       NoteBookmark[]
+
+  @@index([siteId, noteId, orderIndex])
+  @@index([noteId, pageNumber])
+  @@map("note_index_entries")
+}
+
+model NoteBookmark {
+  id               String          @id @default(cuid())
+  siteId           String
+  noteId           String
+  userId           String
+  noteIndexEntryId String?
+  label            String?
+  pageNumber       Int
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  site             Site            @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  note             Note            @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  noteIndexEntry   NoteIndexEntry? @relation(fields: [noteIndexEntryId], references: [id], onDelete: SetNull)
+
+  @@index([siteId, userId, noteId, createdAt])
+  @@index([noteId, noteIndexEntryId])
+  @@map("note_bookmarks")
 }
 
 model NoteViewSession {

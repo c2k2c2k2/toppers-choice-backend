@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -18,16 +19,21 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiErrorResponseDto } from '../../common/dto/api-error-response.dto';
+import { ActionMessageResponseDto } from '../../common/dto/action-message-response.dto';
 import { Audit } from '../authorization/decorators/audit.decorator';
 import { Policy } from '../authorization/decorators/policy.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { AuthenticatedUser } from '../auth/auth.types';
 import {
   AdminListNotesQueryDto,
+  CreateNoteIndexEntryDto,
   CreateNoteDto,
+  UpdateNoteIndexEntryDto,
   UpdateNoteDto,
 } from './dto/manage-notes.dto';
 import {
+  NoteIndexEntryResponseDto,
+  NoteIndexListResponseDto,
   NotesListResponseDto,
   NoteSummaryResponseDto,
 } from './dto/note-response.dto';
@@ -137,5 +143,66 @@ export class AdminNotesController {
     @Param('noteId') noteId: string,
   ) {
     return this.notesService.unpublishNote(user, noteId);
+  }
+
+  @Get(':noteId/index')
+  @Policy('content.notes.read')
+  @ApiOkResponse({ type: NoteIndexListResponseDto })
+  async listNoteIndexEntries(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('noteId') noteId: string,
+  ) {
+    return this.notesService.listAdminNoteIndexEntries(user.siteId, noteId);
+  }
+
+  @Post(':noteId/index')
+  @Policy('content.notes.manage')
+  @Audit({
+    action: 'admin.notes.index.create',
+    resourceType: 'note_index_entry',
+    resourceIdResponseField: 'id',
+    includeBodyKeys: ['serialLabel', 'title', 'pageNumber', 'orderIndex'],
+  })
+  @ApiCreatedResponse({ type: NoteIndexEntryResponseDto })
+  async createNoteIndexEntry(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('noteId') noteId: string,
+    @Body() body: CreateNoteIndexEntryDto,
+  ) {
+    return this.notesService.createNoteIndexEntry(user, noteId, body);
+  }
+
+  @Patch(':noteId/index/:entryId')
+  @Policy('content.notes.manage')
+  @Audit({
+    action: 'admin.notes.index.update',
+    resourceType: 'note_index_entry',
+    resourceIdParam: 'entryId',
+    includeBodyKeys: ['serialLabel', 'title', 'pageNumber', 'orderIndex'],
+  })
+  @ApiOkResponse({ type: NoteIndexEntryResponseDto })
+  async updateNoteIndexEntry(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('noteId') noteId: string,
+    @Param('entryId') entryId: string,
+    @Body() body: UpdateNoteIndexEntryDto,
+  ) {
+    return this.notesService.updateNoteIndexEntry(user, noteId, entryId, body);
+  }
+
+  @Delete(':noteId/index/:entryId')
+  @Policy('content.notes.manage')
+  @Audit({
+    action: 'admin.notes.index.delete',
+    resourceType: 'note_index_entry',
+    resourceIdParam: 'entryId',
+  })
+  @ApiOkResponse({ type: ActionMessageResponseDto })
+  async deleteNoteIndexEntry(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('noteId') noteId: string,
+    @Param('entryId') entryId: string,
+  ) {
+    return this.notesService.deleteNoteIndexEntry(user, noteId, entryId);
   }
 }

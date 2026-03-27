@@ -1,9 +1,5 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '../../common/throttling/throttle.decorator';
 import { ThrottleGuard } from '../../common/throttling/throttle.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';

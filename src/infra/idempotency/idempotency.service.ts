@@ -3,10 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import {
-  IdempotencyRecordStatus,
-  Prisma,
-} from '@prisma/client';
+import { IdempotencyRecordStatus, Prisma } from '@prisma/client';
 import { createHash } from 'node:crypto';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -20,7 +17,13 @@ type IdempotentExecutionOptions = {
   ttlMinutes?: number;
 };
 
-type StoredResponse = Record<string, unknown> | unknown[] | string | number | boolean | null;
+type StoredResponse =
+  | Record<string, unknown>
+  | unknown[]
+  | string
+  | number
+  | boolean
+  | null;
 
 @Injectable()
 export class IdempotencyService {

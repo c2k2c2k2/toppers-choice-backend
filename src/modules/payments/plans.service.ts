@@ -132,7 +132,11 @@ export class PlansService {
     }
   }
 
-  async updatePlan(user: AuthenticatedUser, planId: string, input: UpdatePlanDto) {
+  async updatePlan(
+    user: AuthenticatedUser,
+    planId: string,
+    input: UpdatePlanDto,
+  ) {
     const existing = await this.getPlanRecord(user.siteId, planId);
 
     try {
@@ -154,11 +158,11 @@ export class PlansService {
             shortDescription:
               input.shortDescription === undefined
                 ? undefined
-                : input.shortDescription?.trim() ?? null,
+                : (input.shortDescription?.trim() ?? null),
             description:
               input.description === undefined
                 ? undefined
-                : input.description?.trim() ?? null,
+                : (input.description?.trim() ?? null),
             pricePaise: input.pricePaise,
             currencyCode:
               input.currencyCode === undefined
@@ -279,7 +283,9 @@ export class PlansService {
     tx: PrismaTransactionClient,
     siteId: string,
     planId: string,
-    input: Pick<CreatePlanDto, 'entitlements'> | Pick<UpdatePlanDto, 'entitlements'>,
+    input:
+      | Pick<CreatePlanDto, 'entitlements'>
+      | Pick<UpdatePlanDto, 'entitlements'>,
   ) {
     await tx.planEntitlement.deleteMany({
       where: {

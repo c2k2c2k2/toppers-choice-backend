@@ -76,7 +76,10 @@ class NotificationTemplateBaseDto {
   @MaxLength(160)
   name!: string;
 
-  @ApiPropertyOptional({ enum: NotificationChannel, default: NotificationChannel.IN_APP })
+  @ApiPropertyOptional({
+    enum: NotificationChannel,
+    default: NotificationChannel.IN_APP,
+  })
   @IsOptional()
   @IsEnum(NotificationChannel)
   channel?: NotificationChannel;
@@ -105,7 +108,10 @@ class NotificationTemplateBaseDto {
   @IsObject()
   metaJson?: Record<string, unknown>;
 
-  @ApiPropertyOptional({ enum: NotificationTemplateStatus, default: NotificationTemplateStatus.ACTIVE })
+  @ApiPropertyOptional({
+    enum: NotificationTemplateStatus,
+    default: NotificationTemplateStatus.ACTIVE,
+  })
   @IsOptional()
   @IsEnum(NotificationTemplateStatus)
   status?: NotificationTemplateStatus;
@@ -146,7 +152,10 @@ export class CreateNotificationBroadcastDto {
   @IsEnum(NotificationAudienceType)
   audienceType!: NotificationAudienceType;
 
-  @ApiPropertyOptional({ enum: NotificationChannel, default: NotificationChannel.IN_APP })
+  @ApiPropertyOptional({
+    enum: NotificationChannel,
+    default: NotificationChannel.IN_APP,
+  })
   @IsOptional()
   @IsEnum(NotificationChannel)
   channel?: NotificationChannel;

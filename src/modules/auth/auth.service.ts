@@ -4,10 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import {
-  TokenPurpose,
-  UserStatus,
-} from '@prisma/client';
+import { TokenPurpose, UserStatus } from '@prisma/client';
 import { ActionMessageResponseDto } from '../../common/dto/action-message-response.dto';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuthorizationService } from '../authorization/authorization.service';
@@ -44,7 +41,10 @@ export class AuthService {
       passwordHash,
     });
     const activeUser = await this.usersService.markLastLogin(user.id);
-    const session = await this.sessionService.createSession(activeUser, metadata);
+    const session = await this.sessionService.createSession(
+      activeUser,
+      metadata,
+    );
     const access = await this.authorizationService.getUserAccessSummary(
       activeUser.id,
       activeUser.siteId,
@@ -80,7 +80,10 @@ export class AuthService {
     }
 
     const activeUser = await this.usersService.markLastLogin(user.id);
-    const session = await this.sessionService.createSession(activeUser, metadata);
+    const session = await this.sessionService.createSession(
+      activeUser,
+      metadata,
+    );
     const access = await this.authorizationService.getUserAccessSummary(
       activeUser.id,
       activeUser.siteId,
@@ -296,7 +299,9 @@ export class AuthService {
       });
     }
 
-    const passwordHash = await this.passwordHasherService.hash(body.newPassword);
+    const passwordHash = await this.passwordHasherService.hash(
+      body.newPassword,
+    );
 
     await this.prisma.$transaction(async (tx) => {
       await tx.passwordResetToken.update({

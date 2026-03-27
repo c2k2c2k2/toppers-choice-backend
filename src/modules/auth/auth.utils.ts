@@ -1,8 +1,6 @@
 import { createHash, randomInt } from 'node:crypto';
 import type { Request } from 'express';
-import {
-  PASSWORD_RESET_CODE_LENGTH,
-} from './auth.constants';
+import { PASSWORD_RESET_CODE_LENGTH } from './auth.constants';
 import { RequestSessionMetadata } from './auth.types';
 
 export function hashOpaqueToken(token: string) {

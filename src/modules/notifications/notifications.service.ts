@@ -181,7 +181,10 @@ export class NotificationsService {
     return this.getPreferences(user);
   }
 
-  async listTemplates(siteId: string, query: ListAdminNotificationTemplatesQueryDto) {
+  async listTemplates(
+    siteId: string,
+    query: ListAdminNotificationTemplatesQueryDto,
+  ) {
     const where: Prisma.NotificationTemplateWhereInput = {
       siteId,
       channel: query.channel,
@@ -250,7 +253,7 @@ export class NotificationsService {
         subjectTemplate:
           input.subjectTemplate === undefined
             ? undefined
-            : input.subjectTemplate?.trim() ?? null,
+            : (input.subjectTemplate?.trim() ?? null),
         titleTemplate: input.titleTemplate?.trim(),
         bodyTemplate: input.bodyTemplate?.trim(),
         metaJson:
@@ -389,7 +392,9 @@ export class NotificationsService {
       },
       data: {
         templateId:
-          input.templateId === undefined ? undefined : input.templateId ?? null,
+          input.templateId === undefined
+            ? undefined
+            : (input.templateId ?? null),
         audienceType: input.audienceType,
         channel: input.channel,
         title: input.title?.trim(),
@@ -574,7 +579,10 @@ export class NotificationsService {
     return this.mapBroadcast(broadcast);
   }
 
-  async listMessages(siteId: string, query: ListAdminNotificationMessagesQueryDto) {
+  async listMessages(
+    siteId: string,
+    query: ListAdminNotificationMessagesQueryDto,
+  ) {
     const where: Prisma.NotificationMessageWhereInput = {
       siteId,
       status: query.status,
@@ -774,9 +782,7 @@ export class NotificationsService {
       preferences.map((item) => [item.userId, item.isEnabled]),
     );
 
-    return userIds.filter(
-      (userId) => explicitPreferences.get(userId) ?? true,
-    );
+    return userIds.filter((userId) => explicitPreferences.get(userId) ?? true);
   }
 
   private async refreshBroadcastStats(broadcastId: string | null) {
@@ -821,13 +827,17 @@ export class NotificationsService {
     });
   }
 
-  private extractUserIds(filtersJson: Record<string, unknown> | null | undefined) {
+  private extractUserIds(
+    filtersJson: Record<string, unknown> | null | undefined,
+  ) {
     const rawUserIds = filtersJson?.userIds;
     if (!Array.isArray(rawUserIds)) {
       return [];
     }
 
-    return rawUserIds.filter((item): item is string => typeof item === 'string');
+    return rawUserIds.filter(
+      (item): item is string => typeof item === 'string',
+    );
   }
 
   private toObject(value: Prisma.JsonValue | null) {

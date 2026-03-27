@@ -36,10 +36,13 @@ import { NotesEntitlementService } from './notes.entitlement.service';
 import { NotesSettingsService } from './notes.settings.service';
 import {
   AdminListNotesQueryDto,
+  CreateNoteIndexEntryDto,
   CreateNoteDto,
   ListPublishedNotesQueryDto,
+  UpdateNoteIndexEntryDto,
   UpdateNoteDto,
   UpdateNoteProgressDto,
+  UpsertNoteBookmarkDto,
 } from './dto/manage-notes.dto';
 import {
   mapNoteProgress,
@@ -117,7 +120,7 @@ export class NotesService {
 
     return {
       items: items.map((item) =>
-        mapNoteRecord(item, this.getAdminAccessSummary(item), null),
+        mapNoteRecord(item, this.getAdminAccessSummary(), null),
       ),
       total,
     };
@@ -139,7 +142,7 @@ export class NotesService {
       });
     }
 
-    return mapNoteRecord(note, this.getAdminAccessSummary(note), null);
+    return mapNoteRecord(note, this.getAdminAccessSummary(), null);
   }
 
   async createNote(user: AuthenticatedUser, input: CreateNoteDto) {
@@ -460,7 +463,6 @@ export class NotesService {
       select: noteSelect,
     });
     const items = await this.mapPublishedNoteRecords(user, notes);
-    const notesById = new Map(items.map((item) => [item.id, item]));
     const subjectIds = Array.from(new Set(notes.map((note) => note.subjectId)));
     const topics = await this.prisma.topic.findMany({
       where: {
@@ -1064,6 +1066,462 @@ export class NotesService {
     return mapNoteProgress(progress);
   }
 
+  async listAdminNoteIndexEntries(siteId: string, noteId: string) {
+    await this.ensureNoteExists(siteId, noteId);
+
+    const items = await this.prisma.noteIndexEntry.findMany({
+      where: {
+        noteId,
+        siteId,
+      },
+      orderBy: [
+        { orderIndex: 'asc' },
+        { pageNumber: 'asc' },
+        { createdAt: 'asc' },
+      ],
+    });
+
+    return {
+      items: items.map((item) => this.mapNoteIndexEntry(item)),
+    };
+  }
+
+  async createNoteIndexEntry(
+    user: AuthenticatedUser,
+    noteId: string,
+    input: CreateNoteIndexEntryDto,
+  ) {
+    const note = await this.ensureNoteExists(user.siteId, noteId);
+    this.assertPageNumberWithinNote(note.pageCount, input.pageNumber);
+
+    const created = await this.prisma.noteIndexEntry.create({
+      data: {
+        siteId: user.siteId,
+        noteId,
+        serialLabel: input.serialLabel?.trim() || null,
+        title: input.title.trim(),
+        titleFontHint: input.titleFontHint ?? null,
+        pageNumber: input.pageNumber,
+        indentLevel: input.indentLevel ?? 0,
+        orderIndex:
+          input.orderIndex ?? (await this.getNextNoteIndexOrderIndex(noteId)),
+        createdByUserId: user.userId,
+        updatedByUserId: user.userId,
+      },
+    });
+
+    return this.mapNoteIndexEntry(created);
+  }
+
+  async updateNoteIndexEntry(
+    user: AuthenticatedUser,
+    noteId: string,
+    entryId: string,
+    input: UpdateNoteIndexEntryDto,
+  ) {
+    const note = await this.ensureNoteExists(user.siteId, noteId);
+    const existing = await this.getNoteIndexEntryForSite(
+      user.siteId,
+      noteId,
+      entryId,
+    );
+
+    const nextPageNumber = input.pageNumber ?? existing.pageNumber;
+    this.assertPageNumberWithinNote(note.pageCount, nextPageNumber);
+
+    const updated = await this.prisma.noteIndexEntry.update({
+      where: {
+        id: entryId,
+      },
+      data: {
+        serialLabel:
+          input.serialLabel === undefined
+            ? undefined
+            : input.serialLabel?.trim() || null,
+        title: input.title?.trim(),
+        titleFontHint:
+          input.titleFontHint === undefined
+            ? undefined
+            : input.titleFontHint || null,
+        pageNumber: input.pageNumber,
+        indentLevel: input.indentLevel,
+        orderIndex: input.orderIndex,
+        updatedByUserId: user.userId,
+      },
+    });
+
+    return this.mapNoteIndexEntry(updated);
+  }
+
+  async deleteNoteIndexEntry(
+    user: AuthenticatedUser,
+    noteId: string,
+    entryId: string,
+  ) {
+    await this.ensureNoteExists(user.siteId, noteId);
+    await this.getNoteIndexEntryForSite(user.siteId, noteId, entryId);
+
+    await this.prisma.$transaction([
+      this.prisma.noteBookmark.updateMany({
+        where: {
+          noteIndexEntryId: entryId,
+          noteId,
+          siteId: user.siteId,
+        },
+        data: {
+          noteIndexEntryId: null,
+        },
+      }),
+      this.prisma.noteIndexEntry.delete({
+        where: {
+          id: entryId,
+        },
+      }),
+    ]);
+
+    return {
+      message: 'Note index entry deleted.',
+    };
+  }
+
+  async listPublishedNoteIndexEntries(user: AuthenticatedUser, noteId: string) {
+    await this.ensurePublishedNoteExists(user.siteId, noteId);
+
+    const items = await this.prisma.noteIndexEntry.findMany({
+      where: {
+        noteId,
+        siteId: user.siteId,
+      },
+      orderBy: [
+        { orderIndex: 'asc' },
+        { pageNumber: 'asc' },
+        { createdAt: 'asc' },
+      ],
+    });
+
+    return {
+      items: items.map((item) => this.mapNoteIndexEntry(item)),
+    };
+  }
+
+  async listNoteBookmarks(user: AuthenticatedUser, noteId: string) {
+    await this.getBookmarkablePublishedNote(user, noteId);
+
+    const items = await this.prisma.noteBookmark.findMany({
+      where: {
+        noteId,
+        siteId: user.siteId,
+        userId: user.userId,
+      },
+      orderBy: [{ createdAt: 'desc' }],
+    });
+
+    return {
+      items: items.map((item) => this.mapNoteBookmark(item)),
+    };
+  }
+
+  async createNoteBookmark(
+    user: AuthenticatedUser,
+    noteId: string,
+    input: UpsertNoteBookmarkDto,
+  ) {
+    const note = await this.getBookmarkablePublishedNote(user, noteId);
+    this.assertPageNumberWithinNote(note.pageCount, input.pageNumber);
+    const noteIndexEntryId = await this.resolveBookmarkIndexEntryId(
+      user.siteId,
+      noteId,
+      input.noteIndexEntryId,
+    );
+
+    const created = await this.prisma.noteBookmark.create({
+      data: {
+        siteId: user.siteId,
+        noteId,
+        userId: user.userId,
+        noteIndexEntryId,
+        label: input.label?.trim() || null,
+        pageNumber: input.pageNumber,
+      },
+    });
+
+    return this.mapNoteBookmark(created);
+  }
+
+  async updateNoteBookmark(
+    user: AuthenticatedUser,
+    noteId: string,
+    bookmarkId: string,
+    input: UpsertNoteBookmarkDto,
+  ) {
+    const note = await this.getBookmarkablePublishedNote(user, noteId);
+    await this.getNoteBookmarkForUser(
+      user.siteId,
+      user.userId,
+      noteId,
+      bookmarkId,
+    );
+    this.assertPageNumberWithinNote(note.pageCount, input.pageNumber);
+    const noteIndexEntryId = await this.resolveBookmarkIndexEntryId(
+      user.siteId,
+      noteId,
+      input.noteIndexEntryId,
+    );
+
+    const updated = await this.prisma.noteBookmark.update({
+      where: {
+        id: bookmarkId,
+      },
+      data: {
+        noteIndexEntryId,
+        label: input.label?.trim() || null,
+        pageNumber: input.pageNumber,
+      },
+    });
+
+    return this.mapNoteBookmark(updated);
+  }
+
+  async deleteNoteBookmark(
+    user: AuthenticatedUser,
+    noteId: string,
+    bookmarkId: string,
+  ) {
+    await this.getBookmarkablePublishedNote(user, noteId);
+    await this.getNoteBookmarkForUser(
+      user.siteId,
+      user.userId,
+      noteId,
+      bookmarkId,
+    );
+
+    await this.prisma.noteBookmark.delete({
+      where: {
+        id: bookmarkId,
+      },
+    });
+
+    return {
+      message: 'Bookmark removed.',
+    };
+  }
+
+  private async ensureNoteExists(siteId: string, noteId: string) {
+    const note = await this.prisma.note.findFirst({
+      where: {
+        id: noteId,
+        siteId,
+      },
+      select: {
+        id: true,
+        pageCount: true,
+      },
+    });
+
+    if (!note) {
+      throw new NotFoundException({
+        code: 'NOTE_NOT_FOUND',
+        message: 'Note was not found.',
+      });
+    }
+
+    return note;
+  }
+
+  private async ensurePublishedNoteExists(siteId: string, noteId: string) {
+    const note = await this.prisma.note.findFirst({
+      where: {
+        id: noteId,
+        siteId,
+        status: NoteStatus.PUBLISHED,
+      },
+      select: {
+        id: true,
+        pageCount: true,
+      },
+    });
+
+    if (!note) {
+      throw new NotFoundException({
+        code: 'NOTE_NOT_FOUND',
+        message: 'Published note was not found.',
+      });
+    }
+
+    return note;
+  }
+
+  private async getBookmarkablePublishedNote(
+    user: AuthenticatedUser,
+    noteId: string,
+  ) {
+    const note = await this.prisma.note.findFirst({
+      where: {
+        id: noteId,
+        siteId: user.siteId,
+        status: NoteStatus.PUBLISHED,
+      },
+      select: noteSelect,
+    });
+
+    if (!note) {
+      throw new NotFoundException({
+        code: 'NOTE_NOT_FOUND',
+        message: 'Published note was not found.',
+      });
+    }
+
+    const access = await this.resolveAccessForUser(user, note);
+    if (access.mode === 'LOCKED') {
+      throw new ForbiddenException({
+        code: 'NOTE_ACCESS_DENIED',
+        message: access.reason ?? 'This note is not available for bookmarking.',
+      });
+    }
+
+    return note;
+  }
+
+  private async getNoteIndexEntryForSite(
+    siteId: string,
+    noteId: string,
+    entryId: string,
+  ) {
+    const entry = await this.prisma.noteIndexEntry.findFirst({
+      where: {
+        id: entryId,
+        siteId,
+        noteId,
+      },
+    });
+
+    if (!entry) {
+      throw new NotFoundException({
+        code: 'NOTE_INDEX_ENTRY_NOT_FOUND',
+        message: 'Note index entry was not found.',
+      });
+    }
+
+    return entry;
+  }
+
+  private async resolveBookmarkIndexEntryId(
+    siteId: string,
+    noteId: string,
+    noteIndexEntryId?: string,
+  ) {
+    if (!noteIndexEntryId) {
+      return null;
+    }
+
+    const entry = await this.getNoteIndexEntryForSite(
+      siteId,
+      noteId,
+      noteIndexEntryId,
+    );
+
+    return entry.id;
+  }
+
+  private async getNoteBookmarkForUser(
+    siteId: string,
+    userId: string,
+    noteId: string,
+    bookmarkId: string,
+  ) {
+    const bookmark = await this.prisma.noteBookmark.findFirst({
+      where: {
+        id: bookmarkId,
+        siteId,
+        userId,
+        noteId,
+      },
+    });
+
+    if (!bookmark) {
+      throw new NotFoundException({
+        code: 'NOTE_BOOKMARK_NOT_FOUND',
+        message: 'Bookmark was not found.',
+      });
+    }
+
+    return bookmark;
+  }
+
+  private mapNoteIndexEntry(entry: {
+    id: string;
+    noteId: string;
+    serialLabel: string | null;
+    title: string;
+    titleFontHint: string | null;
+    pageNumber: number;
+    indentLevel: number;
+    orderIndex: number;
+    createdAt: Date;
+    updatedAt: Date;
+  }) {
+    return {
+      id: entry.id,
+      noteId: entry.noteId,
+      serialLabel: entry.serialLabel,
+      title: entry.title,
+      titleFontHint: entry.titleFontHint,
+      pageNumber: entry.pageNumber,
+      indentLevel: entry.indentLevel,
+      orderIndex: entry.orderIndex,
+      createdAt: entry.createdAt,
+      updatedAt: entry.updatedAt,
+    };
+  }
+
+  private mapNoteBookmark(bookmark: {
+    id: string;
+    noteId: string;
+    userId: string;
+    noteIndexEntryId: string | null;
+    label: string | null;
+    pageNumber: number;
+    createdAt: Date;
+    updatedAt: Date;
+  }) {
+    return {
+      id: bookmark.id,
+      noteId: bookmark.noteId,
+      userId: bookmark.userId,
+      noteIndexEntryId: bookmark.noteIndexEntryId,
+      label: bookmark.label,
+      pageNumber: bookmark.pageNumber,
+      createdAt: bookmark.createdAt,
+      updatedAt: bookmark.updatedAt,
+    };
+  }
+
+  private assertPageNumberWithinNote(pageCount: number, pageNumber: number) {
+    if (
+      !Number.isInteger(pageNumber) ||
+      pageNumber < 1 ||
+      pageNumber > pageCount
+    ) {
+      throw new BadRequestException({
+        code: 'NOTE_PAGE_NUMBER_INVALID',
+        message: 'Page number must stay within the note page count.',
+      });
+    }
+  }
+
+  private async getNextNoteIndexOrderIndex(noteId: string) {
+    const aggregate = await this.prisma.noteIndexEntry.aggregate({
+      where: {
+        noteId,
+      },
+      _max: {
+        orderIndex: true,
+      },
+    });
+
+    return (aggregate._max.orderIndex ?? 0) + 10;
+  }
+
   private buildAdminNoteWhere(
     siteId: string,
     query: AdminListNotesQueryDto,
@@ -1165,7 +1623,7 @@ export class NotesService {
     note: NoteRecord,
   ): Promise<NoteAccessSummary> {
     if (user.userType === UserType.ADMIN) {
-      return this.getAdminAccessSummary(note);
+      return this.getAdminAccessSummary();
     }
 
     if (note.accessType === NoteAccessType.FREE) {
@@ -1215,7 +1673,7 @@ export class NotesService {
     };
   }
 
-  private getAdminAccessSummary(_note: NoteRecord): NoteAccessSummary {
+  private getAdminAccessSummary(): NoteAccessSummary {
     return {
       mode: 'FULL',
       canStartViewSession: true,

@@ -1,14 +1,20 @@
 import { Transform } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { UserStatus, UserType } from '@prisma/client';
-import { IsEnum, IsInt, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 export class ListAdminUsersQueryDto {
   @ApiPropertyOptional()
   @IsOptional()
-  @Transform(({ value }) =>
-    typeof value === 'string' ? value.trim() : value,
-  )
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @MaxLength(120)
   q?: string;
@@ -26,7 +32,9 @@ export class ListAdminUsersQueryDto {
   @ApiPropertyOptional({ default: 25, minimum: 1, maximum: 100 })
   @IsOptional()
   @Transform(({ value }) =>
-    value === undefined || value === null || value === '' ? undefined : Number(value),
+    value === undefined || value === null || value === ''
+      ? undefined
+      : Number(value),
   )
   @IsInt()
   @Min(1)

@@ -1,6 +1,4 @@
-import {
-  RefreshSessionStatus,
-} from '@prisma/client';
+import { RefreshSessionStatus } from '@prisma/client';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserAccessResponseDto } from '../../authorization/dto/user-access-response.dto';
 import { UserIdentityResponseDto } from '../../users/dto/user-identity-response.dto';

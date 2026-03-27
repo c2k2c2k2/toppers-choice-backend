@@ -4,9 +4,7 @@ import { EntitlementsService } from '../payments/entitlements.service';
 
 @Injectable()
 export class TestsEntitlementService {
-  constructor(
-    private readonly entitlementsService: EntitlementsService,
-  ) {}
+  constructor(private readonly entitlementsService: EntitlementsService) {}
 
   async canAccessTest(
     siteId: string,

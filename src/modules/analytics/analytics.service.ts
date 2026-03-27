@@ -20,92 +20,95 @@ export class AnalyticsService {
 
   async getStudentSummary(user: AuthenticatedUser) {
     const now = new Date();
-    const [noteProgress, practiceStats, testStats, unreadNotifications, entitlements, subscription] =
-      await Promise.all([
-        this.prisma.noteProgress.aggregate({
-          where: {
-            siteId: user.siteId,
-            userId: user.userId,
+    const [
+      noteProgress,
+      practiceStats,
+      testStats,
+      unreadNotifications,
+      entitlements,
+      subscription,
+    ] = await Promise.all([
+      this.prisma.noteProgress.aggregate({
+        where: {
+          siteId: user.siteId,
+          userId: user.userId,
+        },
+        _count: {
+          noteId: true,
+          completedAt: true,
+        },
+      }),
+      this.prisma.practiceSession.aggregate({
+        where: {
+          siteId: user.siteId,
+          userId: user.userId,
+          status: 'COMPLETED',
+        },
+        _count: {
+          id: true,
+        },
+        _sum: {
+          answeredCount: true,
+          correctCount: true,
+        },
+      }),
+      this.prisma.testAttempt.aggregate({
+        where: {
+          siteId: user.siteId,
+          userId: user.userId,
+          status: {
+            in: [TestAttemptStatus.SUBMITTED, TestAttemptStatus.AUTO_SUBMITTED],
           },
-          _count: {
-            noteId: true,
-            completedAt: true,
+        },
+        _count: {
+          id: true,
+        },
+        _max: {
+          percentage: true,
+        },
+      }),
+      this.prisma.notificationMessage.count({
+        where: {
+          siteId: user.siteId,
+          userId: user.userId,
+          status: NotificationMessageStatus.DELIVERED,
+          readAt: null,
+        },
+      }),
+      this.prisma.entitlement.count({
+        where: {
+          siteId: user.siteId,
+          userId: user.userId,
+          revokedAt: null,
+          startsAt: {
+            lte: now,
           },
-        }),
-        this.prisma.practiceSession.aggregate({
-          where: {
-            siteId: user.siteId,
-            userId: user.userId,
-            status: 'COMPLETED',
+          OR: [{ endsAt: null }, { endsAt: { gt: now } }],
+        },
+      }),
+      this.prisma.subscription.findFirst({
+        where: {
+          siteId: user.siteId,
+          userId: user.userId,
+          status: SubscriptionStatus.ACTIVE,
+          revokedAt: null,
+          endsAt: {
+            gt: now,
           },
-          _count: {
-            id: true,
-          },
-          _sum: {
-            answeredCount: true,
-            correctCount: true,
-          },
-        }),
-        this.prisma.testAttempt.aggregate({
-          where: {
-            siteId: user.siteId,
-            userId: user.userId,
-            status: {
-              in: [
-                TestAttemptStatus.SUBMITTED,
-                TestAttemptStatus.AUTO_SUBMITTED,
-              ],
+        },
+        orderBy: {
+          endsAt: 'desc',
+        },
+        include: {
+          plan: {
+            select: {
+              id: true,
+              name: true,
             },
           },
-          _count: {
-            id: true,
-          },
-          _max: {
-            percentage: true,
-          },
-        }),
-        this.prisma.notificationMessage.count({
-          where: {
-            siteId: user.siteId,
-            userId: user.userId,
-            status: NotificationMessageStatus.DELIVERED,
-            readAt: null,
-          },
-        }),
-        this.prisma.entitlement.count({
-          where: {
-            siteId: user.siteId,
-            userId: user.userId,
-            revokedAt: null,
-            startsAt: {
-              lte: now,
-            },
-            OR: [{ endsAt: null }, { endsAt: { gt: now } }],
-          },
-        }),
-        this.prisma.subscription.findFirst({
-          where: {
-            siteId: user.siteId,
-            userId: user.userId,
-            status: SubscriptionStatus.ACTIVE,
-            revokedAt: null,
-            endsAt: {
-              gt: now,
-            },
-          },
-          orderBy: {
-            endsAt: 'desc',
-          },
-          include: {
-            plan: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        }),
-      ]);
+        },
+      }),
+    ]);
 
     const answeredCount = practiceStats._sum.answeredCount ?? 0;
     const correctCount = practiceStats._sum.correctCount ?? 0;
@@ -119,7 +122,9 @@ export class AnalyticsService {
         completedSessions: practiceStats._count.id,
         answeredCount,
         accuracyPercent:
-          answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0,
+          answeredCount > 0
+            ? Math.round((correctCount / answeredCount) * 100)
+            : 0,
       },
       tests: {
         submittedAttempts: testStats._count.id,

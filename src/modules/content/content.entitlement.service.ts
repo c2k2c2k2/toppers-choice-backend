@@ -5,9 +5,7 @@ import { ContentEntryRecord } from './content.types';
 
 @Injectable()
 export class ContentEntitlementService {
-  constructor(
-    private readonly entitlementsService: EntitlementsService,
-  ) {}
+  constructor(private readonly entitlementsService: EntitlementsService) {}
 
   async canAccessPremiumContent(
     siteId: string,

@@ -47,7 +47,9 @@ export class AdminAuditLogsController {
         ipAddress: log.ipAddress,
         userAgent: log.userAgent,
         meta:
-          log.metaJson && typeof log.metaJson === 'object' && !Array.isArray(log.metaJson)
+          log.metaJson &&
+          typeof log.metaJson === 'object' &&
+          !Array.isArray(log.metaJson)
             ? (log.metaJson as Record<string, unknown>)
             : null,
         createdAt: log.createdAt.toISOString(),

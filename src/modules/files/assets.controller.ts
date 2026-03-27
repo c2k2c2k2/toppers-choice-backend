@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Res,
-  StreamableFile,
-} from '@nestjs/common';
+import { Controller, Get, Param, Res, StreamableFile } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
@@ -26,7 +20,8 @@ export class AssetsController {
 
   @Get(':assetId')
   @ApiOkResponse({
-    description: 'Streams an authenticated or protected asset through the backend.',
+    description:
+      'Streams an authenticated or protected asset through the backend.',
   })
   @ApiUnauthorizedResponse({ type: ApiErrorResponseDto })
   @ApiForbiddenResponse({ type: ApiErrorResponseDto })

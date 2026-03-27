@@ -246,7 +246,9 @@ export class UsersService {
     }
   }
 
-  private async createUser(input: CreateUserInput): Promise<UserIdentityRecord> {
+  private async createUser(
+    input: CreateUserInput,
+  ): Promise<UserIdentityRecord> {
     const site = await this.resolveCurrentSite(input.siteCode);
     const normalizedEmail = this.normalizeEmail(input.email);
 

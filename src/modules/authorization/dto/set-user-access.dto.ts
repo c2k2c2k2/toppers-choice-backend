@@ -26,9 +26,7 @@ export class PermissionOverrideInputDto {
 
   @ApiPropertyOptional({ nullable: true })
   @IsOptional()
-  @Transform(({ value }) =>
-    typeof value === 'string' ? value.trim() : value,
-  )
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @MaxLength(500)
   reason?: string;
@@ -40,9 +38,7 @@ export class SetUserAccessDto {
   @ArrayUnique()
   @Transform(({ value }) =>
     Array.isArray(value)
-      ? value.map((item) =>
-          typeof item === 'string' ? item.trim() : item,
-        )
+      ? value.map((item) => (typeof item === 'string' ? item.trim() : item))
       : value,
   )
   @IsString({ each: true })

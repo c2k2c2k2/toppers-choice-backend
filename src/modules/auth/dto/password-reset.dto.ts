@@ -12,9 +12,7 @@ export class PasswordResetDto {
   email!: string;
 
   @ApiProperty({ example: '483921' })
-  @Transform(({ value }) =>
-    typeof value === 'string' ? value.trim() : value,
-  )
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @MinLength(4)
   @MaxLength(12)

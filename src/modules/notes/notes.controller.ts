@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
 import type { Request } from 'express';
 import {
   ApiBearerAuth,
@@ -8,15 +18,20 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { ActionMessageResponseDto } from '../../common/dto/action-message-response.dto';
 import { ApiErrorResponseDto } from '../../common/dto/api-error-response.dto';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { getRequestSessionMetadata } from '../auth/auth.utils';
 import { AuthenticatedUser } from '../auth/auth.types';
 import {
+  UpsertNoteBookmarkDto,
   ListPublishedNotesQueryDto,
   UpdateNoteProgressDto,
 } from './dto/manage-notes.dto';
 import {
+  NoteBookmarkListResponseDto,
+  NoteBookmarkResponseDto,
+  NoteIndexListResponseDto,
   NoteProgressResponseDto,
   NotesListResponseDto,
   NotesTreeResponseDto,
@@ -61,6 +76,17 @@ export class NotesController {
     return this.notesService.getPublishedNote(user, noteId);
   }
 
+  @Get(':noteId/index')
+  @ApiOkResponse({ type: NoteIndexListResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto })
+  @ApiForbiddenResponse({ type: ApiErrorResponseDto })
+  async getPublishedNoteIndex(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('noteId') noteId: string,
+  ) {
+    return this.notesService.listPublishedNoteIndexEntries(user, noteId);
+  }
+
   @Post(':noteId/view-session')
   @ApiCreatedResponse({ type: NoteViewSessionResponseDto })
   @ApiUnauthorizedResponse({ type: ApiErrorResponseDto })
@@ -93,5 +119,53 @@ export class NotesController {
       body,
       getRequestSessionMetadata(request),
     );
+  }
+
+  @Get(':noteId/bookmarks')
+  @ApiOkResponse({ type: NoteBookmarkListResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto })
+  @ApiForbiddenResponse({ type: ApiErrorResponseDto })
+  async listBookmarks(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('noteId') noteId: string,
+  ) {
+    return this.notesService.listNoteBookmarks(user, noteId);
+  }
+
+  @Post(':noteId/bookmarks')
+  @ApiCreatedResponse({ type: NoteBookmarkResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto })
+  @ApiForbiddenResponse({ type: ApiErrorResponseDto })
+  async createBookmark(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('noteId') noteId: string,
+    @Body() body: UpsertNoteBookmarkDto,
+  ) {
+    return this.notesService.createNoteBookmark(user, noteId, body);
+  }
+
+  @Patch(':noteId/bookmarks/:bookmarkId')
+  @ApiOkResponse({ type: NoteBookmarkResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto })
+  @ApiForbiddenResponse({ type: ApiErrorResponseDto })
+  async updateBookmark(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('noteId') noteId: string,
+    @Param('bookmarkId') bookmarkId: string,
+    @Body() body: UpsertNoteBookmarkDto,
+  ) {
+    return this.notesService.updateNoteBookmark(user, noteId, bookmarkId, body);
+  }
+
+  @Delete(':noteId/bookmarks/:bookmarkId')
+  @ApiOkResponse({ type: ActionMessageResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto })
+  @ApiForbiddenResponse({ type: ApiErrorResponseDto })
+  async deleteBookmark(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('noteId') noteId: string,
+    @Param('bookmarkId') bookmarkId: string,
+  ) {
+    return this.notesService.deleteNoteBookmark(user, noteId, bookmarkId);
   }
 }

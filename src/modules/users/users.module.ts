@@ -9,7 +9,11 @@ import { UsersService } from './users.service';
 
 @Module({
   imports: [SiteSettingsModule, AuthorizationModule],
-  controllers: [ProfileController, AdminStudentsController, AdminUsersController],
+  controllers: [
+    ProfileController,
+    AdminStudentsController,
+    AdminUsersController,
+  ],
   providers: [UsersService, PasswordHasherService],
   exports: [UsersService],
 })

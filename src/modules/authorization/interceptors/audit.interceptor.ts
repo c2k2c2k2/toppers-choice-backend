@@ -67,7 +67,10 @@ export class AuditInterceptor implements NestInterceptor {
     }
 
     if (metadata.resourceIdBodyField) {
-      const fromBody = this.getValueFromRecord(request.body, metadata.resourceIdBodyField);
+      const fromBody = this.getValueFromRecord(
+        request.body,
+        metadata.resourceIdBodyField,
+      );
       if (typeof fromBody === 'string' && fromBody.length > 0) {
         return fromBody;
       }

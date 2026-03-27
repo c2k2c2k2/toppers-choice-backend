@@ -11,7 +11,12 @@ import { NotesService } from './notes.service';
 import { NoteViewSessionsController } from './note-view-sessions.controller';
 
 @Module({
-  imports: [AuthModule, AuthorizationModule, PaymentsModule, SiteSettingsModule],
+  imports: [
+    AuthModule,
+    AuthorizationModule,
+    PaymentsModule,
+    SiteSettingsModule,
+  ],
   controllers: [
     AdminNotesController,
     NotesController,

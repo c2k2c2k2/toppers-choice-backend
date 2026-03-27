@@ -82,7 +82,11 @@ export class TaxonomyService {
     return mapExamTrack(record);
   }
 
-  async updateExamTrack(siteId: string, examTrackId: string, input: UpdateExamTrackDto) {
+  async updateExamTrack(
+    siteId: string,
+    examTrackId: string,
+    input: UpdateExamTrackDto,
+  ) {
     await this.ensureExamTrackExists(siteId, examTrackId);
 
     const record = await this.prisma.examTrack.update({
@@ -98,7 +102,9 @@ export class TaxonomyService {
             : this.resolveSlug(input.slug, input.name),
         name: input.name?.trim(),
         shortName:
-          input.shortName === undefined ? undefined : input.shortName?.trim() || null,
+          input.shortName === undefined
+            ? undefined
+            : input.shortName?.trim() || null,
         description:
           input.description === undefined
             ? undefined
@@ -239,7 +245,11 @@ export class TaxonomyService {
     return mapSubject(record);
   }
 
-  async updateSubject(siteId: string, subjectId: string, input: UpdateSubjectDto) {
+  async updateSubject(
+    siteId: string,
+    subjectId: string,
+    input: UpdateSubjectDto,
+  ) {
     const existing = await this.ensureSubjectExists(siteId, subjectId);
     const nextExamTrackId = input.examTrackId ?? existing.examTrackId;
 
@@ -342,7 +352,12 @@ export class TaxonomyService {
     await this.ensureSubjectExists(siteId, nextSubjectId);
 
     if (nextParentId) {
-      await this.ensureParentTopic(siteId, nextSubjectId, nextParentId, topicId);
+      await this.ensureParentTopic(
+        siteId,
+        nextSubjectId,
+        nextParentId,
+        topicId,
+      );
       await this.assertTopicNotDescendant(topicId, nextParentId);
     }
 

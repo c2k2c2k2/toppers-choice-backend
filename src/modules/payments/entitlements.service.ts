@@ -80,10 +80,7 @@ export class EntitlementsService {
     };
   }
 
-  async grantEntitlement(
-    actor: AuthenticatedUser,
-    input: GrantEntitlementDto,
-  ) {
+  async grantEntitlement(actor: AuthenticatedUser, input: GrantEntitlementDto) {
     const targetUser = await this.ensureStudentUser(actor.siteId, input.userId);
     const startsAt = input.startsAt ? new Date(input.startsAt) : new Date();
 
@@ -394,7 +391,11 @@ export class EntitlementsService {
     scopeJson: Prisma.JsonValue | null,
     criteria: EntitlementCriteria,
   ) {
-    if (!scopeJson || typeof scopeJson !== 'object' || Array.isArray(scopeJson)) {
+    if (
+      !scopeJson ||
+      typeof scopeJson !== 'object' ||
+      Array.isArray(scopeJson)
+    ) {
       return true;
     }
 
@@ -420,7 +421,9 @@ export class EntitlementsService {
         if (
           criteriaValue === null ||
           criteriaValue === undefined ||
-          !scopeValue.map((item) => String(item)).includes(String(criteriaValue))
+          !scopeValue
+            .map((item) => String(item))
+            .includes(String(criteriaValue))
         ) {
           return false;
         }
@@ -429,7 +432,11 @@ export class EntitlementsService {
       }
 
       if (Array.isArray(criteriaValue)) {
-        if (!criteriaValue.map((item) => String(item)).includes(String(scopeValue))) {
+        if (
+          !criteriaValue
+            .map((item) => String(item))
+            .includes(String(scopeValue))
+        ) {
           return false;
         }
         continue;

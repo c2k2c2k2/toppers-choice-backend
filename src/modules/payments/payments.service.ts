@@ -195,7 +195,9 @@ export class PaymentsService {
       updatedOrder.status === PaymentOrderStatus.SUCCEEDED &&
       !updatedOrder.subscription
     ) {
-      return mapPaymentOrder(await this.activateSuccessfulOrder(updatedOrder.id));
+      return mapPaymentOrder(
+        await this.activateSuccessfulOrder(updatedOrder.id),
+      );
     }
 
     return mapPaymentOrder(updatedOrder);
@@ -220,7 +222,10 @@ export class PaymentsService {
       });
     }
 
-    const reconciled = await this.reconcileIfNeeded(order, PaymentEventSource.STATUS_POLL);
+    const reconciled = await this.reconcileIfNeeded(
+      order,
+      PaymentEventSource.STATUS_POLL,
+    );
     return mapPaymentOrder(reconciled);
   }
 
@@ -344,7 +349,8 @@ export class PaymentsService {
           },
           data: {
             status: PaymentEventStatus.IGNORED,
-            errorMessage: 'merchantOrderCode could not be resolved from callback.',
+            errorMessage:
+              'merchantOrderCode could not be resolved from callback.',
             processedAt: new Date(),
           },
         });
@@ -387,7 +393,7 @@ export class PaymentsService {
 
     const updatedOrder = await this.prisma.paymentEvent.update({
       where: {
-        id: createdEventId!,
+        id: createdEventId,
       },
       data: {
         siteId: order.siteId,
@@ -613,10 +619,12 @@ export class PaymentsService {
 
     const latestEndsAt =
       subscriptionMode === 'EXTEND_ACTIVE'
-        ? currentSubscriptions[0]?.endsAt ?? null
+        ? (currentSubscriptions[0]?.endsAt ?? null)
         : null;
     const startsAt =
-      latestEndsAt && latestEndsAt > now ? latestEndsAt : order.confirmedAt ?? now;
+      latestEndsAt && latestEndsAt > now
+        ? latestEndsAt
+        : (order.confirmedAt ?? now);
     const endsAt = new Date(
       startsAt.getTime() + order.plan.durationDays * 24 * 60 * 60_000,
     );

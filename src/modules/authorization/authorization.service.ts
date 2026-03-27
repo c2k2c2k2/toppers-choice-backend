@@ -5,9 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../infra/prisma/prisma.service';
-import {
-  SELF_ROLE_MANAGEMENT_PERMISSION,
-} from './authorization.constants';
+import { SELF_ROLE_MANAGEMENT_PERMISSION } from './authorization.constants';
 import {
   AuthorizationAccessSummary,
   AuthorizationPermissionOverrideSummary,
@@ -263,7 +261,9 @@ export class AuthorizationService {
       });
     }
 
-    const mismatchedRole = roles.find((role) => role.userType !== targetUser.userType);
+    const mismatchedRole = roles.find(
+      (role) => role.userType !== targetUser.userType,
+    );
     if (mismatchedRole) {
       throw new BadRequestException({
         code: 'ROLE_USER_TYPE_MISMATCH',
@@ -402,7 +402,9 @@ export class AuthorizationService {
 
   private async resolvePermissionIds(permissionKeys: string[]) {
     const permissionMap = await this.resolvePermissionMap(permissionKeys);
-    return permissionKeys.map((permissionKey) => permissionMap.get(permissionKey)!);
+    return permissionKeys.map(
+      (permissionKey) => permissionMap.get(permissionKey)!,
+    );
   }
 
   private async resolvePermissionMap(permissionKeys: string[]) {
@@ -428,7 +430,9 @@ export class AuthorizationService {
       });
     }
 
-    return new Map(permissions.map((permission) => [permission.key, permission.id]));
+    return new Map(
+      permissions.map((permission) => [permission.key, permission.id]),
+    );
   }
 
   private async getRoleSummaryById(roleId: string) {

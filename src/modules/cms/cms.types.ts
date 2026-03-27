@@ -152,7 +152,9 @@ export function mapCmsPage(
     archivedAt: record.archivedAt,
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,
-    coverImage: record.coverImageAsset ? mapCmsAsset(record.coverImageAsset) : null,
+    coverImage: record.coverImageAsset
+      ? mapCmsAsset(record.coverImageAsset)
+      : null,
   };
 }
 

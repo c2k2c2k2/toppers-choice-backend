@@ -1,9 +1,5 @@
 import { Transform } from 'class-transformer';
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  PartialType,
-} from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { CatalogVisibility } from '@prisma/client';
 import {
   ArrayMinSize,
@@ -71,7 +67,10 @@ class TaxonomyMutationBaseDto {
   @MaxLength(500)
   description?: string;
 
-  @ApiPropertyOptional({ enum: CatalogVisibility, default: CatalogVisibility.PUBLIC })
+  @ApiPropertyOptional({
+    enum: CatalogVisibility,
+    default: CatalogVisibility.PUBLIC,
+  })
   @IsOptional()
   @IsEnum(CatalogVisibility)
   visibility?: CatalogVisibility;

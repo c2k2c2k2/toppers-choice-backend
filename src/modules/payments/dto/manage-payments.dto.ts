@@ -1,8 +1,4 @@
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  PartialType,
-} from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import {
   ArrayMinSize,
@@ -114,7 +110,9 @@ class PlanMutationBaseDto {
   @MaxLength(320)
   shortDescription?: string;
 
-  @ApiPropertyOptional({ example: 'Detailed plan copy shown in the pricing UI.' })
+  @ApiPropertyOptional({
+    example: 'Detailed plan copy shown in the pricing UI.',
+  })
   @Transform(({ value }) => normalizeOptionalText(value))
   @IsOptional()
   @IsString()

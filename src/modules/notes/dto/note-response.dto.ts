@@ -24,6 +24,74 @@ export class NoteTopicResponseDto {
   isActive!: boolean;
 }
 
+export class NoteIndexEntryResponseDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty()
+  noteId!: string;
+
+  @ApiPropertyOptional({ nullable: true })
+  serialLabel!: string | null;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiPropertyOptional({ nullable: true })
+  titleFontHint!: string | null;
+
+  @ApiProperty()
+  pageNumber!: number;
+
+  @ApiProperty()
+  indentLevel!: number;
+
+  @ApiProperty()
+  orderIndex!: number;
+
+  @ApiProperty()
+  createdAt!: Date;
+
+  @ApiProperty()
+  updatedAt!: Date;
+}
+
+export class NoteIndexListResponseDto {
+  @ApiProperty({ type: [NoteIndexEntryResponseDto] })
+  items!: NoteIndexEntryResponseDto[];
+}
+
+export class NoteBookmarkResponseDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty()
+  noteId!: string;
+
+  @ApiProperty()
+  userId!: string;
+
+  @ApiPropertyOptional({ nullable: true })
+  noteIndexEntryId!: string | null;
+
+  @ApiPropertyOptional({ nullable: true })
+  label!: string | null;
+
+  @ApiProperty()
+  pageNumber!: number;
+
+  @ApiProperty()
+  createdAt!: Date;
+
+  @ApiProperty()
+  updatedAt!: Date;
+}
+
+export class NoteBookmarkListResponseDto {
+  @ApiProperty({ type: [NoteBookmarkResponseDto] })
+  items!: NoteBookmarkResponseDto[];
+}
+
 export class NoteProgressResponseDto {
   @ApiProperty()
   noteId!: string;

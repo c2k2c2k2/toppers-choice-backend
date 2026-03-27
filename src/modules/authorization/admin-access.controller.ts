@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -34,9 +26,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 @ApiBearerAuth('access-token')
 @Controller('admin')
 export class AdminAccessController {
-  constructor(
-    private readonly authorizationService: AuthorizationService,
-  ) {}
+  constructor(private readonly authorizationService: AuthorizationService) {}
 
   @Get('access/permissions')
   @Policy('admin.roles.read')
@@ -151,7 +141,9 @@ export class AdminAccessController {
     );
   }
 
-  private mapUserAccess(access: Awaited<ReturnType<AuthorizationService['getUserAccessSummary']>>) {
+  private mapUserAccess(
+    access: Awaited<ReturnType<AuthorizationService['getUserAccessSummary']>>,
+  ) {
     return {
       userId: access.userId,
       siteId: access.siteId,

@@ -49,7 +49,10 @@ export class AdminUsersController {
     @CurrentUser() user: AuthenticatedUser,
     @Query() query: ListAdminUsersQueryDto,
   ) {
-    const result = await this.usersService.listUsersForAdmin(user.siteId, query);
+    const result = await this.usersService.listUsersForAdmin(
+      user.siteId,
+      query,
+    );
 
     return {
       items: result.items.map((item) => mapUserIdentity(item)),

@@ -82,9 +82,7 @@ export class PaymentSettingsService {
     );
 
     if (
-      PAYMENT_SUBSCRIPTION_MODE_VALUES.includes(
-        mode as PaymentSubscriptionMode,
-      )
+      PAYMENT_SUBSCRIPTION_MODE_VALUES.includes(mode as PaymentSubscriptionMode)
     ) {
       return mode as PaymentSubscriptionMode;
     }
@@ -103,44 +101,49 @@ export class PaymentSettingsService {
   }
 
   async getPhonePeRuntimeConfig(): Promise<PhonePeRuntimeConfig> {
-    const [payPath, statusPathTemplate, callbackPath, returnPath, redirectMode] =
-      await Promise.all([
-        this.siteSettingsService.getStringSetting(
-          PAYMENTS_RUNTIME_CONFIG_KEY,
-          PHONEPE_PAY_PATH,
-          {
-            fallback: '/pg/v1/pay',
-          },
-        ),
-        this.siteSettingsService.getStringSetting(
-          PAYMENTS_RUNTIME_CONFIG_KEY,
-          PHONEPE_STATUS_PATH_TEMPLATE,
-          {
-            fallback: '/pg/v1/status/{merchantId}/{merchantOrderCode}',
-          },
-        ),
-        this.siteSettingsService.getStringSetting(
-          PAYMENTS_RUNTIME_CONFIG_KEY,
-          PHONEPE_CALLBACK_PATH,
-          {
-            fallback: '/api/v1/payments/providers/phonepe/callback',
-          },
-        ),
-        this.siteSettingsService.getStringSetting(
-          PAYMENTS_RUNTIME_CONFIG_KEY,
-          PHONEPE_RETURN_PATH,
-          {
-            fallback: '/payments/result',
-          },
-        ),
-        this.siteSettingsService.getStringSetting(
-          PAYMENTS_RUNTIME_CONFIG_KEY,
-          PHONEPE_REDIRECT_MODE_PATH,
-          {
-            fallback: 'REDIRECT',
-          },
-        ),
-      ]);
+    const [
+      payPath,
+      statusPathTemplate,
+      callbackPath,
+      returnPath,
+      redirectMode,
+    ] = await Promise.all([
+      this.siteSettingsService.getStringSetting(
+        PAYMENTS_RUNTIME_CONFIG_KEY,
+        PHONEPE_PAY_PATH,
+        {
+          fallback: '/pg/v1/pay',
+        },
+      ),
+      this.siteSettingsService.getStringSetting(
+        PAYMENTS_RUNTIME_CONFIG_KEY,
+        PHONEPE_STATUS_PATH_TEMPLATE,
+        {
+          fallback: '/pg/v1/status/{merchantId}/{merchantOrderCode}',
+        },
+      ),
+      this.siteSettingsService.getStringSetting(
+        PAYMENTS_RUNTIME_CONFIG_KEY,
+        PHONEPE_CALLBACK_PATH,
+        {
+          fallback: '/api/v1/payments/providers/phonepe/callback',
+        },
+      ),
+      this.siteSettingsService.getStringSetting(
+        PAYMENTS_RUNTIME_CONFIG_KEY,
+        PHONEPE_RETURN_PATH,
+        {
+          fallback: '/payments/result',
+        },
+      ),
+      this.siteSettingsService.getStringSetting(
+        PAYMENTS_RUNTIME_CONFIG_KEY,
+        PHONEPE_REDIRECT_MODE_PATH,
+        {
+          fallback: 'REDIRECT',
+        },
+      ),
+    ]);
     const appBaseUrl = await this.siteSettingsService.getStringSetting(
       PLATFORM_PUBLIC_RUNTIME_CONFIG_KEY,
       'origins.appBaseUrl',

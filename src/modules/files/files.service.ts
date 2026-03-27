@@ -23,7 +23,10 @@ import {
   FILE_UPLOAD_URL_TTL_SECONDS,
   isInlineAssetContentType,
 } from './files.constants';
-import { InitFileUploadDto, ListFileAssetsQueryDto } from './dto/manage-file-assets.dto';
+import {
+  InitFileUploadDto,
+  ListFileAssetsQueryDto,
+} from './dto/manage-file-assets.dto';
 import { fileAssetSelect, mapFileAsset } from './files.types';
 
 @Injectable()
@@ -105,7 +108,8 @@ export class FilesService {
         createdByUserId: user.userId,
         purpose: input.purpose,
         accessLevel:
-          input.accessLevel ?? FILE_PURPOSE_RULES[input.purpose].defaultAccessLevel,
+          input.accessLevel ??
+          FILE_PURPOSE_RULES[input.purpose].defaultAccessLevel,
         status: FileAssetStatus.PENDING_UPLOAD,
         objectKey,
         originalFileName: input.fileName.trim(),
@@ -157,7 +161,9 @@ export class FilesService {
       });
     }
 
-    const metadata = await this.objectStorageService.headObject(asset.objectKey);
+    const metadata = await this.objectStorageService.headObject(
+      asset.objectKey,
+    );
 
     if (!metadata.contentLength || metadata.contentLength <= 0) {
       throw new BadRequestException({
@@ -346,7 +352,7 @@ export class FilesService {
     const normalizedName = fileName.trim();
     const nameParts = normalizedName.split('.');
     const fileExtension =
-      nameParts.length > 1 ? nameParts.at(-1)?.toLowerCase() ?? null : null;
+      nameParts.length > 1 ? (nameParts.at(-1)?.toLowerCase() ?? null) : null;
     const expectedExtension = FILE_EXTENSION_BY_CONTENT_TYPE[contentType];
 
     if (!expectedExtension) {

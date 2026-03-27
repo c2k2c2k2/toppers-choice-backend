@@ -9,7 +9,11 @@ import { SearchService } from './search.service';
 
 @Module({
   imports: [PrismaModule, SiteSettingsModule],
-  controllers: [PublicSearchController, SearchController, AdminSearchController],
+  controllers: [
+    PublicSearchController,
+    SearchController,
+    AdminSearchController,
+  ],
   providers: [SearchService, ThrottleGuard],
 })
 export class SearchModule {}

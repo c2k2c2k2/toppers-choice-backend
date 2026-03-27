@@ -151,7 +151,8 @@ export class CmsService {
             : (input.seoJson as Prisma.InputJsonValue),
         visibility: input.visibility ?? CatalogVisibility.PUBLIC,
         coverImageAssetId,
-        orderIndex: input.orderIndex ?? (await this.getNextPageOrderIndex(user.siteId)),
+        orderIndex:
+          input.orderIndex ?? (await this.getNextPageOrderIndex(user.siteId)),
         createdByUserId: user.userId,
         updatedByUserId: user.userId,
       },
@@ -209,7 +210,9 @@ export class CmsService {
         slug: nextSlug,
         title: input.title?.trim(),
         summary:
-          input.summary === undefined ? undefined : input.summary?.trim() ?? null,
+          input.summary === undefined
+            ? undefined
+            : (input.summary?.trim() ?? null),
         bodyJson:
           input.bodyJson === undefined
             ? undefined
@@ -270,18 +273,16 @@ export class CmsService {
   }
 
   async reorderPages(siteId: string, input: ReorderCmsRecordsDto) {
-    await this.reorderEntities(
-      input.orderedIds,
-      async (id, orderIndex) =>
-        this.prisma.cmsPage.updateMany({
-          where: {
-            id,
-            siteId,
-          },
-          data: {
-            orderIndex,
-          },
-        }),
+    await this.reorderEntities(input.orderedIds, async (id, orderIndex) =>
+      this.prisma.cmsPage.updateMany({
+        where: {
+          id,
+          siteId,
+        },
+        data: {
+          orderIndex,
+        },
+      }),
     );
   }
 
@@ -411,14 +412,19 @@ export class CmsService {
         placement: input.placement,
         title: input.title?.trim(),
         subtitle:
-          input.subtitle === undefined ? undefined : input.subtitle?.trim() ?? null,
-        body: input.body === undefined ? undefined : input.body?.trim() ?? null,
+          input.subtitle === undefined
+            ? undefined
+            : (input.subtitle?.trim() ?? null),
+        body:
+          input.body === undefined ? undefined : (input.body?.trim() ?? null),
         ctaLabel:
           input.ctaLabel === undefined
             ? undefined
-            : input.ctaLabel?.trim() ?? null,
+            : (input.ctaLabel?.trim() ?? null),
         ctaHref:
-          input.ctaHref === undefined ? undefined : input.ctaHref?.trim() ?? null,
+          input.ctaHref === undefined
+            ? undefined
+            : (input.ctaHref?.trim() ?? null),
         imageAssetId: nextImageAssetId,
         visibility: nextVisibility,
         orderIndex: input.orderIndex,
@@ -488,18 +494,16 @@ export class CmsService {
   }
 
   async reorderBanners(siteId: string, input: ReorderCmsRecordsDto) {
-    await this.reorderEntities(
-      input.orderedIds,
-      async (id, orderIndex) =>
-        this.prisma.cmsBanner.updateMany({
-          where: {
-            id,
-            siteId,
-          },
-          data: {
-            orderIndex,
-          },
-        }),
+    await this.reorderEntities(input.orderedIds, async (id, orderIndex) =>
+      this.prisma.cmsBanner.updateMany({
+        where: {
+          id,
+          siteId,
+        },
+        data: {
+          orderIndex,
+        },
+      }),
     );
   }
 
@@ -518,7 +522,11 @@ export class CmsService {
     const [items, total] = await this.prisma.$transaction([
       this.prisma.cmsAnnouncement.findMany({
         where,
-        orderBy: [{ isPinned: 'desc' }, { orderIndex: 'asc' }, { createdAt: 'desc' }],
+        orderBy: [
+          { isPinned: 'desc' },
+          { orderIndex: 'asc' },
+          { createdAt: 'desc' },
+        ],
         select: cmsAnnouncementSelect,
       }),
       this.prisma.cmsAnnouncement.count({ where }),
@@ -563,7 +571,9 @@ export class CmsService {
         level: input.level,
         visibility: input.visibility ?? CatalogVisibility.PUBLIC,
         isPinned: input.isPinned ?? false,
-        orderIndex: input.orderIndex ?? (await this.getNextAnnouncementOrderIndex(user.siteId)),
+        orderIndex:
+          input.orderIndex ??
+          (await this.getNextAnnouncementOrderIndex(user.siteId)),
         startsAt: input.startsAt ? new Date(input.startsAt) : null,
         endsAt: input.endsAt ? new Date(input.endsAt) : null,
         metaJson:
@@ -614,11 +624,11 @@ export class CmsService {
         linkLabel:
           input.linkLabel === undefined
             ? undefined
-            : input.linkLabel?.trim() ?? null,
+            : (input.linkLabel?.trim() ?? null),
         linkHref:
           input.linkHref === undefined
             ? undefined
-            : input.linkHref?.trim() ?? null,
+            : (input.linkHref?.trim() ?? null),
         level: input.level,
         visibility: input.visibility,
         isPinned: input.isPinned,
@@ -689,18 +699,16 @@ export class CmsService {
   }
 
   async reorderAnnouncements(siteId: string, input: ReorderCmsRecordsDto) {
-    await this.reorderEntities(
-      input.orderedIds,
-      async (id, orderIndex) =>
-        this.prisma.cmsAnnouncement.updateMany({
-          where: {
-            id,
-            siteId,
-          },
-          data: {
-            orderIndex,
-          },
-        }),
+    await this.reorderEntities(input.orderedIds, async (id, orderIndex) =>
+      this.prisma.cmsAnnouncement.updateMany({
+        where: {
+          id,
+          siteId,
+        },
+        data: {
+          orderIndex,
+        },
+      }),
     );
   }
 
@@ -743,7 +751,10 @@ export class CmsService {
     });
 
     if (!section) {
-      throw this.notFound('CMS_SECTION_NOT_FOUND', 'CMS section was not found.');
+      throw this.notFound(
+        'CMS_SECTION_NOT_FOUND',
+        'CMS section was not found.',
+      );
     }
 
     return mapCmsSection(section, { includeBody: true });
@@ -806,7 +817,10 @@ export class CmsService {
     });
 
     if (!existing) {
-      throw this.notFound('CMS_SECTION_NOT_FOUND', 'CMS section was not found.');
+      throw this.notFound(
+        'CMS_SECTION_NOT_FOUND',
+        'CMS section was not found.',
+      );
     }
 
     const nextVisibility = input.visibility ?? existing.visibility;
@@ -829,7 +843,9 @@ export class CmsService {
         code: input.code,
         title: input.title?.trim(),
         subtitle:
-          input.subtitle === undefined ? undefined : input.subtitle?.trim() ?? null,
+          input.subtitle === undefined
+            ? undefined
+            : (input.subtitle?.trim() ?? null),
         type: input.type,
         bodyJson:
           input.bodyJson === undefined
@@ -893,73 +909,87 @@ export class CmsService {
   }
 
   async reorderSections(siteId: string, input: ReorderCmsRecordsDto) {
-    await this.reorderEntities(
-      input.orderedIds,
-      async (id, orderIndex) =>
-        this.prisma.cmsSection.updateMany({
-          where: {
-            id,
-            siteId,
-          },
-          data: {
-            orderIndex,
-          },
-        }),
+    await this.reorderEntities(input.orderedIds, async (id, orderIndex) =>
+      this.prisma.cmsSection.updateMany({
+        where: {
+          id,
+          siteId,
+        },
+        data: {
+          orderIndex,
+        },
+      }),
     );
   }
 
-  private async resolveCmsBundle(siteId: string, includeAuthenticated: boolean) {
+  private async resolveCmsBundle(
+    siteId: string,
+    includeAuthenticated: boolean,
+  ) {
     const limits = await this.getResolverLimits();
     const visibilityFilter = buildCmsVisibilityWhere(includeAuthenticated);
     const now = new Date();
-    const [pages, banners, announcements, sections] = await this.prisma.$transaction([
-      this.prisma.cmsPage.findMany({
-        where: {
-          siteId,
-          visibility: visibilityFilter,
-          status: CmsRecordStatus.PUBLISHED,
-          OR: [{ publishedAt: null }, { publishedAt: { lte: now } }],
-        },
-        orderBy: [{ orderIndex: 'asc' }, { title: 'asc' }],
-        take: limits.pages,
-        select: cmsPageSelect,
-      }),
-      this.prisma.cmsBanner.findMany({
-        where: {
-          siteId,
-          visibility: visibilityFilter,
-          status: CmsRecordStatus.PUBLISHED,
-          OR: [{ publishedAt: null }, { publishedAt: { lte: now } }],
-          AND: this.buildActiveWindowFilters(now),
-        },
-        orderBy: [{ placement: 'asc' }, { orderIndex: 'asc' }, { createdAt: 'desc' }],
-        take: limits.banners,
-        select: cmsBannerSelect,
-      }),
-      this.prisma.cmsAnnouncement.findMany({
-        where: {
-          siteId,
-          visibility: visibilityFilter,
-          status: CmsRecordStatus.PUBLISHED,
-          OR: [{ publishedAt: null }, { publishedAt: { lte: now } }],
-          AND: this.buildActiveWindowFilters(now),
-        },
-        orderBy: [{ isPinned: 'desc' }, { orderIndex: 'asc' }, { createdAt: 'desc' }],
-        take: limits.announcements,
-        select: cmsAnnouncementSelect,
-      }),
-      this.prisma.cmsSection.findMany({
-        where: {
-          siteId,
-          visibility: visibilityFilter,
-          status: CmsRecordStatus.PUBLISHED,
-          OR: [{ publishedAt: null }, { publishedAt: { lte: now } }],
-        },
-        orderBy: [{ surface: 'asc' }, { orderIndex: 'asc' }, { createdAt: 'desc' }],
-        take: limits.sections,
-        select: cmsSectionSelect,
-      }),
-    ]);
+    const [pages, banners, announcements, sections] =
+      await this.prisma.$transaction([
+        this.prisma.cmsPage.findMany({
+          where: {
+            siteId,
+            visibility: visibilityFilter,
+            status: CmsRecordStatus.PUBLISHED,
+            OR: [{ publishedAt: null }, { publishedAt: { lte: now } }],
+          },
+          orderBy: [{ orderIndex: 'asc' }, { title: 'asc' }],
+          take: limits.pages,
+          select: cmsPageSelect,
+        }),
+        this.prisma.cmsBanner.findMany({
+          where: {
+            siteId,
+            visibility: visibilityFilter,
+            status: CmsRecordStatus.PUBLISHED,
+            OR: [{ publishedAt: null }, { publishedAt: { lte: now } }],
+            AND: this.buildActiveWindowFilters(now),
+          },
+          orderBy: [
+            { placement: 'asc' },
+            { orderIndex: 'asc' },
+            { createdAt: 'desc' },
+          ],
+          take: limits.banners,
+          select: cmsBannerSelect,
+        }),
+        this.prisma.cmsAnnouncement.findMany({
+          where: {
+            siteId,
+            visibility: visibilityFilter,
+            status: CmsRecordStatus.PUBLISHED,
+            OR: [{ publishedAt: null }, { publishedAt: { lte: now } }],
+            AND: this.buildActiveWindowFilters(now),
+          },
+          orderBy: [
+            { isPinned: 'desc' },
+            { orderIndex: 'asc' },
+            { createdAt: 'desc' },
+          ],
+          take: limits.announcements,
+          select: cmsAnnouncementSelect,
+        }),
+        this.prisma.cmsSection.findMany({
+          where: {
+            siteId,
+            visibility: visibilityFilter,
+            status: CmsRecordStatus.PUBLISHED,
+            OR: [{ publishedAt: null }, { publishedAt: { lte: now } }],
+          },
+          orderBy: [
+            { surface: 'asc' },
+            { orderIndex: 'asc' },
+            { createdAt: 'desc' },
+          ],
+          take: limits.sections,
+          select: cmsSectionSelect,
+        }),
+      ]);
 
     return {
       pages: pages.map((item) => mapCmsPage(item)),
@@ -1015,7 +1045,10 @@ export class CmsService {
     });
 
     if (!asset) {
-      throw this.notFound('CMS_ASSET_NOT_FOUND', 'CMS image asset was not found.');
+      throw this.notFound(
+        'CMS_ASSET_NOT_FOUND',
+        'CMS image asset was not found.',
+      );
     }
 
     if (asset.status !== FileAssetStatus.READY) {
@@ -1031,11 +1064,15 @@ export class CmsService {
     ) {
       throw new BadRequestException({
         code: 'CMS_ASSET_PURPOSE_INVALID',
-        message: 'Only CMS or generic image assets can be linked to CMS records.',
+        message:
+          'Only CMS or generic image assets can be linked to CMS records.',
       });
     }
 
-    if (visibility === CatalogVisibility.PUBLIC && asset.accessLevel !== FileAssetAccess.PUBLIC) {
+    if (
+      visibility === CatalogVisibility.PUBLIC &&
+      asset.accessLevel !== FileAssetAccess.PUBLIC
+    ) {
       throw new BadRequestException({
         code: 'CMS_ASSET_ACCESS_INVALID',
         message: 'Public CMS records require publicly readable image assets.',
@@ -1118,7 +1155,9 @@ export class CmsService {
     ];
   }
 
-  private assertBannerDates(record: Pick<CmsBannerRecord, 'startsAt' | 'endsAt'>) {
+  private assertBannerDates(
+    record: Pick<CmsBannerRecord, 'startsAt' | 'endsAt'>,
+  ) {
     if (record.startsAt && record.endsAt && record.startsAt > record.endsAt) {
       throw new BadRequestException({
         code: 'CMS_BANNER_DATE_RANGE_INVALID',

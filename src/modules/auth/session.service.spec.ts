@@ -1,9 +1,5 @@
 import { UnauthorizedException } from '@nestjs/common';
-import {
-  RefreshSessionStatus,
-  UserStatus,
-  UserType,
-} from '@prisma/client';
+import { RefreshSessionStatus, UserStatus, UserType } from '@prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuthSettingsService } from './auth-settings.service';
 import { AuthTokenService } from './auth-token.service';

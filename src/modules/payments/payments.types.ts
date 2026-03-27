@@ -69,44 +69,43 @@ export const subscriptionSummarySelect =
     },
   });
 
-export const entitlementSelect =
-  Prisma.validator<Prisma.EntitlementSelect>()({
-    id: true,
-    sourceType: true,
-    kind: true,
-    scopeJson: true,
-    startsAt: true,
-    endsAt: true,
-    revokedAt: true,
-    revokedReason: true,
-    metadataJson: true,
-    createdAt: true,
-    updatedAt: true,
-    plan: {
-      select: planSummarySelect,
+export const entitlementSelect = Prisma.validator<Prisma.EntitlementSelect>()({
+  id: true,
+  sourceType: true,
+  kind: true,
+  scopeJson: true,
+  startsAt: true,
+  endsAt: true,
+  revokedAt: true,
+  revokedReason: true,
+  metadataJson: true,
+  createdAt: true,
+  updatedAt: true,
+  plan: {
+    select: planSummarySelect,
+  },
+  subscription: {
+    select: {
+      id: true,
+      status: true,
+      startsAt: true,
+      endsAt: true,
     },
-    subscription: {
-      select: {
-        id: true,
-        status: true,
-        startsAt: true,
-        endsAt: true,
-      },
+  },
+  paymentOrder: {
+    select: {
+      id: true,
+      merchantOrderCode: true,
+      status: true,
     },
-    paymentOrder: {
-      select: {
-        id: true,
-        merchantOrderCode: true,
-        status: true,
-      },
-    },
-    grantedByUser: {
-      select: userSummarySelect,
-    },
-  });
+  },
+  grantedByUser: {
+    select: userSummarySelect,
+  },
+});
 
-export const paymentOrderSelect =
-  Prisma.validator<Prisma.PaymentOrderSelect>()({
+export const paymentOrderSelect = Prisma.validator<Prisma.PaymentOrderSelect>()(
+  {
     siteId: true,
     id: true,
     merchantOrderCode: true,
@@ -135,10 +134,11 @@ export const paymentOrderSelect =
     subscription: {
       select: subscriptionSummarySelect,
     },
-  });
+  },
+);
 
-export const paymentEventSelect =
-  Prisma.validator<Prisma.PaymentEventSelect>()({
+export const paymentEventSelect = Prisma.validator<Prisma.PaymentEventSelect>()(
+  {
     id: true,
     provider: true,
     source: true,
@@ -153,7 +153,8 @@ export const paymentEventSelect =
     processedAt: true,
     createdAt: true,
     updatedAt: true,
-  });
+  },
+);
 
 export type PlanSummaryRecord = Prisma.PlanGetPayload<{
   select: typeof planSummarySelect;
@@ -409,12 +410,14 @@ export function isActiveEntitlement(
 }
 
 export function isTerminalPaymentStatus(status: PaymentOrderStatus) {
-  return ([
-    PaymentOrderStatus.SUCCEEDED,
-    PaymentOrderStatus.FAILED,
-    PaymentOrderStatus.CANCELLED,
-    PaymentOrderStatus.EXPIRED,
-  ] as PaymentOrderStatus[]).includes(status);
+  return (
+    [
+      PaymentOrderStatus.SUCCEEDED,
+      PaymentOrderStatus.FAILED,
+      PaymentOrderStatus.CANCELLED,
+      PaymentOrderStatus.EXPIRED,
+    ] as PaymentOrderStatus[]
+  ).includes(status);
 }
 
 export function isActiveSubscriptionStatus(status: SubscriptionStatus) {

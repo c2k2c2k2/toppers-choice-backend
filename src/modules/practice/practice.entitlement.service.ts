@@ -13,9 +13,7 @@ type PracticeAccessScope = {
 
 @Injectable()
 export class PracticeEntitlementService {
-  constructor(
-    private readonly entitlementsService: EntitlementsService,
-  ) {}
+  constructor(private readonly entitlementsService: EntitlementsService) {}
 
   async canUsePractice(
     siteId: string,

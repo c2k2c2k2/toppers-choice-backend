@@ -213,7 +213,9 @@ export class AdminOpsService {
         signalKey: item.signalKey,
         severity: item.severity,
         metaJson:
-          item.metaJson && typeof item.metaJson === 'object' && !Array.isArray(item.metaJson)
+          item.metaJson &&
+          typeof item.metaJson === 'object' &&
+          !Array.isArray(item.metaJson)
             ? (item.metaJson as Record<string, unknown>)
             : null,
         createdAt: item.createdAt,
@@ -347,7 +349,10 @@ export class AdminOpsService {
       });
     }
 
-    await this.sessionService.revokeUserSessions(user.id, 'admin_support_action');
+    await this.sessionService.revokeUserSessions(
+      user.id,
+      'admin_support_action',
+    );
     return {
       message: 'User sessions revoked successfully.',
     };

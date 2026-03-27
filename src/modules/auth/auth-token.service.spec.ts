@@ -71,8 +71,8 @@ describe('AuthTokenService', () => {
       30,
     );
 
-    await expect(service.verifyAccessToken(refreshToken)).rejects.toBeInstanceOf(
-      UnauthorizedException,
-    );
+    await expect(
+      service.verifyAccessToken(refreshToken),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
   });
 });

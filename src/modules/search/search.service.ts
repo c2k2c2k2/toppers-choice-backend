@@ -72,7 +72,11 @@ export class SearchService {
           ],
         },
         take: limit,
-        orderBy: [{ isPinned: 'desc' }, { orderIndex: 'asc' }, { createdAt: 'desc' }],
+        orderBy: [
+          { isPinned: 'desc' },
+          { orderIndex: 'asc' },
+          { createdAt: 'desc' },
+        ],
         select: {
           id: true,
           title: true,
@@ -94,7 +98,11 @@ export class SearchService {
           ],
         },
         take: limit,
-        orderBy: [{ isFeatured: 'desc' }, { featuredOrderIndex: 'asc' }, { title: 'asc' }],
+        orderBy: [
+          { isFeatured: 'desc' },
+          { featuredOrderIndex: 'asc' },
+          { title: 'asc' },
+        ],
         select: {
           id: true,
           slug: true,
@@ -179,141 +187,154 @@ export class SearchService {
   }
 
   async searchStudent(siteId: string, query: SearchQueryDto) {
-    const limit = await this.resolveLimit('student.maxResults', query.limit, 16);
-    const [pages, announcements, notes, content, tests, plans] = await Promise.all([
-      this.prisma.cmsPage.findMany({
-        where: {
-          siteId,
-          status: 'PUBLISHED',
-          visibility: {
-            in: [CatalogVisibility.PUBLIC, CatalogVisibility.AUTHENTICATED],
+    const limit = await this.resolveLimit(
+      'student.maxResults',
+      query.limit,
+      16,
+    );
+    const [pages, announcements, notes, content, tests, plans] =
+      await Promise.all([
+        this.prisma.cmsPage.findMany({
+          where: {
+            siteId,
+            status: 'PUBLISHED',
+            visibility: {
+              in: [CatalogVisibility.PUBLIC, CatalogVisibility.AUTHENTICATED],
+            },
+            OR: [
+              { title: { contains: query.q, mode: 'insensitive' } },
+              { slug: { contains: query.q, mode: 'insensitive' } },
+              { summary: { contains: query.q, mode: 'insensitive' } },
+            ],
           },
-          OR: [
-            { title: { contains: query.q, mode: 'insensitive' } },
-            { slug: { contains: query.q, mode: 'insensitive' } },
-            { summary: { contains: query.q, mode: 'insensitive' } },
-          ],
-        },
-        take: limit,
-        orderBy: [{ orderIndex: 'asc' }, { title: 'asc' }],
-        select: {
-          id: true,
-          slug: true,
-          title: true,
-          summary: true,
-          status: true,
-          visibility: true,
-        },
-      }),
-      this.prisma.cmsAnnouncement.findMany({
-        where: {
-          siteId,
-          status: 'PUBLISHED',
-          visibility: {
-            in: [CatalogVisibility.PUBLIC, CatalogVisibility.AUTHENTICATED],
+          take: limit,
+          orderBy: [{ orderIndex: 'asc' }, { title: 'asc' }],
+          select: {
+            id: true,
+            slug: true,
+            title: true,
+            summary: true,
+            status: true,
+            visibility: true,
           },
-          OR: [
-            { title: { contains: query.q, mode: 'insensitive' } },
-            { body: { contains: query.q, mode: 'insensitive' } },
-          ],
-        },
-        take: limit,
-        orderBy: [{ isPinned: 'desc' }, { orderIndex: 'asc' }, { createdAt: 'desc' }],
-        select: {
-          id: true,
-          title: true,
-          body: true,
-          status: true,
-          visibility: true,
-        },
-      }),
-      this.prisma.note.findMany({
-        where: {
-          siteId,
-          status: NoteStatus.PUBLISHED,
-          OR: [
-            { title: { contains: query.q, mode: 'insensitive' } },
-            { slug: { contains: query.q, mode: 'insensitive' } },
-            { shortDescription: { contains: query.q, mode: 'insensitive' } },
-          ],
-        },
-        take: limit,
-        orderBy: [{ orderIndex: 'asc' }, { title: 'asc' }],
-        select: {
-          id: true,
-          slug: true,
-          title: true,
-          shortDescription: true,
-          status: true,
-          accessType: true,
-        },
-      }),
-      this.prisma.contentEntry.findMany({
-        where: {
-          siteId,
-          status: ContentStatus.PUBLISHED,
-          visibility: {
-            in: [CatalogVisibility.PUBLIC, CatalogVisibility.AUTHENTICATED],
+        }),
+        this.prisma.cmsAnnouncement.findMany({
+          where: {
+            siteId,
+            status: 'PUBLISHED',
+            visibility: {
+              in: [CatalogVisibility.PUBLIC, CatalogVisibility.AUTHENTICATED],
+            },
+            OR: [
+              { title: { contains: query.q, mode: 'insensitive' } },
+              { body: { contains: query.q, mode: 'insensitive' } },
+            ],
           },
-          OR: [
-            { title: { contains: query.q, mode: 'insensitive' } },
-            { excerpt: { contains: query.q, mode: 'insensitive' } },
-            { slug: { contains: query.q, mode: 'insensitive' } },
+          take: limit,
+          orderBy: [
+            { isPinned: 'desc' },
+            { orderIndex: 'asc' },
+            { createdAt: 'desc' },
           ],
-        },
-        take: limit,
-        orderBy: [{ isFeatured: 'desc' }, { featuredOrderIndex: 'asc' }, { title: 'asc' }],
-        select: {
-          id: true,
-          slug: true,
-          title: true,
-          excerpt: true,
-          status: true,
-          visibility: true,
-        },
-      }),
-      this.prisma.test.findMany({
-        where: {
-          siteId,
-          status: TestStatus.PUBLISHED,
-          OR: [
-            { title: { contains: query.q, mode: 'insensitive' } },
-            { slug: { contains: query.q, mode: 'insensitive' } },
-            { shortDescription: { contains: query.q, mode: 'insensitive' } },
+          select: {
+            id: true,
+            title: true,
+            body: true,
+            status: true,
+            visibility: true,
+          },
+        }),
+        this.prisma.note.findMany({
+          where: {
+            siteId,
+            status: NoteStatus.PUBLISHED,
+            OR: [
+              { title: { contains: query.q, mode: 'insensitive' } },
+              { slug: { contains: query.q, mode: 'insensitive' } },
+              { shortDescription: { contains: query.q, mode: 'insensitive' } },
+            ],
+          },
+          take: limit,
+          orderBy: [{ orderIndex: 'asc' }, { title: 'asc' }],
+          select: {
+            id: true,
+            slug: true,
+            title: true,
+            shortDescription: true,
+            status: true,
+            accessType: true,
+          },
+        }),
+        this.prisma.contentEntry.findMany({
+          where: {
+            siteId,
+            status: ContentStatus.PUBLISHED,
+            visibility: {
+              in: [CatalogVisibility.PUBLIC, CatalogVisibility.AUTHENTICATED],
+            },
+            OR: [
+              { title: { contains: query.q, mode: 'insensitive' } },
+              { excerpt: { contains: query.q, mode: 'insensitive' } },
+              { slug: { contains: query.q, mode: 'insensitive' } },
+            ],
+          },
+          take: limit,
+          orderBy: [
+            { isFeatured: 'desc' },
+            { featuredOrderIndex: 'asc' },
+            { title: 'asc' },
           ],
-        },
-        take: limit,
-        orderBy: [{ publishedAt: 'desc' }, { title: 'asc' }],
-        select: {
-          id: true,
-          slug: true,
-          title: true,
-          shortDescription: true,
-          status: true,
-          accessType: true,
-        },
-      }),
-      this.prisma.plan.findMany({
-        where: {
-          siteId,
-          status: PlanStatus.ACTIVE,
-          OR: [
-            { name: { contains: query.q, mode: 'insensitive' } },
-            { shortDescription: { contains: query.q, mode: 'insensitive' } },
-            { slug: { contains: query.q, mode: 'insensitive' } },
-          ],
-        },
-        take: limit,
-        orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
-        select: {
-          id: true,
-          slug: true,
-          name: true,
-          shortDescription: true,
-          status: true,
-        },
-      }),
-    ]);
+          select: {
+            id: true,
+            slug: true,
+            title: true,
+            excerpt: true,
+            status: true,
+            visibility: true,
+          },
+        }),
+        this.prisma.test.findMany({
+          where: {
+            siteId,
+            status: TestStatus.PUBLISHED,
+            OR: [
+              { title: { contains: query.q, mode: 'insensitive' } },
+              { slug: { contains: query.q, mode: 'insensitive' } },
+              { shortDescription: { contains: query.q, mode: 'insensitive' } },
+            ],
+          },
+          take: limit,
+          orderBy: [{ publishedAt: 'desc' }, { title: 'asc' }],
+          select: {
+            id: true,
+            slug: true,
+            title: true,
+            shortDescription: true,
+            status: true,
+            accessType: true,
+          },
+        }),
+        this.prisma.plan.findMany({
+          where: {
+            siteId,
+            status: PlanStatus.ACTIVE,
+            OR: [
+              { name: { contains: query.q, mode: 'insensitive' } },
+              { shortDescription: { contains: query.q, mode: 'insensitive' } },
+              { slug: { contains: query.q, mode: 'insensitive' } },
+            ],
+          },
+          take: limit,
+          orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+          select: {
+            id: true,
+            slug: true,
+            name: true,
+            shortDescription: true,
+            status: true,
+          },
+        }),
+      ]);
 
     return this.buildResponse(query.q, [
       {

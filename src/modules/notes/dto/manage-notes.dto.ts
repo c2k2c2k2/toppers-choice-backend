@@ -5,6 +5,7 @@ import {
   ArrayUnique,
   IsArray,
   IsEnum,
+  IsIn,
   IsInt,
   IsOptional,
   IsString,
@@ -15,6 +16,7 @@ import {
 } from 'class-validator';
 
 const SLUG_PATTERN = /^[a-z0-9-]+$/;
+const MARATHI_FONT_HINT_VALUES = ['shree-dev', 'surekh'] as const;
 
 function normalizeText(value: unknown) {
   if (typeof value !== 'string') {
@@ -22,6 +24,14 @@ function normalizeText(value: unknown) {
   }
 
   return value.trim().replace(/\s+/gu, ' ');
+}
+
+function normalizeSlug(value: unknown) {
+  if (typeof value !== 'string') {
+    return value;
+  }
+
+  return value.trim().toLowerCase();
 }
 
 export class CreateNoteDto {
@@ -33,9 +43,7 @@ export class CreateNoteDto {
   title!: string;
 
   @ApiPropertyOptional({ example: 'indian-polity-marathon-notes' })
-  @Transform(({ value }) =>
-    typeof value === 'string' ? value.trim().toLowerCase() : value,
-  )
+  @Transform(({ value }) => normalizeSlug(value))
   @IsOptional()
   @IsString()
   @MaxLength(180)
@@ -175,4 +183,66 @@ export class UpdateNoteProgressDto {
   @IsInt()
   @Min(0)
   lastPageViewed!: number;
+}
+
+export class CreateNoteIndexEntryDto {
+  @ApiPropertyOptional({ example: '1.2' })
+  @Transform(({ value }) => normalizeText(value))
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  serialLabel?: string;
+
+  @ApiProperty({ example: 'Fundamental Rights' })
+  @Transform(({ value }) => normalizeText(value))
+  @IsString()
+  @MinLength(1)
+  @MaxLength(180)
+  title!: string;
+
+  @ApiPropertyOptional({ enum: MARATHI_FONT_HINT_VALUES, example: 'shree-dev' })
+  @IsOptional()
+  @IsString()
+  @IsIn(MARATHI_FONT_HINT_VALUES)
+  titleFontHint?: (typeof MARATHI_FONT_HINT_VALUES)[number];
+
+  @ApiProperty({ example: 17 })
+  @IsInt()
+  @Min(1)
+  pageNumber!: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  indentLevel?: number;
+
+  @ApiPropertyOptional({ example: 20 })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  orderIndex?: number;
+}
+
+export class UpdateNoteIndexEntryDto extends PartialType(
+  CreateNoteIndexEntryDto,
+) {}
+
+export class UpsertNoteBookmarkDto {
+  @ApiProperty({ example: 17 })
+  @IsInt()
+  @Min(1)
+  pageNumber!: number;
+
+  @ApiPropertyOptional({ example: 'Revise before test' })
+  @Transform(({ value }) => normalizeText(value))
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  label?: string;
+
+  @ApiPropertyOptional({ example: 'cmag4index001' })
+  @IsOptional()
+  @IsString()
+  noteIndexEntryId?: string;
 }

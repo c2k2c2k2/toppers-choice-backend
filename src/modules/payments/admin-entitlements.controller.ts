@@ -72,6 +72,10 @@ export class AdminEntitlementsController {
     @Param('entitlementId') entitlementId: string,
     @Body() body: RevokeEntitlementDto,
   ) {
-    return this.entitlementsService.revokeEntitlement(user, entitlementId, body);
+    return this.entitlementsService.revokeEntitlement(
+      user,
+      entitlementId,
+      body,
+    );
   }
 }

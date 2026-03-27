@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  ServiceUnavailableException,
-} from '@nestjs/common';
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Readable } from 'node:stream';
 import { Client } from 'minio';
@@ -41,18 +38,27 @@ export class ObjectStorageService {
   private readonly client: Client | null;
 
   constructor(private readonly configService: ConfigService) {
-    this.endpoint = this.configService.get<string>('OBJECT_STORAGE_ENDPOINT') ?? null;
+    this.endpoint =
+      this.configService.get<string>('OBJECT_STORAGE_ENDPOINT') ?? null;
     this.region =
       this.configService.get<string>('OBJECT_STORAGE_REGION') ?? 'us-east-1';
-    this.bucket = this.configService.get<string>('OBJECT_STORAGE_BUCKET') ?? null;
+    this.bucket =
+      this.configService.get<string>('OBJECT_STORAGE_BUCKET') ?? null;
     this.accessKeyId =
       this.configService.get<string>('OBJECT_STORAGE_ACCESS_KEY_ID') ?? null;
     this.secretAccessKey =
-      this.configService.get<string>('OBJECT_STORAGE_SECRET_ACCESS_KEY') ?? null;
+      this.configService.get<string>('OBJECT_STORAGE_SECRET_ACCESS_KEY') ??
+      null;
     this.forcePathStyle =
-      this.configService.get<boolean>('OBJECT_STORAGE_FORCE_PATH_STYLE') ?? true;
+      this.configService.get<boolean>('OBJECT_STORAGE_FORCE_PATH_STYLE') ??
+      true;
 
-    if (this.endpoint && this.bucket && this.accessKeyId && this.secretAccessKey) {
+    if (
+      this.endpoint &&
+      this.bucket &&
+      this.accessKeyId &&
+      this.secretAccessKey
+    ) {
       const endpointUrl = new URL(this.endpoint);
       this.client = new Client({
         endPoint: endpointUrl.hostname,
@@ -128,7 +134,9 @@ export class ObjectStorageService {
     };
   }
 
-  async readObjectRange(input: ReadObjectRangeInput): Promise<ReadObjectResult> {
+  async readObjectRange(
+    input: ReadObjectRangeInput,
+  ): Promise<ReadObjectResult> {
     const client = this.getClient();
     const body = await client.getPartialObject(
       this.getBucket(),
