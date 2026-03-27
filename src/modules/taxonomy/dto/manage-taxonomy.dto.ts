@@ -115,7 +115,12 @@ export class CreateTopicDto extends TaxonomyMutationBaseDto {
   @IsString()
   subjectId!: string;
 
-  @ApiPropertyOptional({ example: 'cmag4b4ph0000x5r7snyza999' })
+  @ApiPropertyOptional({
+    example: 'cmag4b4ph0000x5r7snyza999',
+    type: String,
+    nullable: true,
+  })
+  @Transform(({ value }) => normalizeOptionalText(value))
   @IsOptional()
   @IsString()
   parentId?: string | null;
