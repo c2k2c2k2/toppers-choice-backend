@@ -7,7 +7,6 @@ import {
   QuestionType,
 } from '@prisma/client';
 import {
-  ArrayMinSize,
   ArrayUnique,
   IsArray,
   IsBoolean,

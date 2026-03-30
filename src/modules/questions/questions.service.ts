@@ -29,6 +29,7 @@ import {
   questionSelect,
   type QuestionRecord,
 } from './questions.types';
+import { sanitizeQuestionContent } from './question-rich-content.util';
 import { buildQuestionSearchText, normalizeOptionKey } from './questions.utils';
 
 type NormalizedOptionInput = {
@@ -95,6 +96,17 @@ export class QuestionsService {
   }
 
   async createQuestion(user: AuthenticatedUser, input: CreateQuestionDto) {
+    const statementJson = sanitizeQuestionContent(
+      input.statementJson,
+    ) as Record<string, unknown>;
+    const explanationJson =
+      input.explanationJson === undefined
+        ? undefined
+        : (sanitizeQuestionContent(input.explanationJson) as Record<
+            string,
+            unknown
+          >);
+
     await this.validateSubjectContext(
       user.siteId,
       input.subjectId,
@@ -112,10 +124,7 @@ export class QuestionsService {
       input.mediaReferences ?? [],
       options,
     );
-    const mediaAssets = await this.validateMediaAssets(
-      user.siteId,
-      mediaReferences,
-    );
+    await this.validateMediaAssets(user.siteId, mediaReferences);
     this.validateCorrectAnswer(input.type, input.correctAnswerJson, options);
 
     const questionId = await this.prisma.$transaction(async (tx) => {
@@ -128,11 +137,11 @@ export class QuestionsService {
           topicId: input.topicId ?? null,
           type: input.type,
           difficulty: input.difficulty,
-          statementJson: input.statementJson as Prisma.InputJsonValue,
+          statementJson: statementJson as Prisma.InputJsonValue,
           explanationJson:
-            input.explanationJson === undefined
+            explanationJson === undefined
               ? Prisma.DbNull
-              : (input.explanationJson as Prisma.InputJsonValue),
+              : (explanationJson as Prisma.InputJsonValue),
           metadataJson:
             input.metadataJson === undefined
               ? Prisma.DbNull
@@ -140,8 +149,8 @@ export class QuestionsService {
           correctAnswerJson: input.correctAnswerJson as Prisma.InputJsonValue,
           searchText: buildQuestionSearchText(
             input.code,
-            input.statementJson,
-            input.explanationJson,
+            statementJson,
+            explanationJson,
             options.map((option) => option.contentJson),
           ),
           hasMedia: mediaReferences.length > 0,
@@ -196,6 +205,22 @@ export class QuestionsService {
       input.mediumId === undefined
         ? existing.mediumId
         : (input.mediumId ?? null);
+    const nextStatementJson =
+      input.statementJson === undefined
+        ? (existing.statementJson as Record<string, unknown>)
+        : (sanitizeQuestionContent(input.statementJson) as Record<
+            string,
+            unknown
+          >);
+    const nextExplanationJson =
+      input.explanationJson === undefined
+        ? ((existing.explanationJson as Record<string, unknown> | null) ?? null)
+        : input.explanationJson === null
+          ? null
+          : (sanitizeQuestionContent(input.explanationJson) as Record<
+              string,
+              unknown
+            >);
     const nextOptions =
       input.options === undefined
         ? existing.options.map((option) => ({
@@ -245,13 +270,13 @@ export class QuestionsService {
           statementJson:
             input.statementJson === undefined
               ? undefined
-              : (input.statementJson as Prisma.InputJsonValue),
+              : (nextStatementJson as Prisma.InputJsonValue),
           explanationJson:
             input.explanationJson === undefined
               ? undefined
-              : input.explanationJson === null
+              : nextExplanationJson === null
                 ? Prisma.DbNull
-                : (input.explanationJson as Prisma.InputJsonValue),
+                : (nextExplanationJson as Prisma.InputJsonValue),
           metadataJson:
             input.metadataJson === undefined
               ? undefined
@@ -264,8 +289,8 @@ export class QuestionsService {
               : (input.correctAnswerJson as Prisma.InputJsonValue),
           searchText: buildQuestionSearchText(
             input.code ?? existing.code,
-            input.statementJson ?? existing.statementJson,
-            input.explanationJson ?? existing.explanationJson,
+            nextStatementJson,
+            nextExplanationJson,
             nextOptions.map((option) => option.contentJson),
           ),
           hasMedia: nextMediaReferences.length > 0,
@@ -530,7 +555,10 @@ export class QuestionsService {
       (option, index) => ({
         optionKey: option.optionKey,
         orderIndex: option.orderIndex ?? (index + 1) * 10,
-        contentJson: option.contentJson,
+        contentJson: sanitizeQuestionContent(option.contentJson) as Record<
+          string,
+          unknown
+        >,
         metaJson: option.metaJson ?? null,
       }),
     );
