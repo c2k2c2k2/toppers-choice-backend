@@ -9,6 +9,7 @@ import {
   PaymentEventSource,
   PaymentEventStatus,
   PaymentOrderStatus,
+  PaymentProvider,
   Prisma,
   SubscriptionStatus,
   UserType,
@@ -115,17 +116,30 @@ export class PaymentsService {
       },
     });
 
-    const providerResponse = await this.paymentGatewayService.initiateCheckout(
-      provider,
-      {
-        order: createdOrder,
-        purchaser: {
-          id: user.userId,
-          email: user.email,
-          fullName: user.fullName,
+    let providerResponse;
+
+    try {
+      providerResponse = await this.paymentGatewayService.initiateCheckout(
+        provider,
+        {
+          order: createdOrder,
+          purchaser: {
+            id: user.userId,
+            email: user.email,
+            fullName: user.fullName,
+          },
         },
-      },
-    );
+      );
+    } catch (error) {
+      await this.recordCheckoutInitiationFailure({
+        siteId: user.siteId,
+        provider,
+        order: createdOrder,
+        error,
+      });
+
+      throw error;
+    }
 
     const updatedOrder = await this.prisma.$transaction(async (tx) => {
       await tx.paymentEvent.create({
@@ -208,9 +222,9 @@ export class PaymentsService {
 
     const order = await this.prisma.paymentOrder.findFirst({
       where: {
-        id: orderId,
         siteId: user.siteId,
         userId: user.userId,
+        OR: [{ id: orderId }, { merchantOrderCode: orderId }],
       },
       select: paymentOrderSelect,
     });
@@ -448,6 +462,7 @@ export class PaymentsService {
       order.provider,
       {
         merchantOrderCode: order.merchantOrderCode,
+        amountPaise: order.amountPaise,
       },
     );
     const now = new Date();
@@ -695,7 +710,161 @@ export class PaymentsService {
   }
 
   private buildMerchantOrderCode() {
-    return `tc_${Date.now()}_${randomBytes(4).toString('hex')}`;
+    // Keep provider order ids short and alphanumeric for HDFC SmartGateway.
+    return `tc${Date.now().toString(36)}${randomBytes(4).toString('hex')}`;
+  }
+
+  private async recordCheckoutInitiationFailure(input: {
+    siteId: string;
+    provider: PaymentProvider;
+    order: {
+      id: string;
+      merchantOrderCode: string;
+      amountPaise: number;
+      currencyCode: string;
+    };
+    error: unknown;
+  }) {
+    const now = new Date();
+    const errorCode = this.extractProviderErrorCode(input.error);
+    const errorMessage = this.extractProviderErrorMessage(input.error);
+    const errorPayload = this.buildProviderErrorPayload(
+      input.error,
+      errorCode,
+      errorMessage,
+    );
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.paymentEvent.create({
+        data: {
+          siteId: input.siteId,
+          paymentOrderId: input.order.id,
+          provider: input.provider,
+          source: PaymentEventSource.CHECKOUT_RESPONSE,
+          eventType: 'CHECKOUT_INITIATION_FAILED',
+          dedupeKey: `checkout-error:${input.order.merchantOrderCode}`,
+          status: PaymentEventStatus.FAILED,
+          payloadJson: errorPayload as Prisma.InputJsonValue,
+          errorMessage,
+          processedAt: now,
+        },
+      });
+
+      await tx.paymentTransaction.upsert({
+        where: {
+          paymentOrderId: input.order.id,
+        },
+        update: {
+          provider: input.provider,
+          providerTransactionId: null,
+          providerReferenceId: null,
+          status: 'FAILED',
+          amountPaise: input.order.amountPaise,
+          currencyCode: input.order.currencyCode,
+          occurredAt: now,
+          responseJson: errorPayload as Prisma.InputJsonValue,
+        },
+        create: {
+          siteId: input.siteId,
+          paymentOrderId: input.order.id,
+          provider: input.provider,
+          status: 'FAILED',
+          amountPaise: input.order.amountPaise,
+          currencyCode: input.order.currencyCode,
+          occurredAt: now,
+          responseJson: errorPayload as Prisma.InputJsonValue,
+        },
+      });
+
+      await tx.paymentOrder.update({
+        where: {
+          id: input.order.id,
+        },
+        data: {
+          status: PaymentOrderStatus.FAILED,
+          providerStatus: errorCode ?? 'INITIATION_FAILED',
+          failedAt: now,
+          lastCheckedAt: now,
+        },
+      });
+    });
+  }
+
+  private extractProviderErrorCode(error: unknown) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const response = error.response;
+      if (
+        response &&
+        typeof response === 'object' &&
+        'code' in response &&
+        typeof response.code === 'string' &&
+        response.code.trim().length > 0
+      ) {
+        return response.code.trim();
+      }
+    }
+
+    if (
+      error &&
+      typeof error === 'object' &&
+      'code' in error &&
+      typeof error.code === 'string' &&
+      error.code.trim().length > 0
+    ) {
+      return error.code.trim();
+    }
+
+    return null;
+  }
+
+  private extractProviderErrorMessage(error: unknown) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const response = error.response;
+      if (
+        response &&
+        typeof response === 'object' &&
+        'message' in response &&
+        typeof response.message === 'string' &&
+        response.message.trim().length > 0
+      ) {
+        return response.message.trim();
+      }
+    }
+
+    if (error instanceof Error && error.message.trim().length > 0) {
+      return error.message.trim();
+    }
+
+    return 'Payment checkout initiation failed.';
+  }
+
+  private buildProviderErrorPayload(
+    error: unknown,
+    code: string | null,
+    message: string,
+  ) {
+    const payload: Prisma.JsonObject = {
+      message,
+    };
+
+    if (code) {
+      payload.code = code;
+    }
+
+    if (error instanceof Error) {
+      payload.name = error.name;
+    }
+
+    if (
+      error &&
+      typeof error === 'object' &&
+      'status' in error &&
+      typeof error.status === 'number'
+    ) {
+      payload.status = error.status;
+    }
+
+    return payload;
   }
 
   private async resolveDefaultSiteId() {

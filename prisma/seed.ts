@@ -215,6 +215,9 @@ async function main() {
         premiumRequired: false,
       },
       providers: {
+        hdfc: {
+          returnPath: '/payments/result',
+        },
         phonepe: {
           payPath: '/pg/v1/pay',
           statusPathTemplate: '/pg/v1/status/{merchantId}/{merchantOrderCode}',

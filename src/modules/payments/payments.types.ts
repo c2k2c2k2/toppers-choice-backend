@@ -85,12 +85,7 @@ export const entitlementSelect = Prisma.validator<Prisma.EntitlementSelect>()({
     select: planSummarySelect,
   },
   subscription: {
-    select: {
-      id: true,
-      status: true,
-      startsAt: true,
-      endsAt: true,
-    },
+    select: subscriptionSummarySelect,
   },
   paymentOrder: {
     select: {
@@ -314,14 +309,7 @@ export function mapEntitlement(record: EntitlementRecord) {
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,
     plan: record.plan ? mapPlan(record.plan) : null,
-    subscription: record.subscription
-      ? {
-          id: record.subscription.id,
-          status: record.subscription.status,
-          startsAt: record.subscription.startsAt,
-          endsAt: record.subscription.endsAt,
-        }
-      : null,
+    subscription: record.subscription ? mapSubscription(record.subscription) : null,
     paymentOrder: record.paymentOrder
       ? {
           id: record.paymentOrder.id,
@@ -453,6 +441,78 @@ export function mapPhonePeStateToTransactionStatus(
     case 'CANCELLED':
     case 'CANCELED':
       return PaymentTransactionStatus.CANCELLED;
+    default:
+      return PaymentTransactionStatus.PENDING;
+  }
+}
+
+export function mapHdfcStatusToOrderStatus(status: string | null | undefined) {
+  switch ((status ?? '').toUpperCase()) {
+    case 'CHARGED':
+      return PaymentOrderStatus.SUCCEEDED;
+    case 'CANCELLED':
+    case 'CANCELED':
+    case 'USER_ABORTED':
+    case 'USER_DROPPED':
+      return PaymentOrderStatus.CANCELLED;
+    case 'FAILED':
+    case 'AUTHORIZATION_FAILED':
+    case 'AUTHENTICATION_FAILED':
+    case 'AUTHORIZER_ERROR':
+    case 'AUTO_REFUNDED':
+    case 'DECLINED':
+    case 'JUSPAY_DECLINED':
+    case 'NOT_CHARGED':
+    case 'PARTIAL_CHARGED':
+    case 'PARTIALLY_CHARGED':
+    case 'VOID':
+      return PaymentOrderStatus.FAILED;
+    case 'AUTHORIZED':
+    case 'AUTHORIZING':
+    case 'CHARGING':
+    case 'COD_INITIATED':
+    case 'NEW':
+    case 'PENDING':
+    case 'PENDING_VBV':
+    case 'STARTED':
+    case 'TO_BE_CHARGED':
+    default:
+      return PaymentOrderStatus.PENDING;
+  }
+}
+
+export function mapHdfcStatusToTransactionStatus(
+  status: string | null | undefined,
+) {
+  switch ((status ?? '').toUpperCase()) {
+    case 'CHARGED':
+      return PaymentTransactionStatus.SUCCEEDED;
+    case 'CANCELLED':
+    case 'CANCELED':
+    case 'USER_ABORTED':
+    case 'USER_DROPPED':
+      return PaymentTransactionStatus.CANCELLED;
+    case 'FAILED':
+    case 'AUTHORIZATION_FAILED':
+    case 'AUTHENTICATION_FAILED':
+    case 'AUTHORIZER_ERROR':
+    case 'AUTO_REFUNDED':
+    case 'DECLINED':
+    case 'JUSPAY_DECLINED':
+    case 'NOT_CHARGED':
+    case 'PARTIAL_CHARGED':
+    case 'PARTIALLY_CHARGED':
+    case 'VOID':
+      return PaymentTransactionStatus.FAILED;
+    case 'AUTHORIZED':
+    case 'AUTHORIZING':
+    case 'CHARGING':
+    case 'COD_INITIATED':
+    case 'NEW':
+    case 'PENDING':
+    case 'PENDING_VBV':
+    case 'STARTED':
+    case 'TO_BE_CHARGED':
     default:
       return PaymentTransactionStatus.PENDING;
   }

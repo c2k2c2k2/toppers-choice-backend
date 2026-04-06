@@ -13,6 +13,7 @@ export type PaymentProviderAdapter = {
   ): Promise<ProviderCheckoutResult>;
   checkStatus(order: {
     merchantOrderCode: string;
+    amountPaise?: number;
   }): Promise<ProviderStatusResult>;
   extractCallback(
     payload: unknown,

@@ -4,6 +4,7 @@ import { PLATFORM_PUBLIC_RUNTIME_CONFIG_KEY } from '../site-settings/site-settin
 import { SiteSettingsService } from '../site-settings/site-settings.service';
 import {
   DEFAULT_PAYMENT_ORDER_EXPIRY_MINUTES,
+  HDFC_RETURN_PATH,
   PAYMENT_SUBSCRIPTION_MODE_VALUES,
   PAYMENTS_ACTIVE_PROVIDER_PATH,
   PAYMENTS_DEFAULT_CURRENCY_CODE_PATH,
@@ -27,6 +28,10 @@ type PhonePeRuntimeConfig = {
   redirectMode: string;
 };
 
+type HdfcSmartGatewayRuntimeConfig = {
+  returnUrl: string | null;
+};
+
 @Injectable()
 export class PaymentSettingsService {
   constructor(private readonly siteSettingsService: SiteSettingsService) {}
@@ -41,6 +46,10 @@ export class PaymentSettingsService {
     );
 
     if (provider === PaymentProvider.PHONEPE_STANDARD) {
+      return provider;
+    }
+
+    if (provider === PaymentProvider.HDFC_SMARTGATEWAY) {
       return provider;
     }
 
@@ -160,6 +169,31 @@ export class PaymentSettingsService {
       callbackUrl: this.resolveUrl(appBaseUrl, callbackPath),
       returnUrl: this.resolveUrl(appBaseUrl, returnPath),
       redirectMode: redirectMode || 'REDIRECT',
+    };
+  }
+
+  async getHdfcRuntimeConfig(): Promise<HdfcSmartGatewayRuntimeConfig> {
+    const [returnPath, appBaseUrl] = await Promise.all([
+      this.siteSettingsService.getStringSetting(
+        PAYMENTS_RUNTIME_CONFIG_KEY,
+        HDFC_RETURN_PATH,
+        {
+          fallback: '/payments/result',
+        },
+      ),
+      this.siteSettingsService.getStringSetting(
+        PLATFORM_PUBLIC_RUNTIME_CONFIG_KEY,
+        'origins.appBaseUrl',
+        {
+          visibility: ConfigVisibility.PUBLIC,
+          fallback: '',
+          envFallbackKey: 'APP_BASE_URL',
+        },
+      ),
+    ]);
+
+    return {
+      returnUrl: this.resolveUrl(appBaseUrl, returnPath),
     };
   }
 

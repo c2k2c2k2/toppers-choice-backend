@@ -6,11 +6,13 @@ import type {
   ProviderCheckoutResult,
   ProviderStatusResult,
 } from './payments.types';
+import { HdfcSmartGatewayPaymentProviderService } from './providers/hdfc-smartgateway-payment-provider.service';
 import { PhonePePaymentProviderService } from './providers/phonepe-payment-provider.service';
 
 @Injectable()
 export class PaymentGatewayService {
   constructor(
+    private readonly hdfcSmartGatewayPaymentProviderService: HdfcSmartGatewayPaymentProviderService,
     private readonly phonePePaymentProviderService: PhonePePaymentProviderService,
   ) {}
 
@@ -25,6 +27,7 @@ export class PaymentGatewayService {
     provider: PaymentProvider,
     order: {
       merchantOrderCode: string;
+      amountPaise?: number;
     },
   ): Promise<ProviderStatusResult> {
     return this.getAdapter(provider).checkStatus(order);
@@ -40,6 +43,8 @@ export class PaymentGatewayService {
 
   private getAdapter(provider: PaymentProvider) {
     switch (provider) {
+      case PaymentProvider.HDFC_SMARTGATEWAY:
+        return this.hdfcSmartGatewayPaymentProviderService;
       case PaymentProvider.PHONEPE_STANDARD:
         return this.phonePePaymentProviderService;
       default:

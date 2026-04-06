@@ -6,6 +6,7 @@ export const PAYMENTS_ORDER_EXPIRY_MINUTES_PATH = 'checkout.orderExpiryMinutes';
 export const PAYMENTS_SUBSCRIPTION_MODE_PATH = 'checkout.subscriptionMode';
 export const PAYMENTS_PRACTICE_PREMIUM_REQUIRED_PATH =
   'practice.premiumRequired';
+export const HDFC_RETURN_PATH = 'providers.hdfc.returnPath';
 export const PHONEPE_PAY_PATH = 'providers.phonepe.payPath';
 export const PHONEPE_STATUS_PATH_TEMPLATE =
   'providers.phonepe.statusPathTemplate';

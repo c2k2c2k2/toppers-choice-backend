@@ -230,6 +230,7 @@ enum SubscriptionStatus {
 
 enum PaymentProvider {
   PHONEPE_STANDARD
+  HDFC_SMARTGATEWAY
 }
 
 enum PaymentOrderStatus {

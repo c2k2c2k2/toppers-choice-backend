@@ -27,6 +27,9 @@ type StoredResponse =
 
 @Injectable()
 export class IdempotencyService {
+  private static readonly IN_PROGRESS_POLL_INTERVAL_MS = 250;
+  private static readonly IN_PROGRESS_POLL_TIMEOUT_MS = 5_000;
+
   constructor(private readonly prisma: PrismaService) {}
 
   async execute<T extends StoredResponse>(
@@ -65,6 +68,21 @@ export class IdempotencyService {
         existing.responseJson !== null
       ) {
         return existing.responseJson as T;
+      }
+
+      if (existing.status === IdempotencyRecordStatus.IN_PROGRESS) {
+        const completedRecord = await this.waitForInProgressRecord(
+          options.siteId,
+          options.scope,
+          idempotencyKey,
+        );
+
+        if (
+          completedRecord?.status === IdempotencyRecordStatus.COMPLETED &&
+          completedRecord.responseJson !== null
+        ) {
+          return completedRecord.responseJson as T;
+        }
       }
 
       throw new ConflictException({
@@ -128,6 +146,39 @@ export class IdempotencyService {
   private resolveExpiry(ttlMinutes?: number) {
     const ttl = ttlMinutes ?? 60;
     return new Date(Date.now() + ttl * 60_000);
+  }
+
+  private async waitForInProgressRecord(
+    siteId: string,
+    scope: string,
+    key: string,
+  ) {
+    const startedAt = Date.now();
+
+    while (
+      Date.now() - startedAt <
+      IdempotencyService.IN_PROGRESS_POLL_TIMEOUT_MS
+    ) {
+      await new Promise((resolve) =>
+        setTimeout(resolve, IdempotencyService.IN_PROGRESS_POLL_INTERVAL_MS),
+      );
+
+      const record = await this.prisma.idempotencyRecord.findUnique({
+        where: {
+          siteId_scope_key: {
+            siteId,
+            scope,
+            key,
+          },
+        },
+      });
+
+      if (!record || record.status !== IdempotencyRecordStatus.IN_PROGRESS) {
+        return record;
+      }
+    }
+
+    return null;
   }
 
   private extractResourceId(response: StoredResponse) {

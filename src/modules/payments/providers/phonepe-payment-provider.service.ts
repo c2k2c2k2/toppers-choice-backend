@@ -118,6 +118,7 @@ export class PhonePePaymentProviderService implements PaymentProviderAdapter {
 
   async checkStatus(order: {
     merchantOrderCode: string;
+    amountPaise?: number;
   }): Promise<ProviderStatusResult> {
     const config = await this.getRequiredConfig();
     const runtimeConfig =

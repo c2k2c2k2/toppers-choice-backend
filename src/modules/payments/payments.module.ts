@@ -13,6 +13,7 @@ import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 import { PlansService } from './plans.service';
 import { PublicPlansController } from './public-plans.controller';
+import { HdfcSmartGatewayPaymentProviderService } from './providers/hdfc-smartgateway-payment-provider.service';
 import { PhonePePaymentProviderService } from './providers/phonepe-payment-provider.service';
 
 @Module({
@@ -30,6 +31,7 @@ import { PhonePePaymentProviderService } from './providers/phonepe-payment-provi
     EntitlementsService,
     PaymentSettingsService,
     PaymentGatewayService,
+    HdfcSmartGatewayPaymentProviderService,
     PhonePePaymentProviderService,
     PaymentsService,
   ],

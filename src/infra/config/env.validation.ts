@@ -21,6 +21,14 @@ export type EnvironmentVariables = {
   PHONEPE_MERCHANT_ID?: string;
   PHONEPE_SALT_KEY?: string;
   PHONEPE_SALT_INDEX?: string;
+  HDFC_SMARTGATEWAY_API_BASE_URL?: string;
+  HDFC_SMARTGATEWAY_MERCHANT_ID?: string;
+  HDFC_SMARTGATEWAY_KEY_UUID?: string;
+  HDFC_SMARTGATEWAY_PAYMENT_PAGE_CLIENT_ID?: string;
+  HDFC_SMARTGATEWAY_PUBLIC_KEY?: string;
+  HDFC_SMARTGATEWAY_PUBLIC_KEY_PATH?: string;
+  HDFC_SMARTGATEWAY_PRIVATE_KEY?: string;
+  HDFC_SMARTGATEWAY_PRIVATE_KEY_PATH?: string;
 };
 
 const NODE_ENV_VALUES = ['development', 'test', 'production'] as const;
@@ -108,6 +116,33 @@ export function validateEnvironment(
   const phonePeMerchantId = parseOptionalString(config.PHONEPE_MERCHANT_ID);
   const phonePeSaltKey = parseOptionalString(config.PHONEPE_SALT_KEY);
   const phonePeSaltIndex = parseOptionalString(config.PHONEPE_SALT_INDEX);
+  const hdfcSmartGatewayApiBaseUrl =
+    parseOptionalUrl(
+      config.HDFC_SMARTGATEWAY_API_BASE_URL,
+      'HDFC_SMARTGATEWAY_API_BASE_URL',
+      errors,
+    ) ?? 'https://smartgateway.hdfcuat.bank.in';
+  const hdfcSmartGatewayMerchantId = parseOptionalString(
+    config.HDFC_SMARTGATEWAY_MERCHANT_ID,
+  );
+  const hdfcSmartGatewayKeyUuid = parseOptionalString(
+    config.HDFC_SMARTGATEWAY_KEY_UUID,
+  );
+  const hdfcSmartGatewayPaymentPageClientId = parseOptionalString(
+    config.HDFC_SMARTGATEWAY_PAYMENT_PAGE_CLIENT_ID,
+  );
+  const hdfcSmartGatewayPublicKey = parseOptionalString(
+    config.HDFC_SMARTGATEWAY_PUBLIC_KEY,
+  );
+  const hdfcSmartGatewayPublicKeyPath = parseOptionalString(
+    config.HDFC_SMARTGATEWAY_PUBLIC_KEY_PATH,
+  );
+  const hdfcSmartGatewayPrivateKey = parseOptionalString(
+    config.HDFC_SMARTGATEWAY_PRIVATE_KEY,
+  );
+  const hdfcSmartGatewayPrivateKeyPath = parseOptionalString(
+    config.HDFC_SMARTGATEWAY_PRIVATE_KEY_PATH,
+  );
 
   if (!databaseUrl && nodeEnv === 'production') {
     errors.push('DATABASE_URL is required when NODE_ENV=production.');
@@ -151,6 +186,48 @@ export function validateEnvironment(
     );
   }
 
+  const hdfcSmartGatewayConfigValues = [
+    config.HDFC_SMARTGATEWAY_API_BASE_URL,
+    hdfcSmartGatewayMerchantId,
+    hdfcSmartGatewayKeyUuid,
+    hdfcSmartGatewayPaymentPageClientId,
+    hdfcSmartGatewayPublicKey,
+    hdfcSmartGatewayPublicKeyPath,
+    hdfcSmartGatewayPrivateKey,
+    hdfcSmartGatewayPrivateKeyPath,
+  ];
+  const hasAnyHdfcSmartGatewayConfig = hdfcSmartGatewayConfigValues.some(
+    (value) => typeof value === 'string' && value.trim().length > 0,
+  );
+
+  if (hasAnyHdfcSmartGatewayConfig) {
+    if (!hdfcSmartGatewayMerchantId) {
+      errors.push(
+        'HDFC_SMARTGATEWAY_MERCHANT_ID is required when HDFC SmartGateway is configured.',
+      );
+    }
+    if (!hdfcSmartGatewayKeyUuid) {
+      errors.push(
+        'HDFC_SMARTGATEWAY_KEY_UUID is required when HDFC SmartGateway is configured.',
+      );
+    }
+    if (!hdfcSmartGatewayPaymentPageClientId) {
+      errors.push(
+        'HDFC_SMARTGATEWAY_PAYMENT_PAGE_CLIENT_ID is required when HDFC SmartGateway is configured.',
+      );
+    }
+    if (!hdfcSmartGatewayPublicKey && !hdfcSmartGatewayPublicKeyPath) {
+      errors.push(
+        'Provide HDFC_SMARTGATEWAY_PUBLIC_KEY or HDFC_SMARTGATEWAY_PUBLIC_KEY_PATH when HDFC SmartGateway is configured.',
+      );
+    }
+    if (!hdfcSmartGatewayPrivateKey && !hdfcSmartGatewayPrivateKeyPath) {
+      errors.push(
+        'Provide HDFC_SMARTGATEWAY_PRIVATE_KEY or HDFC_SMARTGATEWAY_PRIVATE_KEY_PATH when HDFC SmartGateway is configured.',
+      );
+    }
+  }
+
   if (errors.length > 0) {
     throw new Error(`Environment validation failed:\n- ${errors.join('\n- ')}`);
   }
@@ -178,6 +255,15 @@ export function validateEnvironment(
     PHONEPE_MERCHANT_ID: phonePeMerchantId,
     PHONEPE_SALT_KEY: phonePeSaltKey,
     PHONEPE_SALT_INDEX: phonePeSaltIndex,
+    HDFC_SMARTGATEWAY_API_BASE_URL: hdfcSmartGatewayApiBaseUrl,
+    HDFC_SMARTGATEWAY_MERCHANT_ID: hdfcSmartGatewayMerchantId,
+    HDFC_SMARTGATEWAY_KEY_UUID: hdfcSmartGatewayKeyUuid,
+    HDFC_SMARTGATEWAY_PAYMENT_PAGE_CLIENT_ID:
+      hdfcSmartGatewayPaymentPageClientId,
+    HDFC_SMARTGATEWAY_PUBLIC_KEY: hdfcSmartGatewayPublicKey,
+    HDFC_SMARTGATEWAY_PUBLIC_KEY_PATH: hdfcSmartGatewayPublicKeyPath,
+    HDFC_SMARTGATEWAY_PRIVATE_KEY: hdfcSmartGatewayPrivateKey,
+    HDFC_SMARTGATEWAY_PRIVATE_KEY_PATH: hdfcSmartGatewayPrivateKeyPath,
   };
 }
 
