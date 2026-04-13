@@ -7,6 +7,7 @@ type FilePurposeRule = {
 };
 
 const IMAGE_CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
+const AUDIO_CONTENT_TYPES = ['audio/mpeg'] as const;
 
 export const FILE_PURPOSE_RULES: Record<FileAssetPurpose, FilePurposeRule> = {
   [FileAssetPurpose.NOTE_PDF]: {
@@ -34,6 +35,11 @@ export const FILE_PURPOSE_RULES: Record<FileAssetPurpose, FilePurposeRule> = {
     maxSizeBytes: 10 * 1024 * 1024,
     defaultAccessLevel: FileAssetAccess.PROTECTED,
   },
+  [FileAssetPurpose.CONTENT_AUDIO]: {
+    allowedContentTypes: [...AUDIO_CONTENT_TYPES],
+    maxSizeBytes: 20 * 1024 * 1024,
+    defaultAccessLevel: FileAssetAccess.PROTECTED,
+  },
   [FileAssetPurpose.GENERIC_PDF]: {
     allowedContentTypes: ['application/pdf'],
     maxSizeBytes: 25 * 1024 * 1024,
@@ -53,8 +59,13 @@ export const FILE_EXTENSION_BY_CONTENT_TYPE: Record<string, string> = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
   'image/webp': 'webp',
+  'audio/mpeg': 'mp3',
 };
 
 export function isInlineAssetContentType(contentType: string) {
-  return contentType === 'application/pdf' || contentType.startsWith('image/');
+  return (
+    contentType === 'application/pdf' ||
+    contentType.startsWith('image/') ||
+    contentType.startsWith('audio/')
+  );
 }

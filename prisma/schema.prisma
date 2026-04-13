@@ -57,6 +57,7 @@ enum FileAssetPurpose {
   QUESTION_IMAGE
   PROFILE_IMAGE
   CONTENT_IMAGE
+  CONTENT_AUDIO
   GENERIC_PDF
   GENERIC_IMAGE
 }
@@ -128,6 +129,19 @@ enum ContentStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+enum EnglishSpeakingLanguage {
+  HINDI
+  MARATHI
+  ENGLISH
+}
+
+enum EnglishSpeakingAudioStatus {
+  NOT_GENERATED
+  PREVIEW_READY
+  FINALIZED
+  FAILED
 }
 
 enum ContentAccessType {
@@ -376,6 +390,7 @@ model Site {
   fileAssets               FileAsset[]
   fileAssetReferences      FileAssetReference[]
   contentEntries           ContentEntry[]
+  englishSpeakingTopics    EnglishSpeakingTopic[]
   questions                Question[]
   practiceSessions         PracticeSession[]
   practiceSessionQuestions PracticeSessionQuestion[]
@@ -1077,6 +1092,74 @@ model ContentEntry {
   @@index([siteId, accessType, status])
   @@index([siteId, isFeatured, featuredOrderIndex])
   @@map("content_entries")
+}
+
+model EnglishSpeakingTopic {
+  id                String                    @id @default(cuid())
+  siteId            String
+  slug              String
+  title             String
+  description       String?
+  visibility        CatalogVisibility         @default(AUTHENTICATED)
+  accessType        ContentAccessType         @default(FREE)
+  orderIndex        Int                       @default(0)
+  status            ContentStatus             @default(DRAFT)
+  createdByUserId   String
+  updatedByUserId   String
+  publishedByUserId String?
+  publishedAt       DateTime?
+  archivedAt        DateTime?
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+  site              Site                      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  sentences         EnglishSpeakingSentence[]
+
+  @@unique([siteId, slug])
+  @@index([siteId, status, publishedAt])
+  @@index([siteId, visibility, status, publishedAt])
+  @@index([siteId, accessType, status])
+  @@index([siteId, orderIndex])
+  @@map("english_speaking_topics")
+}
+
+model EnglishSpeakingSentence {
+  id           String                         @id @default(cuid())
+  topicId      String
+  orderIndex   Int                            @default(0)
+  hindiText    String
+  marathiText  String
+  englishText  String
+  createdAt    DateTime                       @default(now())
+  updatedAt    DateTime                       @updatedAt
+  topic        EnglishSpeakingTopic           @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  audioRecords EnglishSpeakingSentenceAudio[]
+
+  @@index([topicId, orderIndex])
+  @@map("english_speaking_sentences")
+}
+
+model EnglishSpeakingSentenceAudio {
+  id                   String                     @id @default(cuid())
+  sentenceId           String
+  language             EnglishSpeakingLanguage
+  previewFileAssetId   String?
+  finalizedFileAssetId String?
+  voiceId              String?
+  modelId              String?
+  outputFormat         String?
+  textHash             String?
+  status               EnglishSpeakingAudioStatus @default(NOT_GENERATED)
+  lastError            String?
+  generatedAt          DateTime?
+  finalizedAt          DateTime?
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+  sentence             EnglishSpeakingSentence    @relation(fields: [sentenceId], references: [id], onDelete: Cascade)
+
+  @@unique([sentenceId, language])
+  @@index([previewFileAssetId])
+  @@index([finalizedFileAssetId])
+  @@map("english_speaking_sentence_audios")
 }
 
 model ContentEntryExamTrack {

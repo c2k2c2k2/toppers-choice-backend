@@ -1,0 +1,275 @@
+{
+  "document_title": "AIRPORT & FLIGHT",
+  "data": [
+    {
+      "id": 1,
+      "hindi": "फ्लाईट का आगमन समय क्या है?",
+      "marathi": "विमानाची येण्याची वेळ (आगमन वेळ) काय आहे?",
+      "english": "What is the arrival time of flight?"
+    },
+    {
+      "id": 2,
+      "hindi": "मुझे चेक इन करना है।",
+      "marathi": "मला चेक-इन करायचे आहे.",
+      "english": "I need to check in."
+    },
+    {
+      "id": 3,
+      "hindi": "मेरी पासपोर्ट की जाँच कहाँ होगी?",
+      "marathi": "माझ्या पासपोर्टची तपासणी कुठे होईल?",
+      "english": "Where will my passport be checked?"
+    },
+    {
+      "id": 4,
+      "hindi": "मेरी फ्लाईट देरी से आ रही है।",
+      "marathi": "माझे विमान उशिरा येत आहे.",
+      "english": "My flight is delayed."
+    },
+    {
+      "id": 5,
+      "hindi": "मुझे बोर्डिंग पास चाहिए।",
+      "marathi": "मला बोर्डिंग पास हवा आहे.",
+      "english": "I need a boarding pass."
+    },
+    {
+      "id": 6,
+      "hindi": "क्या यहा वाय-फाय उपलब्ध है?",
+      "marathi": "येथे वाय-फाय उपलब्ध आहे का?",
+      "english": "Is there wifi available here?"
+    },
+    {
+      "id": 7,
+      "hindi": "हवाई जहाज कब उडान भरेंगा ?",
+      "marathi": "विमान केव्हा उड्डाण करेल?",
+      "english": "When will the flight take off?"
+    },
+    {
+      "id": 8,
+      "hindi": "मेरी उडान रद्द हो गई है।",
+      "marathi": "माझे विमान रद्द झाले आहे.",
+      "english": "My flight has been cancelled."
+    },
+    {
+      "id": 9,
+      "hindi": "हवाई अड्डा कहाँ है ?",
+      "marathi": "विमानतळ कुठे आहे?",
+      "english": "Where is the airport?"
+    },
+    {
+      "id": 10,
+      "hindi": "आपका सामान चेक-इन हो गया है।",
+      "marathi": "तुमच्या सामानाचे चेक-इन झाले आहे.",
+      "english": "Your luggage has been checked in."
+    },
+    {
+      "id": 11,
+      "hindi": "क्या आप उडान का समय बता सकते है?",
+      "marathi": "तुम्ही विमानाची वेळ सांगू शकता का?",
+      "english": "Can you tell the flight time?"
+    },
+    {
+      "id": 12,
+      "hindi": "फ्लाईट कितनी देर में है?",
+      "marathi": "विमान किती वेळात आहे?",
+      "english": "How late is the flight?"
+    },
+    {
+      "id": 13,
+      "hindi": "क्या उडान में भोजन मिलेंगा ?",
+      "marathi": "विमाना प्रवासात जेवण मिळेल का?",
+      "english": "Will food be served on the flight?"
+    },
+    {
+      "id": 14,
+      "hindi": "आपका बोर्डिंग पास तैयार है।",
+      "marathi": "तुमचा बोर्डिंग पास तयार आहे.",
+      "english": "Your boarding pass is ready."
+    },
+    {
+      "id": 15,
+      "hindi": "कृपया सुरक्षा जांच के लिए आगे बढे।",
+      "marathi": "कृपया सुरक्षा तपासणीसाठी पुढे चला.",
+      "english": "Please proceed for security check."
+    },
+    {
+      "id": 16,
+      "hindi": "क्या आप मुझे गेट नंबर बता सकते है?",
+      "marathi": "तुम्ही मला गेट नंबर सांगू शकता का?",
+      "english": "Can you tell me the get number?"
+    },
+    {
+      "id": 17,
+      "hindi": "क्या मैं अपनी उडान को रीशेड्युल कर सकता हूँ?",
+      "marathi": "मी माझ्या विमानाची वेळ बदलू (रीशेड्युल) शकतो का?",
+      "english": "Can I reschedule my flight?"
+    },
+    {
+      "id": 18,
+      "hindi": "क्या यह आंतरराष्ट्रीय उडान है?",
+      "marathi": "हे आंतरराष्ट्रीय विमान आहे का?",
+      "english": "Is this an international flight?"
+    },
+    {
+      "id": 19,
+      "hindi": "क्या मै सामान के साथ यात्रा कर सकता हूँ?",
+      "marathi": "मी सामानासह प्रवास करू शकतो का?",
+      "english": "Can I travel with the luggage?"
+    },
+    {
+      "id": 20,
+      "hindi": "मुझे फ्लाईट नंबर बताएं।",
+      "marathi": "मला फ्लाईट नंबर सांगा.",
+      "english": "Tell me the flight number."
+    },
+    {
+      "id": 21,
+      "hindi": "क्या आपको खाने का विकल्प चाहिए?",
+      "marathi": "तुम्हाला जेवणाचा पर्याय हवा आहे का?",
+      "english": "Do you want a food option?"
+    },
+    {
+      "id": 22,
+      "hindi": "मुझे कौनसा टर्मिनल जाना है?",
+      "marathi": "मला कोणत्या टर्मिनलला जायचे आहे?",
+      "english": "Which terminal should I go to?"
+    },
+    {
+      "id": 23,
+      "hindi": "मेरी कनेक्टिंग फ्लाईट छूट गयी।",
+      "marathi": "माझी पुढची कनेक्टिंग फ्लाईट चुकली.",
+      "english": "I missed my connecting flight."
+    },
+    {
+      "id": 24,
+      "hindi": "क्या मुझे आंतरराष्ट्रीय उडान के लिए वीजा चाहिए?",
+      "marathi": "मला आंतरराष्ट्रीय विमानासाठी व्हिसा हवा आहे का?",
+      "english": "Do I need a visa for an international flight?"
+    },
+    {
+      "id": 25,
+      "hindi": "फ्लाईट कितने बजे लैंड करेंगी?",
+      "marathi": "विमान किती वाजता उतरेल (लँड होईल)?",
+      "english": "What time will the flight land?"
+    },
+    {
+      "id": 26,
+      "hindi": "आपका पासपोर्ट और टिकट दिखाएं।",
+      "marathi": "तुमचा पासपोर्ट आणि तिकीट दाखवा.",
+      "english": "Show your passport and ticket."
+    },
+    {
+      "id": 27,
+      "hindi": "फ्लाईट में खाना कब सर्व्ह होगा?",
+      "marathi": "विमानात जेवण कधी दिले जाईल?",
+      "english": "When will food be served on the flight?"
+    },
+    {
+      "id": 28,
+      "hindi": "मेरे सामान का वजन अधिक है।",
+      "marathi": "माझ्या सामानाचे वजन जास्त आहे.",
+      "english": "My luggage is overweight."
+    },
+    {
+      "id": 29,
+      "hindi": "फ्लाईट का अंतिम कॉल चल रहा है।",
+      "marathi": "विमानासाठी शेवटचा पुकार (फायनल कॉल) सुरू आहे.",
+      "english": "The final call for the flight is being announced."
+    },
+    {
+      "id": 30,
+      "hindi": "मुझे अपनी उडान पकडने में देर हो रही है।",
+      "marathi": "मला माझे विमान पकडायला उशीर होत आहे.",
+      "english": "I am getting late to catch my flight."
+    },
+    {
+      "id": 31,
+      "hindi": "क्या बोर्डिंग प्रक्रिया शुरु हो गई है?",
+      "marathi": "बोर्डिंग प्रक्रिया सुरू झाली आहे का?",
+      "english": "Has the boarding process started?"
+    },
+    {
+      "id": 32,
+      "hindi": "कृपया अपनी इलेक्ट्रॉनिक उपकरणे बंद कर दें।",
+      "marathi": "कृपया तुमची इलेक्ट्रॉनिक उपकरणे बंद करा.",
+      "english": "Please turn off your electronic devices."
+    },
+    {
+      "id": 33,
+      "hindi": "मुझे फ्लाईट के टिकट का रिफंड चाहिए।",
+      "marathi": "मला विमान तिकिटाचे पैसे परत (रिफंड) हवे आहेत.",
+      "english": "I need a refund for my flight ticket."
+    },
+    {
+      "id": 34,
+      "hindi": "मेरे पास केवल हैंड बॅग्ज है।",
+      "marathi": "माझ्याकडे फक्त हातपिशव्या (हँड बॅग्ज) आहेत.",
+      "english": "I only have hand baggage."
+    },
+    {
+      "id": 35,
+      "hindi": "फ्लाईट कितने बजे टेक ऑफ करेंगी?",
+      "marathi": "विमान किती वाजता उड्डाण (टेक ऑफ) करेल?",
+      "english": "What time will the flight take off?"
+    },
+    {
+      "id": 36,
+      "hindi": "मुझे अपनी सीट पर चढाई की समस्या हो रही है।",
+      "marathi": "मला माझी सीट मागे झुकवताना अडचण येत आहे.",
+      "english": "I'm having trouble reclining my seat."
+    },
+    {
+      "id": 37,
+      "hindi": "फ्लाईट के दौरान कोई समस्या नहीं हुई।",
+      "marathi": "विमान प्रवासादरम्यान कोणतीही समस्या आली नाही.",
+      "english": "There were no issues during the flight."
+    },
+    {
+      "id": 38,
+      "hindi": "फ्लाईट की उँचाई से सबकुछ छोटा दिखता है।",
+      "marathi": "विमानातील उंचीवरून सर्वकाही लहान दिसते.",
+      "english": "Everything looks tiny from the height of the flight."
+    },
+    {
+      "id": 39,
+      "hindi": "कृपया सामान को स्कैनर में रखे।",
+      "marathi": "कृपया सामान स्कॅनरमध्ये ठेवा.",
+      "english": "Please place your luggage in the scanners."
+    },
+    {
+      "id": 40,
+      "hindi": "मुझे फ्लाईट का स्टेटस् चेक करना है।",
+      "marathi": "मला विमानाची स्थिती (स्टेटस) तपासायची आहे.",
+      "english": "I need to check the flight status."
+    },
+    {
+      "id": 41,
+      "hindi": "फ्लाईट के लिए चेक-इन काऊंटर कहाँ है?",
+      "marathi": "विमानासाठी चेक-इन काउंटर कुठे आहे?",
+      "english": "Where is the check in couner for the flight?"
+    },
+    {
+      "id": 42,
+      "hindi": "मुझे अपने गंतव्य का नाम कन्फर्म करना है।",
+      "marathi": "मला माझ्या पोहोचण्याच्या ठिकाणाचे नाव कन्फर्म करायचे आहे.",
+      "english": "I need to confirm the name of my destination."
+    },
+    {
+      "id": 43,
+      "hindi": "मेरी उडान का टिकट खो गया है।",
+      "marathi": "माझे विमानाचे तिकीट हरवले आहे.",
+      "english": "I have lost my flight ticket."
+    },
+    {
+      "id": 44,
+      "hindi": "मेरे फ्लाईट का समय क्या है?",
+      "marathi": "माझ्या विमानाची वेळ काय आहे?",
+      "english": "What time is my flight?"
+    },
+    {
+      "id": 45,
+      "hindi": "क्या मै चेक-इन ऑनलाईन कर सकता हूँ?",
+      "marathi": "मी ऑनलाईन चेक-इन करू शकतो का?",
+      "english": "Can I check in online?"
+    }
+  ]
+}

@@ -17,6 +17,11 @@ export type EnvironmentVariables = {
   OBJECT_STORAGE_ACCESS_KEY_ID?: string;
   OBJECT_STORAGE_SECRET_ACCESS_KEY?: string;
   OBJECT_STORAGE_FORCE_PATH_STYLE: boolean;
+  ELEVENLABS_API_KEY?: string;
+  ELEVENLABS_DEFAULT_VOICE_ID?: string;
+  ELEVENLABS_HINDI_VOICE_ID?: string;
+  ELEVENLABS_MARATHI_VOICE_ID?: string;
+  ELEVENLABS_ENGLISH_VOICE_ID?: string;
   PHONEPE_API_BASE_URL?: string;
   PHONEPE_MERCHANT_ID?: string;
   PHONEPE_SALT_KEY?: string;
@@ -107,6 +112,19 @@ export function validateEnvironment(
     'OBJECT_STORAGE_FORCE_PATH_STYLE',
     true,
     errors,
+  );
+  const elevenLabsApiKey = parseOptionalString(config.ELEVENLABS_API_KEY);
+  const elevenLabsDefaultVoiceId = parseOptionalString(
+    config.ELEVENLABS_DEFAULT_VOICE_ID,
+  );
+  const elevenLabsHindiVoiceId = parseOptionalString(
+    config.ELEVENLABS_HINDI_VOICE_ID,
+  );
+  const elevenLabsMarathiVoiceId = parseOptionalString(
+    config.ELEVENLABS_MARATHI_VOICE_ID,
+  );
+  const elevenLabsEnglishVoiceId = parseOptionalString(
+    config.ELEVENLABS_ENGLISH_VOICE_ID,
   );
   const phonePeApiBaseUrl = parseOptionalUrl(
     config.PHONEPE_API_BASE_URL,
@@ -251,6 +269,11 @@ export function validateEnvironment(
     OBJECT_STORAGE_ACCESS_KEY_ID: objectStorageAccessKeyId,
     OBJECT_STORAGE_SECRET_ACCESS_KEY: objectStorageSecretAccessKey,
     OBJECT_STORAGE_FORCE_PATH_STYLE: objectStorageForcePathStyle,
+    ELEVENLABS_API_KEY: elevenLabsApiKey,
+    ELEVENLABS_DEFAULT_VOICE_ID: elevenLabsDefaultVoiceId,
+    ELEVENLABS_HINDI_VOICE_ID: elevenLabsHindiVoiceId,
+    ELEVENLABS_MARATHI_VOICE_ID: elevenLabsMarathiVoiceId,
+    ELEVENLABS_ENGLISH_VOICE_ID: elevenLabsEnglishVoiceId,
     PHONEPE_API_BASE_URL: phonePeApiBaseUrl,
     PHONEPE_MERCHANT_ID: phonePeMerchantId,
     PHONEPE_SALT_KEY: phonePeSaltKey,

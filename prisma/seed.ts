@@ -28,6 +28,7 @@ import { PAYMENTS_RUNTIME_CONFIG_KEY } from '../src/modules/payments/payments.co
 import { NOTIFICATIONS_RUNTIME_CONFIG_KEY } from '../src/modules/notifications/notifications.constants';
 import { SEARCH_RUNTIME_CONFIG_KEY } from '../src/modules/search/search.constants';
 import { ADMIN_OPS_RUNTIME_CONFIG_KEY } from '../src/modules/admin-ops/admin-ops.constants';
+import { ENGLISH_SPEAKING_RUNTIME_CONFIG_KEY } from '../src/modules/english-speaking/english-speaking.constants';
 
 const prisma = new PrismaClient();
 const scrypt = promisify(scryptCallback);
@@ -255,6 +256,32 @@ async function main() {
       },
       broadcast: {
         maxRecipients: 5000,
+      },
+    },
+  );
+
+  await upsertPublishedConfig(
+    site.id,
+    ENGLISH_SPEAKING_RUNTIME_CONFIG_KEY,
+    1,
+    ConfigVisibility.INTERNAL,
+    {
+      tts: {
+        modelId: 'eleven_multilingual_v2',
+        outputFormat: 'mp3_22050_32',
+        voiceIds: {
+          default: 'pNInz6obpgDQGcFmaJgB',
+          hindi: '',
+          marathi: '',
+          english: '',
+        },
+        voiceSettings: {
+          stability: 0.4,
+          similarityBoost: 0.8,
+          style: 0,
+          speed: 1,
+          useSpeakerBoost: true,
+        },
       },
     },
   );

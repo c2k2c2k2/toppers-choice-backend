@@ -37,3 +37,7 @@ Done when:
 ## Out Of Scope
 - Question bank logic
 - Student practice/test session flows
+
+## Implementation Notes
+- Guidance, interview guidance, and current affairs continue to use the shared `ContentEntry` foundation introduced in this step.
+- English speaking now sits beside that foundation as a dedicated audio-first backend module with `EnglishSpeakingTopic`, `EnglishSpeakingSentence`, and `EnglishSpeakingSentenceAudio` tables so admins can generate preview audio, finalize approved output, and stream protected files through backend-controlled routes.

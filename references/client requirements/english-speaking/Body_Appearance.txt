@@ -1,0 +1,155 @@
+{
+  "document_title": "शारीरिक रुप (Body Appearance)",
+  "data": [
+    {
+      "id": 1,
+      "hindi": "वह बहुत पतला है।",
+      "marathi": "तो खूप हडकुळा आहे.",
+      "english": "He is so skinny."
+    },
+    {
+      "id": 2,
+      "hindi": "उसका शरीर गठील है।",
+      "marathi": "त्याचे शरीर पिळदार (गठील) आहे.",
+      "english": "His body is muscular."
+    },
+    {
+      "id": 3,
+      "hindi": "वह थोडी मोटी लगती है।",
+      "marathi": "ती थोडी जाड वाटते.",
+      "english": "She looks a bit chubby."
+    },
+    {
+      "id": 4,
+      "hindi": "उस का रंग सांवला है।",
+      "marathi": "त्याचा वर्ण सावळा आहे.",
+      "english": "His complexion is dusky."
+    },
+    {
+      "id": 5,
+      "hindi": "मेरी कमर पतली है।",
+      "marathi": "माझी कंबर बारीक आहे.",
+      "english": "My waist is thin."
+    },
+    {
+      "id": 6,
+      "hindi": "उसका शरीर बहुत फुर्तीला है।",
+      "marathi": "त्याचे शरीर खूप चपळ आहे.",
+      "english": "His body is very agile."
+    },
+    {
+      "id": 7,
+      "hindi": "वह थोडी झुकी हुई चाल से चलता है।",
+      "marathi": "तो थोडा वाकून चालतो.",
+      "english": "He walks with a slightly bent posture."
+    },
+    {
+      "id": 8,
+      "hindi": "उसका चेहरा थोडा गोल है।",
+      "marathi": "त्याचा चेहरा थोडा गोलाकार आहे.",
+      "english": "His face is a bit round."
+    },
+    {
+      "id": 9,
+      "hindi": "उसके कंधे थोडे झुके हुए है।",
+      "marathi": "त्याचे खांदे थोडे झुकलेले आहेत.",
+      "english": "His shoulders are slightly slouched."
+    },
+    {
+      "id": 10,
+      "hindi": "वह हर समय अच्छे से तैयार रहता है।",
+      "marathi": "तो नेहमी नीटनेटका राहतो.",
+      "english": "He always stays well-groomed."
+    },
+    {
+      "id": 11,
+      "hindi": "उसकी गर्दन पर तिल है।",
+      "marathi": "त्याच्या मानेवर तीळ आहे.",
+      "english": "He has a mole on his neck."
+    },
+    {
+      "id": 12,
+      "hindi": "उसकी नाक नुकीली और सीधी है।",
+      "marathi": "तिचे नाक टोकदार आणि सरळ आहे.",
+      "english": "Her nose is sharp and straight."
+    },
+    {
+      "id": 13,
+      "hindi": "उसकी आंखो मे एक खास चमक है।",
+      "marathi": "तिच्या डोळ्यांत एक वेगळीच चमक आहे.",
+      "english": "There is a special sparkle in her eyes."
+    },
+    {
+      "id": 14,
+      "hindi": "उसके होठ गुलाबी और मुलायम है।",
+      "marathi": "तिचे ओठ गुलाबी आणि मऊ आहेत.",
+      "english": "Her lips are pink and soft."
+    },
+    {
+      "id": 15,
+      "hindi": "उसके शरीर की बनावट संतुलित है।",
+      "marathi": "त्याच्या शरीराची बांधणी संतुलित आहे.",
+      "english": "His body structure is well-balanced."
+    },
+    {
+      "id": 16,
+      "hindi": "उसके गालों पर हल्कीसी लाली है।",
+      "marathi": "तिच्या गालावर हलकी लाली आहे.",
+      "english": "There is a slight blush on her cheeks."
+    },
+    {
+      "id": 17,
+      "hindi": "की ठोडी पर हल्की दाढी है।",
+      "marathi": "त्याच्या हनुवटीवर हलकी दाढी आहे.",
+      "english": "There is a light beard on his chin."
+    },
+    {
+      "id": 18,
+      "hindi": "उसके गालों में डिंपल है जब वह मुस्कराता है।",
+      "marathi": "तो हसतो तेव्हा त्याच्या गालावर खळी पडते.",
+      "english": "He has dimples on his cheeks when he smiles."
+    },
+    {
+      "id": 19,
+      "hindi": "उसके गाल गोल-मटोल है।",
+      "marathi": "त्याचे गाल गोल-मटोल आहेत.",
+      "english": "His cheeks are chubby."
+    },
+    {
+      "id": 20,
+      "hindi": "उसकी ठोडी नुकीली है।",
+      "marathi": "तिची हनुवटी टोकदार आहे.",
+      "english": "Her chin is pointed."
+    },
+    {
+      "id": 21,
+      "hindi": "वह पतला दुबला लेकिन ताकतवर है।",
+      "marathi": "तो दिसायला हडकुळा आहे पण ताकदवान आहे.",
+      "english": "He is skinny but strong."
+    },
+    {
+      "id": 22,
+      "hindi": "उसका पेट बाहर निकाला हुआ है।",
+      "marathi": "त्याचे पोट पुढे आलेले (सुटलेले) आहे.",
+      "english": "His stomach is protruding."
+    },
+    {
+      "id": 23,
+      "hindi": "उसकी आँखो के नीचे हल्के काले घेरे है।",
+      "marathi": "तिच्या डोळ्यांखाली हलकी काळी वर्तुळे आहेत.",
+      "english": "She has light dark circles under her eyes."
+    },
+    {
+      "id": 24,
+      "hindi": "उसकी कद-काठी मजबूत है।",
+      "marathi": "त्याची शरीरयष्टी मजबूत आहे.",
+      "english": "His physique is strong."
+    },
+    {
+      "id": 25,
+      "hindi": "उसका रंग गोरा और चमकदार है।",
+      "marathi": "तिचा वर्ण गोरा आणि चमकदार आहे.",
+      "english": "She has a fair and bright complexion."
+    }
+  ]
+}

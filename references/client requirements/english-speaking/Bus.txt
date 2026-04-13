@@ -1,0 +1,245 @@
+{
+  "document_title": "बस (Bus)",
+  "data": [
+    {
+      "id": 1,
+      "hindi": "बस मे चढो।",
+      "marathi": "बसमध्ये चढा.",
+      "english": "Get on the bus / Board the bus."
+    },
+    {
+      "id": 2,
+      "hindi": "देखो तुम्हारी बस आ गई है।",
+      "marathi": "बघ तुझी बस आली आहे.",
+      "english": "Look, your bus has arrived."
+    },
+    {
+      "id": 3,
+      "hindi": "ध्यान से देखो बस आ रही है या नहीं?",
+      "marathi": "नीट बघ बस येत आहे की नाही?",
+      "english": "Have a look, if the bus is coming?"
+    },
+    {
+      "id": 4,
+      "hindi": "क्या इस सीट पे कोई बैठा है?",
+      "marathi": "या जागेवर (सीटवर) कोणी बसले आहे का?",
+      "english": "Is this seat taken?"
+    },
+    {
+      "id": 5,
+      "hindi": "क्या हम सीट बदल सकते है।",
+      "marathi": "आपण जागा बदलू शकतो का?",
+      "english": "Can we switch seats."
+    },
+    {
+      "id": 6,
+      "hindi": "बिझीलँड के लिए कहा उतरना है?",
+      "marathi": "बिझीलँडसाठी कुठे उतरावे लागेल?",
+      "english": "Where to get off for Busy land?"
+    },
+    {
+      "id": 7,
+      "hindi": "सबसे नजदीकी बस स्टॉप कितनी दूर है?",
+      "marathi": "सगळ्यात जवळचा बस स्टॉप किती लांब आहे?",
+      "english": "How far is the nearest bus stop?"
+    },
+    {
+      "id": 8,
+      "hindi": "बस स्टॉप कहा है?",
+      "marathi": "बस स्टॉप कुठे आहे?",
+      "english": "Where is the bus stop?"
+    },
+    {
+      "id": 9,
+      "hindi": "यह बस कहा तक जाएगी?",
+      "marathi": "ही बस कुठपर्यंत जाणार आहे?",
+      "english": "How far will this bus go?"
+    },
+    {
+      "id": 10,
+      "hindi": "बस कितने बजे चलेगी?",
+      "marathi": "बस किती वाजता सुटेल?",
+      "english": "What time will the bus leave."
+    },
+    {
+      "id": 11,
+      "hindi": "अगला बस स्टॉप कौन सा है?",
+      "marathi": "पुढचा बस स्टॉप कोणता आहे?",
+      "english": "Which is the next bus stop?"
+    },
+    {
+      "id": 12,
+      "hindi": "बस आने में देर हो रही है।",
+      "marathi": "बस यायला उशीर होत आहे.",
+      "english": "The bus is getting late."
+    },
+    {
+      "id": 13,
+      "hindi": "क्या यह बस यहाँ से गुजरती है?",
+      "marathi": "ही बस इथून जाते का?",
+      "english": "Does this bus pass through here?"
+    },
+    {
+      "id": 14,
+      "hindi": "बस से कितना समय लगेगा?",
+      "marathi": "बसने किती वेळ लागेल?",
+      "english": "How much time will it take by bus?"
+    },
+    {
+      "id": 15,
+      "hindi": "इस बस मे जगह है क्या?",
+      "marathi": "या बसमध्ये जागा आहे का?",
+      "english": "Is there space in the bus."
+    },
+    {
+      "id": 16,
+      "hindi": "बस में खडे रहने की भी जगह नहीं है।",
+      "marathi": "बसमध्ये उभं राहायला सुद्धा जागा नाहीये.",
+      "english": "These isn't even standing space in the bus."
+    },
+    {
+      "id": 17,
+      "hindi": "बस में खिडकी के पास बैठना है।",
+      "marathi": "मला बसमध्ये खिडकीपाशी बसायचे आहे.",
+      "english": "I want to sit by the window in the bus."
+    },
+    {
+      "id": 18,
+      "hindi": "बस कब तक यहाँ रूकेगी?",
+      "marathi": "बस इथे किती वेळ थांबेल?",
+      "english": "How long will the bus stop here?"
+    },
+    {
+      "id": 19,
+      "hindi": "क्या यह बस शहर के अंदर जाती है?",
+      "marathi": "ही बस शहराच्या आत जाते का?",
+      "english": "Does this bus go into the city?"
+    },
+    {
+      "id": 20,
+      "hindi": "बस मे ज्यादा सामान मत ले जाओ।",
+      "marathi": "बसमध्ये जास्त सामान घेऊन जाऊ नका.",
+      "english": "Don't carry too much luggage on the bus."
+    },
+    {
+      "id": 21,
+      "hindi": "यह बस हर घंटे चलती है।",
+      "marathi": "ही बस दर तासाला धावते.",
+      "english": "This bus runs every hour."
+    },
+    {
+      "id": 22,
+      "hindi": "बस छूटनेवाली है।",
+      "marathi": "बस सुटणारच आहे.",
+      "english": "The bus is about to leave."
+    },
+    {
+      "id": 23,
+      "hindi": "यह बस सुबह के समय चलती है।",
+      "marathi": "ही बस सकाळी धावते.",
+      "english": "This bus operates in the morning."
+    },
+    {
+      "id": 24,
+      "hindi": "बस कब से यहाँ खडी है?",
+      "marathi": "बस किती वेळापासून इथे उभी आहे?",
+      "english": "How long has the bus been parked here?"
+    },
+    {
+      "id": 25,
+      "hindi": "बस से बाहर झांकना खतरनाक है।",
+      "marathi": "बसच्या बाहेर डोकावणे धोकादायक आहे.",
+      "english": "Leaning out of the bus is dangerous."
+    },
+    {
+      "id": 26,
+      "hindi": "बस एक गड्डे मे फँस गई।",
+      "marathi": "बस एका खड्ड्यात अडकली.",
+      "english": "The bus got stuck in a pathhole."
+    },
+    {
+      "id": 27,
+      "hindi": "क्या यह बस रातभर रूकेंगी।",
+      "marathi": "ही बस रात्रभर थांबेल का?",
+      "english": "Will this bus stay overnight."
+    },
+    {
+      "id": 28,
+      "hindi": "बस यात्रियों को बीच रास्ते में उतार देती है।",
+      "marathi": "बस प्रवाशांना अर्ध्यातच उतरवून देते.",
+      "english": "The bus drops passengers in the middle of the road."
+    },
+    {
+      "id": 29,
+      "hindi": "बस स्टेशन पर गाडी खडी करना मना है।",
+      "marathi": "बस स्थानकावर गाडी उभी करण्यास मनाई आहे.",
+      "english": "Parking is not allowed at the bus station."
+    },
+    {
+      "id": 30,
+      "hindi": "यह बस किराए में सस्ती है।",
+      "marathi": "या बसचे भाडे स्वस्त आहे.",
+      "english": "This bus is cheap in terms of fare."
+    },
+    {
+      "id": 31,
+      "hindi": "बस के अंदर गर्मी बहुत हो रही है।",
+      "marathi": "बसमध्ये खूप उकाडा (गर्मी) होत आहे.",
+      "english": "It's very hot inside the bus."
+    },
+    {
+      "id": 32,
+      "hindi": "बस मे खडा रहना थका देनेवाला है।",
+      "marathi": "बसमध्ये उभं राहणं थकवणारे आहे.",
+      "english": "Standing on the bus is exhausting."
+    },
+    {
+      "id": 33,
+      "hindi": "बस ड्रायव्हर ने अचानक ब्रेक लगाया।",
+      "marathi": "बस ड्रायव्हरने अचानक ब्रेक लावला.",
+      "english": "The bus driver applied the brakes suddenly."
+    },
+    {
+      "id": 34,
+      "hindi": "बस की छत पर सामान रखा गया है।",
+      "marathi": "बसच्या छतावर सामान ठेवले गेले आहे.",
+      "english": "Luggage has been placed on the roof of the bus."
+    },
+    {
+      "id": 35,
+      "hindi": "क्या आपको सिटी बस का मार्ग पता है।",
+      "marathi": "तुम्हाला सिटी बसचा मार्ग माहीत आहे का?",
+      "english": "Do you know the city bus route?"
+    },
+    {
+      "id": 36,
+      "hindi": "मै रोज बस सें यात्रा करता हूँ।",
+      "marathi": "मी रोज बसने प्रवास करतो.",
+      "english": "I travel by bus daily."
+    },
+    {
+      "id": 37,
+      "hindi": "क्या यह बस हवाई अड्डे तक जाती है?",
+      "marathi": "ही बस विमानतळापर्यंत जाते का?",
+      "english": "Does this bus go to the airport?"
+    },
+    {
+      "id": 38,
+      "hindi": "बस कब छूटेंगी?",
+      "marathi": "बस कधी सुटेल?",
+      "english": "When will the bus depart?"
+    },
+    {
+      "id": 39,
+      "hindi": "बस यात्रा के लिए टिकट अनिवार्य है।",
+      "marathi": "बस प्रवासासाठी तिकीट अनिवार्य (गरजेचे) आहे.",
+      "english": "A ticket is mandatory for the bus journey."
+    },
+    {
+      "id": 40,
+      "hindi": "यह बस ओवरलोड है।",
+      "marathi": "ही बस ओव्हरलोड (क्षमतेपेक्षा जास्त भरलेली) आहे.",
+      "english": "This bus overloaded."
+    }
+  ]
+}

@@ -27,6 +27,12 @@ type ReadObjectRangeInput = {
   length?: number;
 };
 
+type WriteObjectInput = {
+  objectKey: string;
+  body: Buffer;
+  contentType: string;
+};
+
 @Injectable()
 export class ObjectStorageService {
   private readonly endpoint: string | null;
@@ -153,6 +159,26 @@ export class ObjectStorageService {
       eTag: metadata.eTag,
       lastModified: metadata.lastModified,
     };
+  }
+
+  async writeObject(input: WriteObjectInput): Promise<HeadObjectResult> {
+    const client = this.getClient();
+    await client.putObject(
+      this.getBucket(),
+      input.objectKey,
+      input.body,
+      input.body.length,
+      {
+        'Content-Type': input.contentType,
+      },
+    );
+
+    return this.headObject(input.objectKey);
+  }
+
+  async removeObject(objectKey: string) {
+    const client = this.getClient();
+    await client.removeObject(this.getBucket(), objectKey);
   }
 
   private getClient() {

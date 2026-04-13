@@ -1,0 +1,185 @@
+{
+  "document_title": "नहाना (Bath)",
+  "data": [
+    {
+      "id": 1,
+      "hindi": "मुझे नहाने का मन कर रहा है।",
+      "marathi": "मला अंघोळ करण्याची इच्छा होत आहे.",
+      "english": "I feel like taking a bath."
+    },
+    {
+      "id": 2,
+      "hindi": "साबून लगाओ।",
+      "marathi": "साबण लाव.",
+      "english": "Soap yourself."
+    },
+    {
+      "id": 3,
+      "hindi": "क्या आप तौलिया ला सकते है?",
+      "marathi": "तुम्ही टॉवेल आणू शकता का?",
+      "english": "Can you bring the towel?"
+    },
+    {
+      "id": 4,
+      "hindi": "बाथरूम मे टॉवल हँगर पर तौलिया टांगो।",
+      "marathi": "बाथरूममध्ये टॉवेल हँगरवर टॉवेल टांगून ठेवा.",
+      "english": "Hang the towel on the towel hanger in the bathroom."
+    },
+    {
+      "id": 5,
+      "hindi": "क्या गीजर चालू है?",
+      "marathi": "गीजर चालू आहे का?",
+      "english": "Is the geyser on?"
+    },
+    {
+      "id": 6,
+      "hindi": "कृपया शावर बंद करो।",
+      "marathi": "कृपया शॉवर बंद करा.",
+      "english": "Please turn off the shower."
+    },
+    {
+      "id": 7,
+      "hindi": "साबून का पानी फर्श पर गिर गया।",
+      "marathi": "साबणाचे पाणी लादीवर (फर्शवर) सांडले आहे.",
+      "english": "Soap water has spilled on the floor."
+    },
+    {
+      "id": 8,
+      "hindi": "पानी गर्म करने के लिए गीजर चालू करो।",
+      "marathi": "पाणी गरम करण्यासाठी गीजर चालू करा.",
+      "english": "Turn on the geyser to heat the water."
+    },
+    {
+      "id": 9,
+      "hindi": "गीजर को ज्यादा देर तक चालू मत रखो।",
+      "marathi": "गीजर जास्त वेळ चालू ठेवू नका.",
+      "english": "Do not keep the geyser on for too long."
+    },
+    {
+      "id": 10,
+      "hindi": "क्या आपने शावर कर्टेन लगाया है?",
+      "marathi": "तुम्ही शॉवरचा पडदा (शावर कर्टन) लावला आहे का?",
+      "english": "Have you put up the shower curtain?"
+    },
+    {
+      "id": 11,
+      "hindi": "नहाते समय पानी बरबाद मत करो।",
+      "marathi": "अंघोळ करताना पाणी वाया घालवू नका.",
+      "english": "Don't waste water while bathing."
+    },
+    {
+      "id": 12,
+      "hindi": "मैने बाथटब मे बबलबाथ लिया।",
+      "marathi": "मी बाथटबमध्ये बबलबाथ घेतला.",
+      "english": "I took a bubble bath in the bathtub."
+    },
+    {
+      "id": 13,
+      "hindi": "मै ठंडे पानी से नहाया।",
+      "marathi": "मी थंड पाण्याने अंघोळ केली.",
+      "english": "I bathed with cold water."
+    },
+    {
+      "id": 14,
+      "hindi": "बाथरूम मे साबून भर दो।",
+      "marathi": "बाथरूममध्ये साबण भरून ठेवा.",
+      "english": "Refill the soap in the bathroom."
+    },
+    {
+      "id": 15,
+      "hindi": "क्या आपने साबूनदानी मे साबून रखा है?",
+      "marathi": "तुम्ही साबणदाणीत साबण ठेवला आहे का?",
+      "english": "Have you kept the soap in the soap dish."
+    },
+    {
+      "id": 16,
+      "hindi": "साबून खत्म हो गया है।",
+      "marathi": "साबण संपला आहे.",
+      "english": "The soap is finished."
+    },
+    {
+      "id": 17,
+      "hindi": "बाथरूम मे गीजर लगा हुआ है।",
+      "marathi": "बाथरूममध्ये गीजर बसवलेला आहे.",
+      "english": "There is a geyser installed in the bathroom."
+    },
+    {
+      "id": 18,
+      "hindi": "गीजर ठीक से काम नही कर रहा है।",
+      "marathi": "गीजर नीट काम करत नाहीये.",
+      "english": "The geyser is not working properly."
+    },
+    {
+      "id": 19,
+      "hindi": "साबून पर बाल चिपक गए है।",
+      "marathi": "साबणाला केस चिकटले आहेत.",
+      "english": "Hair has stuck to the soap."
+    },
+    {
+      "id": 20,
+      "hindi": "मै हर दुसरे दिन नहाता हूँ।",
+      "marathi": "मी दर आड दिवशी अंघोळ करतो.",
+      "english": "I take a bath every other day."
+    },
+    {
+      "id": 21,
+      "hindi": "मै बाथरूम मे स्नान कर रहा हूँ।",
+      "marathi": "मी बाथरूममध्ये अंघोळ करत आहे.",
+      "english": "I am taking shower in the washroom."
+    },
+    {
+      "id": 22,
+      "hindi": "साबून का झाग बहुत है।",
+      "marathi": "साबणाचा फेस खूप झाला आहे.",
+      "english": "The soap is very foamy."
+    },
+    {
+      "id": 23,
+      "hindi": "गीजर का पानी बहुत गरम है।",
+      "marathi": "गीजरचे पाणी खूप गरम आहे.",
+      "english": "The geyser water is too hot."
+    },
+    {
+      "id": 24,
+      "hindi": "गीजर बंद कर दो।",
+      "marathi": "गीजर बंद करा.",
+      "english": "Switch off the geyser."
+    },
+    {
+      "id": 25,
+      "hindi": "मै नहाने जा रहा हूँ।",
+      "marathi": "मी अंघोळीला जात आहे.",
+      "english": "I am going to take a shower/bath."
+    },
+    {
+      "id": 26,
+      "hindi": "मैने नहाना खत्म कर लिया है।",
+      "marathi": "माझी अंघोळ झाली आहे.",
+      "english": "I have finished bathing."
+    },
+    {
+      "id": 27,
+      "hindi": "क्या पानी गर्म हो गया है?",
+      "marathi": "पाणी गरम झाले आहे का?",
+      "english": "Is the water hot?"
+    },
+    {
+      "id": 28,
+      "hindi": "मैने नहाने के बाद फर्श पोंछ दिया है।",
+      "marathi": "मी अंघोळीनंतर लादी पुसली आहे.",
+      "english": "I have mopped the floor after bathing."
+    },
+    {
+      "id": 29,
+      "hindi": "मैने शैम्पू कर लिया है।",
+      "marathi": "मी शॅम्पू लावला आहे (केस धुतले आहेत).",
+      "english": "I have shampood my hair."
+    },
+    {
+      "id": 30,
+      "hindi": "नहाने का समय हो गया है।",
+      "marathi": "अंघोळीची वेळ झाली आहे.",
+      "english": "Time to take a bath."
+    }
+  ]
+}
