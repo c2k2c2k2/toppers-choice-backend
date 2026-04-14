@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -16,6 +17,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { ActionMessageResponseDto } from '../../common/dto/action-message-response.dto';
 import { ApiErrorResponseDto } from '../../common/dto/api-error-response.dto';
 import { Audit } from '../authorization/decorators/audit.decorator';
 import { Policy } from '../authorization/decorators/policy.decorator';
@@ -136,5 +138,21 @@ export class AdminQuestionsController {
     @Param('questionId') questionId: string,
   ) {
     return this.questionsService.unpublishQuestion(user, questionId);
+  }
+
+  @Delete(':questionId')
+  @Policy('academics.questions.manage')
+  @Audit({
+    action: 'admin.questions.delete',
+    resourceType: 'question',
+    resourceIdParam: 'questionId',
+  })
+  @ApiOkResponse({ type: ActionMessageResponseDto })
+  @ApiConflictResponse({ type: ApiErrorResponseDto })
+  async deleteQuestion(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('questionId') questionId: string,
+  ) {
+    return this.questionsService.deleteQuestion(user, questionId);
   }
 }

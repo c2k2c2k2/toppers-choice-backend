@@ -1089,10 +1089,20 @@ export class PracticeService {
   }
 
   private buildQuestionScopeWhere(siteId: string, scope: PracticeScope) {
+    const and: Prisma.QuestionWhereInput[] = [
+      {
+        OR: [{ publishedAt: null }, { publishedAt: { lte: new Date() } }],
+      },
+    ];
+    if (scope.mediumId) {
+      and.push({
+        OR: [{ mediumId: scope.mediumId }, { mediumId: null }],
+      });
+    }
+
     return {
       siteId,
       status: QuestionStatus.PUBLISHED,
-      mediumId: scope.mediumId ?? undefined,
       subjectId: scope.subjectId ?? undefined,
       topicId: scope.topicId ?? undefined,
       difficulty: scope.difficulty ?? undefined,
@@ -1101,6 +1111,7 @@ export class PracticeService {
             examTrackId: scope.examTrackId,
           }
         : undefined,
+      AND: and,
     } satisfies Prisma.QuestionWhereInput;
   }
 

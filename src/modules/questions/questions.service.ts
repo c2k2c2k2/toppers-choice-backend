@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -374,6 +375,84 @@ export class QuestionsService {
     return this.getAdminQuestion(user.siteId, questionId);
   }
 
+  async deleteQuestion(user: AuthenticatedUser, questionId: string) {
+    const existing = await this.prisma.question.findFirst({
+      where: {
+        id: questionId,
+        siteId: user.siteId,
+      },
+      select: { id: true },
+    });
+
+    if (!existing) {
+      throw new NotFoundException({
+        code: 'QUESTION_NOT_FOUND',
+        message: 'Question was not found.',
+      });
+    }
+
+    const [
+      linkedPracticeQuestionCount,
+      linkedPracticeStateCount,
+      linkedTestQuestionCount,
+      linkedTestAttemptQuestionCount,
+    ] = await Promise.all([
+      this.prisma.practiceSessionQuestion.count({
+        where: {
+          questionId,
+        },
+      }),
+      this.prisma.userQuestionPracticeState.count({
+        where: {
+          questionId,
+        },
+      }),
+      this.prisma.testQuestion.count({
+        where: {
+          questionId,
+        },
+      }),
+      this.prisma.testAttemptQuestion.count({
+        where: {
+          questionId,
+        },
+      }),
+    ]);
+
+    if (
+      linkedPracticeQuestionCount > 0 ||
+      linkedPracticeStateCount > 0 ||
+      linkedTestQuestionCount > 0 ||
+      linkedTestAttemptQuestionCount > 0
+    ) {
+      throw new ConflictException({
+        code: 'QUESTION_DELETE_BLOCKED',
+        message:
+          'This question has already been used in practice or tests and cannot be deleted.',
+      });
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.fileAssetReference.deleteMany({
+        where: {
+          siteId: user.siteId,
+          resourceType: 'question',
+          resourceId: questionId,
+        },
+      });
+
+      await tx.question.delete({
+        where: {
+          id: questionId,
+        },
+      });
+    });
+
+    return {
+      message: 'Question deleted.',
+    };
+  }
+
   async listPublishedQuestions(
     user: AuthenticatedUser,
     query: ListQuestionsQueryDto,
@@ -456,6 +535,11 @@ export class QuestionsService {
         OR: [{ publishedAt: null }, { publishedAt: { lte: new Date() } }],
       },
     ];
+    if (query.mediumId) {
+      and.push({
+        OR: [{ mediumId: query.mediumId }, { mediumId: null }],
+      });
+    }
     if (query.search) {
       and.push({
         OR: [
@@ -469,7 +553,6 @@ export class QuestionsService {
       siteId,
       subjectId: query.subjectId,
       topicId: query.topicId,
-      mediumId: query.mediumId,
       type: query.type,
       difficulty: query.difficulty,
       hasMedia: query.hasMedia,

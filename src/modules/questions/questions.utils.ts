@@ -1,4 +1,7 @@
-import { extractQuestionSearchFragments } from './question-rich-content.util';
+import {
+  extractQuestionSearchFragments,
+  extractTextFromQuestionHtml,
+} from './question-rich-content.util';
 
 export const QUESTION_CODE_PATTERN = /^[a-z0-9_-]+$/;
 export const OPTION_KEY_PATTERN = /^[A-Z0-9_-]+$/;
@@ -37,4 +40,121 @@ export function buildQuestionSearchText(...values: unknown[]) {
     .trim();
 
   return text.length > 0 ? text : 'question';
+}
+
+export function buildQuestionStatementPreviewText(
+  value: unknown,
+  maxLength = 180,
+) {
+  const text = extractQuestionStatementText(value);
+  if (!text) {
+    return 'Question statement unavailable.';
+  }
+
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  return `${text.slice(0, Math.max(maxLength - 1, 0)).trimEnd()}...`;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function extractStructuredStatementText(value: Record<string, unknown>): string {
+  const fragments: string[] = [];
+
+  if (typeof value.html === 'string') {
+    const htmlText = extractTextFromQuestionHtml(value.html);
+    if (htmlText) {
+      fragments.push(htmlText);
+    }
+  }
+
+  ['text', 'contentHtml', 'content', 'body'].forEach((key) => {
+    const entry = value[key];
+    if (typeof entry === 'string' && entry.trim()) {
+      fragments.push(
+        key.toLowerCase().includes('html')
+          ? extractTextFromQuestionHtml(entry)
+          : entry.trim(),
+      );
+    }
+  });
+
+  if (Array.isArray(value.blocks)) {
+    value.blocks.forEach((block) => {
+      const blockText = extractQuestionStatementText(block);
+      if (blockText) {
+        fragments.push(blockText);
+      }
+    });
+  }
+
+  return fragments.join(' ').replace(/\s+/gu, ' ').trim();
+}
+
+function extractQuestionStatementText(value: unknown): string {
+  if (value === null || value === undefined) {
+    return '';
+  }
+
+  if (typeof value === 'string') {
+    return value.trim();
+  }
+
+  if (Array.isArray(value)) {
+    return value
+      .map((entry) => extractQuestionStatementText(entry))
+      .filter(Boolean)
+      .join(' ')
+      .replace(/\s+/gu, ' ')
+      .trim();
+  }
+
+  if (!isRecord(value)) {
+    return '';
+  }
+
+  if (
+    Array.isArray(value.blocks) ||
+    typeof value.html === 'string' ||
+    typeof value.text === 'string' ||
+    typeof value.contentHtml === 'string' ||
+    typeof value.content === 'string' ||
+    typeof value.body === 'string'
+  ) {
+    return extractStructuredStatementText(value);
+  }
+
+  const localeCandidates = [
+    'mr-IN',
+    'mr',
+    'en-IN',
+    'en',
+    'default',
+    'content',
+    'body',
+  ];
+
+  for (const localeKey of localeCandidates) {
+    if (value[localeKey] !== undefined) {
+      const localizedText = extractQuestionStatementText(value[localeKey]);
+      if (localizedText) {
+        return localizedText;
+      }
+    }
+  }
+
+  if (isRecord(value.translations)) {
+    const translatedText = extractQuestionStatementText(value.translations);
+    if (translatedText) {
+      return translatedText;
+    }
+  }
+
+  return Object.values(value)
+    .map((entry) => extractQuestionStatementText(entry))
+    .find((entry) => entry.length > 0) ?? '';
 }

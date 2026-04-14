@@ -136,6 +136,12 @@ export class QuestionSummaryResponseDto {
   @ApiProperty({ enum: QuestionDifficulty })
   difficulty!: QuestionDifficulty;
 
+  @ApiProperty({
+    example:
+      'Who presided over the Constituent Assembly while the Constitution was being drafted?',
+  })
+  statementPreviewText!: string;
+
   @ApiProperty()
   hasMedia!: boolean;
 

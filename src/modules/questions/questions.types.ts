@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { buildQuestionStatementPreviewText } from './questions.utils';
 
 export const questionAssetSelect = Prisma.validator<Prisma.FileAssetSelect>()({
   id: true,
@@ -133,6 +134,9 @@ export function mapQuestionSummary(record: QuestionRecord) {
     examTrackId: record.subject.examTrackId,
     type: record.type,
     difficulty: record.difficulty,
+    statementPreviewText: buildQuestionStatementPreviewText(
+      record.statementJson,
+    ),
     hasMedia: record.hasMedia,
     status: record.status,
     publishedAt: record.publishedAt,
