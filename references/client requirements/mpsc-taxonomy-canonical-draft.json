@@ -1,0 +1,584 @@
+{
+  "version": "2026-04-15",
+  "modelDecision": "Use separate MPSC English and Marathi operational exam tracks. Medium remains a separate content filter and does not alter the subject tree.",
+  "mediums": [
+    {
+      "code": "en",
+      "slug": "english",
+      "name": "English",
+      "englishName": "English",
+      "nativeName": null
+    },
+    {
+      "code": "mr",
+      "slug": "marathi",
+      "name": "Marathi",
+      "englishName": "Marathi",
+      "nativeName": "मराठी"
+    }
+  ],
+  "examTracks": [
+    {
+      "code": "mpsc-english-medium",
+      "slug": "mpsc-english-medium",
+      "name": "MPSC - English Medium",
+      "shortName": "MPSC English",
+      "englishName": "MPSC - English Medium",
+      "nativeName": null,
+      "defaultMediumCode": "en",
+      "subjects": [
+        {
+          "code": "general-knowledge",
+          "slug": "general-knowledge",
+          "name": "General Knowledge",
+          "englishName": "General Knowledge",
+          "nativeName": null,
+          "topicEntryMode": "FULL",
+          "entryNotes": [
+            "This topic list came directly from the client syllabus."
+          ],
+          "topics": [
+            {
+              "code": "computer",
+              "slug": "computer",
+              "name": "Computer",
+              "englishName": "Computer",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "political-science",
+              "slug": "political-science",
+              "name": "Political Science",
+              "englishName": "Political Science",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "banking",
+              "slug": "banking",
+              "name": "Banking",
+              "englishName": "Banking",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "commerce-economics",
+              "slug": "commerce-economics",
+              "name": "Commerce & Economics",
+              "englishName": "Commerce & Economics",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "physical-geography",
+              "slug": "physical-geography",
+              "name": "Physical Geography",
+              "englishName": "Physical Geography",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "human-biology",
+              "slug": "human-biology",
+              "name": "Human Biology",
+              "englishName": "Human Biology",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "botany",
+              "slug": "botany",
+              "name": "Botany",
+              "englishName": "Botany",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "zoology",
+              "slug": "zoology",
+              "name": "Zoology",
+              "englishName": "Zoology",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "chemistry",
+              "slug": "chemistry",
+              "name": "Chemistry",
+              "englishName": "Chemistry",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "science-in-general",
+              "slug": "science-in-general",
+              "name": "Science in General",
+              "englishName": "Science in General",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "international-organisation",
+              "slug": "international-organisation",
+              "name": "International Organisation",
+              "englishName": "International Organisation",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "agriculture",
+              "slug": "agriculture",
+              "name": "Agriculture",
+              "englishName": "Agriculture",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "india-in-general",
+              "slug": "india-in-general",
+              "name": "India - in general",
+              "englishName": "India - in general",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "maharashtra",
+              "slug": "maharashtra",
+              "name": "Maharashtra",
+              "englishName": "Maharashtra",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "history",
+              "slug": "history",
+              "name": "History",
+              "englishName": "History",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "world-at-a-glance",
+              "slug": "world-at-a-glance",
+              "name": "World at a glance",
+              "englishName": "World at a glance",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "environment",
+              "slug": "environment",
+              "name": "Environment",
+              "englishName": "Environment",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "panchayat-raj",
+              "slug": "panchayat-raj",
+              "name": "Panchayat raj",
+              "englishName": "Panchayat raj",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "current-affairs",
+              "slug": "current-affairs",
+              "name": "Current affairs",
+              "englishName": "Current affairs",
+              "nativeName": null,
+              "topics": []
+            }
+          ]
+        },
+        {
+          "code": "marathi-grammar",
+          "slug": "marathi-grammar",
+          "name": "Marathi Grammar",
+          "englishName": "Marathi Grammar",
+          "nativeName": null,
+          "topicEntryMode": "SUBJECT_ONLY",
+          "entryNotes": [
+            "The client syllabus names this subject but does not provide subtopics."
+          ],
+          "topics": []
+        },
+        {
+          "code": "english",
+          "slug": "english",
+          "name": "English",
+          "englishName": "English",
+          "nativeName": null,
+          "topicEntryMode": "FULL",
+          "entryNotes": [],
+          "topics": [
+            {
+              "code": "english-grammar",
+              "slug": "english-grammar",
+              "name": "English Grammar",
+              "englishName": "English Grammar",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "english-vocabulary",
+              "slug": "english-vocabulary",
+              "name": "English Vocabulary",
+              "englishName": "English Vocabulary",
+              "nativeName": null,
+              "topics": []
+            }
+          ]
+        },
+        {
+          "code": "maths",
+          "slug": "maths",
+          "name": "Maths",
+          "englishName": "Maths",
+          "nativeName": null,
+          "topicEntryMode": "DEFERRED",
+          "entryNotes": [
+            "The client syllabus says to refer to the Staff-Railway-Bank mathematics notes.",
+            "Do not invent or duplicate the topic tree until the shared-source strategy is approved."
+          ],
+          "topics": []
+        },
+        {
+          "code": "test-of-reasoning",
+          "slug": "test-of-reasoning",
+          "name": "Test of Reasoning",
+          "englishName": "Test of Reasoning",
+          "nativeName": null,
+          "topicEntryMode": "SUBJECT_ONLY",
+          "entryNotes": [
+            "The client syllabus names this subject but does not provide subtopics."
+          ],
+          "topics": []
+        }
+      ]
+    },
+    {
+      "code": "mpsc-marathi-allied",
+      "slug": "mpsc-marathi-allied",
+      "name": "एमपीएससी व तत्सम स्पर्धा परीक्षा",
+      "shortName": "MPSC Marathi",
+      "englishName": "MPSC and Allied Competitive Exams",
+      "nativeName": "एमपीएससी व तत्सम स्पर्धा परीक्षा",
+      "defaultMediumCode": "mr",
+      "subjects": [
+        {
+          "code": "general-knowledge",
+          "slug": "general-knowledge",
+          "name": "सामान्यज्ञान",
+          "englishName": "General Knowledge",
+          "nativeName": "सामान्यज्ञान",
+          "topicEntryMode": "FULL",
+          "entryNotes": [
+            "Geography, History, and Agriculture are grouped as parent topics because the client syllabus provided explicit sub-areas."
+          ],
+          "topics": [
+            {
+              "code": "maharashtra",
+              "slug": "maharashtra",
+              "name": "महाराष्ट्र",
+              "englishName": "Maharashtra",
+              "nativeName": "महाराष्ट्र",
+              "topics": []
+            },
+            {
+              "code": "social-reformers",
+              "slug": "social-reformers",
+              "name": "समाजसुधारक",
+              "englishName": "Social reformers",
+              "nativeName": "समाजसुधारक",
+              "topics": []
+            },
+            {
+              "code": "panchayat-raj",
+              "slug": "panchayat-raj",
+              "name": "पंचायतराज",
+              "englishName": "Panchayat raj",
+              "nativeName": "पंचायतराज",
+              "topics": []
+            },
+            {
+              "code": "banking",
+              "slug": "banking",
+              "name": "बँकींग",
+              "englishName": "Banking",
+              "nativeName": "बँकींग",
+              "topics": []
+            },
+            {
+              "code": "commerce-economy",
+              "slug": "commerce-economy",
+              "name": "वाणिज्य व अर्थव्यवस्था",
+              "englishName": "Commerce & Economy",
+              "nativeName": "वाणिज्य व अर्थव्यवस्था",
+              "topics": []
+            },
+            {
+              "code": "india-at-a-glance",
+              "slug": "india-at-a-glance",
+              "name": "भारत एक दृष्टीक्षेप",
+              "englishName": "India at a glance",
+              "nativeName": "भारत एक दृष्टीक्षेप",
+              "topics": []
+            },
+            {
+              "code": "information-technology-computer",
+              "slug": "information-technology-computer",
+              "name": "माहिती तंत्रज्ञान - कम्प्युटर",
+              "englishName": "Information Technology / Computer",
+              "nativeName": "माहिती तंत्रज्ञान - कम्प्युटर",
+              "topics": []
+            },
+            {
+              "code": "geography",
+              "slug": "geography",
+              "name": "भूगोल",
+              "englishName": "Geography",
+              "nativeName": "भूगोल",
+              "topics": [
+                {
+                  "code": "physical-world-geography",
+                  "slug": "physical-world-geography",
+                  "name": "फिजिकल / जगाचा भूगोल",
+                  "englishName": "Physical / World Geography",
+                  "nativeName": "फिजिकल / जगाचा भूगोल",
+                  "topics": []
+                },
+                {
+                  "code": "various-countries",
+                  "slug": "various-countries",
+                  "name": "विविध देश",
+                  "englishName": "Various countries",
+                  "nativeName": "विविध देश",
+                  "topics": []
+                }
+              ]
+            },
+            {
+              "code": "history",
+              "slug": "history",
+              "name": "इतिहास",
+              "englishName": "History",
+              "nativeName": "इतिहास",
+              "topics": [
+                {
+                  "code": "ancient-history",
+                  "slug": "ancient-history",
+                  "name": "प्राचीन इतिहास",
+                  "englishName": "Ancient history",
+                  "nativeName": "प्राचीन इतिहास",
+                  "topics": []
+                },
+                {
+                  "code": "medieval-history",
+                  "slug": "medieval-history",
+                  "name": "मध्ययुगीन इतिहास",
+                  "englishName": "Medieval history",
+                  "nativeName": "मध्ययुगीन इतिहास",
+                  "topics": []
+                },
+                {
+                  "code": "modern-indian-history",
+                  "slug": "modern-indian-history",
+                  "name": "आधुनिक भारताचा इतिहास",
+                  "englishName": "Modern Indian history",
+                  "nativeName": "आधुनिक भारताचा इतिहास",
+                  "topics": []
+                }
+              ]
+            },
+            {
+              "code": "agriculture",
+              "slug": "agriculture",
+              "name": "कृषी",
+              "englishName": "Agriculture",
+              "nativeName": "कृषी",
+              "topics": [
+                {
+                  "code": "climate-fruits-vegetables-allied",
+                  "slug": "climate-fruits-vegetables-allied",
+                  "name": "हवामान, फळे व भाजीपाला व तत्सम",
+                  "englishName": "Climate, fruits, vegetables, and allied",
+                  "nativeName": "हवामान, फळे व भाजीपाला व तत्सम",
+                  "topics": []
+                },
+                {
+                  "code": "forest-wildlife",
+                  "slug": "forest-wildlife",
+                  "name": "वन व वन्यप्राणी",
+                  "englishName": "Forest & wildlife",
+                  "nativeName": "वन व वन्यप्राणी",
+                  "topics": []
+                },
+                {
+                  "code": "animal-husbandry-dairy",
+                  "slug": "animal-husbandry-dairy",
+                  "name": "पशुसंवर्धन व दुग्धव्यवसाय",
+                  "englishName": "Animal husbandry & dairy",
+                  "nativeName": "पशुसंवर्धन व दुग्धव्यवसाय",
+                  "topics": []
+                },
+                {
+                  "code": "fisheries",
+                  "slug": "fisheries",
+                  "name": "मत्स्यमारी",
+                  "englishName": "Fisheries",
+                  "nativeName": "मत्स्यमारी",
+                  "topics": []
+                },
+                {
+                  "code": "irrigation-soil-fertilizers-seeds",
+                  "slug": "irrigation-soil-fertilizers-seeds",
+                  "name": "सिंचन व जमीन, खते, बियाणे",
+                  "englishName": "Irrigation, soil, fertilizers, seeds",
+                  "nativeName": "सिंचन व जमीन, खते, बियाणे",
+                  "topics": []
+                },
+                {
+                  "code": "agricultural-economics-schemes-green-revolution-other-issues",
+                  "slug": "agricultural-economics-schemes-green-revolution-other-issues",
+                  "name": "कृषी अर्थशास्त्र व योजना, हरितक्रांती व कृषीविषयक इतर मुद्दे",
+                  "englishName": "Agricultural economics, schemes, green revolution, and other agricultural issues",
+                  "nativeName": "कृषी अर्थशास्त्र व योजना, हरितक्रांती व कृषीविषयक इतर मुद्दे",
+                  "topics": []
+                }
+              ]
+            },
+            {
+              "code": "international-organizations",
+              "slug": "international-organizations",
+              "name": "आंतरराष्ट्रीय संघटना",
+              "englishName": "International Organizations",
+              "nativeName": "आंतरराष्ट्रीय संघटना",
+              "topics": []
+            },
+            {
+              "code": "political-science",
+              "slug": "political-science",
+              "name": "राज्यशास्त्र",
+              "englishName": "Political Science",
+              "nativeName": "राज्यशास्त्र",
+              "topics": []
+            },
+            {
+              "code": "human-biology",
+              "slug": "human-biology",
+              "name": "मानवी जीवशास्त्र",
+              "englishName": "Human Biology",
+              "nativeName": "मानवी जीवशास्त्र",
+              "topics": []
+            },
+            {
+              "code": "biology",
+              "slug": "biology",
+              "name": "वनस्पतीशास्त्र व प्राणीशास्त्र - जीवशास्त्र",
+              "englishName": "Botany & Zoology / Biology",
+              "nativeName": "वनस्पतीशास्त्र व प्राणीशास्त्र - जीवशास्त्र",
+              "topics": []
+            },
+            {
+              "code": "chemistry",
+              "slug": "chemistry",
+              "name": "रसायनशास्त्र - केमिस्ट्री",
+              "englishName": "Chemistry",
+              "nativeName": "रसायनशास्त्र - केमिस्ट्री",
+              "topics": []
+            },
+            {
+              "code": "physics",
+              "slug": "physics",
+              "name": "भौतिकशास्त्र - पदार्थ विज्ञान",
+              "englishName": "Physics",
+              "nativeName": "भौतिकशास्त्र - पदार्थ विज्ञान",
+              "topics": []
+            },
+            {
+              "code": "environment",
+              "slug": "environment",
+              "name": "पर्यावरण",
+              "englishName": "Environment",
+              "nativeName": "पर्यावरण",
+              "topics": []
+            },
+            {
+              "code": "current-affairs",
+              "slug": "current-affairs",
+              "name": "चालू घडामोडी",
+              "englishName": "Current Affairs",
+              "nativeName": "चालू घडामोडी",
+              "topics": []
+            }
+          ]
+        },
+        {
+          "code": "mathematics",
+          "slug": "mathematics",
+          "name": "अंकगणित",
+          "englishName": "Mathematics",
+          "nativeName": "अंकगणित",
+          "topicEntryMode": "SUBJECT_ONLY",
+          "entryNotes": [
+            "The client syllabus names this subject but does not provide subtopics."
+          ],
+          "topics": []
+        },
+        {
+          "code": "test-of-reasoning",
+          "slug": "test-of-reasoning",
+          "name": "बुद्धीमापन",
+          "englishName": "Test of Reasoning",
+          "nativeName": "बुद्धीमापन",
+          "topicEntryMode": "SUBJECT_ONLY",
+          "entryNotes": [
+            "The client syllabus names this subject but does not provide subtopics."
+          ],
+          "topics": []
+        },
+        {
+          "code": "marathi-grammar",
+          "slug": "marathi-grammar",
+          "name": "मराठी व्याकरण",
+          "englishName": "Marathi Grammar",
+          "nativeName": "मराठी व्याकरण",
+          "topicEntryMode": "SUBJECT_ONLY",
+          "entryNotes": [
+            "The client syllabus names this subject but does not provide subtopics."
+          ],
+          "topics": []
+        },
+        {
+          "code": "english",
+          "slug": "english",
+          "name": "इंग्रजी",
+          "englishName": "English",
+          "nativeName": "इंग्रजी",
+          "topicEntryMode": "FULL",
+          "entryNotes": [],
+          "topics": [
+            {
+              "code": "english-grammar",
+              "slug": "english-grammar",
+              "name": "इंग्रजी व्याकरण",
+              "englishName": "English Grammar",
+              "nativeName": "इंग्रजी व्याकरण",
+              "topics": []
+            },
+            {
+              "code": "english-vocabulary",
+              "slug": "english-vocabulary",
+              "name": "इंग्रजी शब्दसंग्रह",
+              "englishName": "English Vocabulary",
+              "nativeName": "इंग्रजी शब्दसंग्रह",
+              "topics": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

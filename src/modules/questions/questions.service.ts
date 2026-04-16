@@ -479,7 +479,25 @@ export class QuestionsService {
         id: questionId,
         siteId: user.siteId,
         status: QuestionStatus.PUBLISHED,
-        OR: [{ publishedAt: null }, { publishedAt: { lte: new Date() } }],
+        AND: [
+          {
+            OR: [{ publishedAt: null }, { publishedAt: { lte: new Date() } }],
+          },
+          {
+            subject: {
+              isActive: true,
+              examTrack: {
+                isActive: true,
+              },
+            },
+          },
+          {
+            OR: [{ mediumId: null }, { medium: { isActive: true } }],
+          },
+          {
+            OR: [{ topicId: null }, { topic: { isActive: true } }],
+          },
+        ],
       },
       select: questionSelect,
     });
@@ -534,6 +552,12 @@ export class QuestionsService {
       {
         OR: [{ publishedAt: null }, { publishedAt: { lte: new Date() } }],
       },
+      {
+        OR: [{ mediumId: null }, { medium: { isActive: true } }],
+      },
+      {
+        OR: [{ topicId: null }, { topic: { isActive: true } }],
+      },
     ];
     if (query.mediumId) {
       and.push({
@@ -557,11 +581,13 @@ export class QuestionsService {
       difficulty: query.difficulty,
       hasMedia: query.hasMedia,
       status: QuestionStatus.PUBLISHED,
-      subject: query.examTrackId
-        ? {
-            examTrackId: query.examTrackId,
-          }
-        : undefined,
+      subject: {
+        isActive: true,
+        examTrack: {
+          isActive: true,
+        },
+        ...(query.examTrackId ? { examTrackId: query.examTrackId } : {}),
+      },
       AND: and,
     };
   }

@@ -29,6 +29,7 @@ import { NOTIFICATIONS_RUNTIME_CONFIG_KEY } from '../src/modules/notifications/n
 import { SEARCH_RUNTIME_CONFIG_KEY } from '../src/modules/search/search.constants';
 import { ADMIN_OPS_RUNTIME_CONFIG_KEY } from '../src/modules/admin-ops/admin-ops.constants';
 import { ENGLISH_SPEAKING_RUNTIME_CONFIG_KEY } from '../src/modules/english-speaking/english-speaking.constants';
+import { syncCanonicalTaxonomy } from './seed-taxonomy';
 
 const prisma = new PrismaClient();
 const scrypt = promisify(scryptCallback);
@@ -319,6 +320,8 @@ async function main() {
     },
   );
 
+  const taxonomySummary = await syncCanonicalTaxonomy(prisma, site.id);
+
   await upsertPublishedConfig(
     site.id,
     ACCESS_ROLE_PLACEHOLDER_CONFIG_KEY,
@@ -415,6 +418,14 @@ async function main() {
   console.log(
     `Seeded default site "${site.code}" with baseline runtime configuration.`,
   );
+  console.log(
+    `Taxonomy sync: created ${taxonomySummary.createdExamTracks.length} exam track(s), ${taxonomySummary.createdMediums.length} medium(s), ${taxonomySummary.createdSubjects.length} subject(s), and ${taxonomySummary.createdTopics.length} topic(s).`,
+  );
+  if (taxonomySummary.deactivatedSubjects.length > 0) {
+    console.log(
+      `Taxonomy sync deactivated ${taxonomySummary.deactivatedSubjects.length} legacy subject(s) and ${taxonomySummary.deactivatedTopics.length} legacy topic(s) to avoid deleting referenced records.`,
+    );
+  }
 }
 
 async function upsertPublishedConfig(

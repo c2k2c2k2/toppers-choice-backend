@@ -436,6 +436,13 @@ export class NotesService {
         id: noteId,
         siteId: user.siteId,
         status: NoteStatus.PUBLISHED,
+        subject: {
+          isActive: true,
+          examTrack: {
+            isActive: true,
+          },
+        },
+        OR: [{ mediumId: null }, { medium: { isActive: true } }],
       },
       select: noteSelect,
     });
@@ -458,6 +465,13 @@ export class NotesService {
       where: {
         siteId: user.siteId,
         status: NoteStatus.PUBLISHED,
+        subject: {
+          isActive: true,
+          examTrack: {
+            isActive: true,
+          },
+        },
+        OR: [{ mediumId: null }, { medium: { isActive: true } }],
       },
       orderBy: [{ orderIndex: 'asc' }, { title: 'asc' }],
       select: noteSelect,
@@ -578,6 +592,13 @@ export class NotesService {
         id: noteId,
         siteId: user.siteId,
         status: NoteStatus.PUBLISHED,
+        subject: {
+          isActive: true,
+          examTrack: {
+            isActive: true,
+          },
+        },
+        OR: [{ mediumId: null }, { medium: { isActive: true } }],
       },
       select: noteSelect,
     });
@@ -1334,6 +1355,13 @@ export class NotesService {
         id: noteId,
         siteId,
         status: NoteStatus.PUBLISHED,
+        subject: {
+          isActive: true,
+          examTrack: {
+            isActive: true,
+          },
+        },
+        OR: [{ mediumId: null }, { medium: { isActive: true } }],
       },
       select: {
         id: true,
@@ -1360,6 +1388,13 @@ export class NotesService {
         id: noteId,
         siteId: user.siteId,
         status: NoteStatus.PUBLISHED,
+        subject: {
+          isActive: true,
+          examTrack: {
+            isActive: true,
+          },
+        },
+        OR: [{ mediumId: null }, { medium: { isActive: true } }],
       },
       select: noteSelect,
     });
@@ -1554,11 +1589,45 @@ export class NotesService {
     siteId: string,
     query: ListPublishedNotesQueryDto,
   ): Prisma.NoteWhereInput {
+    const and: Prisma.NoteWhereInput[] = [
+      {
+        subject: {
+          isActive: true,
+          examTrack: {
+            isActive: true,
+          },
+        },
+      },
+      {
+        OR: [{ mediumId: null }, { medium: { isActive: true } }],
+      },
+    ];
+
+    if (query.mediumId) {
+      and.push({
+        OR: [{ mediumId: query.mediumId }, { mediumId: null }],
+      });
+    }
+
+    if (query.search) {
+      and.push({
+        OR: [
+          { title: { contains: query.search, mode: 'insensitive' } },
+          { slug: { contains: query.search, mode: 'insensitive' } },
+          {
+            shortDescription: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      });
+    }
+
     return {
       siteId,
       status: NoteStatus.PUBLISHED,
       subjectId: query.subjectId,
-      mediumId: query.mediumId,
       noteTopics: query.topicId
         ? {
             some: {
@@ -1566,15 +1635,7 @@ export class NotesService {
             },
           }
         : undefined,
-      OR: query.search
-        ? [
-            { title: { contains: query.search, mode: 'insensitive' } },
-            { slug: { contains: query.search, mode: 'insensitive' } },
-            {
-              shortDescription: { contains: query.search, mode: 'insensitive' },
-            },
-          ]
-        : undefined,
+      AND: and,
     };
   }
 

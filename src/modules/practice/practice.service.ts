@@ -1093,6 +1093,12 @@ export class PracticeService {
       {
         OR: [{ publishedAt: null }, { publishedAt: { lte: new Date() } }],
       },
+      {
+        OR: [{ mediumId: null }, { medium: { isActive: true } }],
+      },
+      {
+        OR: [{ topicId: null }, { topic: { isActive: true } }],
+      },
     ];
     if (scope.mediumId) {
       and.push({
@@ -1106,11 +1112,13 @@ export class PracticeService {
       subjectId: scope.subjectId ?? undefined,
       topicId: scope.topicId ?? undefined,
       difficulty: scope.difficulty ?? undefined,
-      subject: scope.examTrackId
-        ? {
-            examTrackId: scope.examTrackId,
-          }
-        : undefined,
+      subject: {
+        isActive: true,
+        examTrack: {
+          isActive: true,
+        },
+        ...(scope.examTrackId ? { examTrackId: scope.examTrackId } : {}),
+      },
       AND: and,
     } satisfies Prisma.QuestionWhereInput;
   }
