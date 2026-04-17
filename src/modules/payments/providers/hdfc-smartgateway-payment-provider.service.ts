@@ -78,15 +78,18 @@ export class HdfcSmartGatewayPaymentProviderService
       const response = this.asPayloadObject(await juspay.orderSession.create(payload));
       const paymentLinks = this.pickObject(response, ['payment_links']);
       const sdkPayload = this.pickObject(response, ['sdk_payload']);
+      const redirectUrl = this.validatePaymentPageUrl(
+        this.pickString(paymentLinks, ['web']) ??
+          this.pickString(paymentLinks, ['mobile']) ??
+          null,
+        config.apiBaseUrl,
+      );
 
       return {
         status: mapHdfcStatusToOrderStatus(
           this.pickString(response, ['status']) ?? 'NEW',
         ),
-        redirectUrl:
-          this.pickString(paymentLinks, ['web']) ??
-          this.pickString(paymentLinks, ['mobile']) ??
-          null,
+        redirectUrl,
         providerOrderId: this.pickString(response, ['id']),
         providerReferenceId:
           this.pickString(sdkPayload, ['requestId']) ??
@@ -296,6 +299,44 @@ export class HdfcSmartGatewayPaymentProviderService
     }
 
     return value.replace(/\\n/g, '\n').trim();
+  }
+
+  private validatePaymentPageUrl(value: string | null, apiBaseUrl: string) {
+    if (!value) {
+      return null;
+    }
+
+    let parsedUrl: URL;
+    let configuredBaseUrl: URL;
+
+    try {
+      parsedUrl = new URL(value);
+      configuredBaseUrl = new URL(apiBaseUrl);
+    } catch {
+      throw new BadGatewayException({
+        code: 'PAYMENT_REDIRECT_INVALID',
+        message:
+          'HDFC SmartGateway returned an invalid payment page redirect URL.',
+      });
+    }
+
+    if (parsedUrl.protocol !== 'https:') {
+      throw new BadGatewayException({
+        code: 'PAYMENT_REDIRECT_INVALID',
+        message:
+          'HDFC SmartGateway returned a non-HTTPS payment page redirect URL.',
+      });
+    }
+
+    if (parsedUrl.host !== configuredBaseUrl.host) {
+      throw new BadGatewayException({
+        code: 'PAYMENT_REDIRECT_INVALID',
+        message:
+          'HDFC SmartGateway returned a payment page redirect URL for an unexpected host.',
+      });
+    }
+
+    return parsedUrl.toString();
   }
 
   private toProviderAmount(amountPaise: number) {

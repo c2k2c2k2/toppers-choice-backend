@@ -313,8 +313,31 @@ export class PaymentsService {
     payload: unknown,
     headers: Record<string, string | string[] | undefined>,
   ) {
+    return this.handleProviderCallback(
+      PaymentProvider.PHONEPE_STANDARD,
+      payload,
+      headers,
+    );
+  }
+
+  async handleHdfcSmartGatewayCallback(
+    payload: unknown,
+    headers: Record<string, string | string[] | undefined>,
+  ) {
+    return this.handleProviderCallback(
+      PaymentProvider.HDFC_SMARTGATEWAY,
+      payload,
+      headers,
+    );
+  }
+
+  private async handleProviderCallback(
+    provider: PaymentProvider,
+    payload: unknown,
+    headers: Record<string, string | string[] | undefined>,
+  ) {
     const callback = this.paymentGatewayService.extractCallback(
-      'PHONEPE_STANDARD',
+      provider,
       payload,
       headers,
     );
@@ -325,7 +348,7 @@ export class PaymentsService {
       const event = await this.prisma.paymentEvent.create({
         data: {
           siteId,
-          provider: 'PHONEPE_STANDARD',
+          provider,
           source: PaymentEventSource.CALLBACK,
           eventType: callback.eventType,
           dedupeKey: callback.dedupeKey,

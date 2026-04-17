@@ -13,6 +13,7 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:seed": "prisma db seed",
     "prisma:studio": "prisma studio",
+    "payments:hdfc:audit-export": "ts-node --transpile-only scripts/export-hdfc-audit-package.ts",
     "taxonomy:validate": "ts-node --transpile-only scripts/validate-taxonomy-draft.ts",
     "taxonomy:audit-inactive": "ts-node --transpile-only scripts/report-inactive-taxonomy-content.ts",
     "english-speaking:import": "ts-node --transpile-only scripts/import-english-speaking-references.ts",

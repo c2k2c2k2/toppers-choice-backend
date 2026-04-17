@@ -115,7 +115,7 @@ async function main() {
         supportedMediums: ['mr', 'en'],
       },
       origins: {
-        appBaseUrl: null,
+        appBaseUrl: process.env.APP_BASE_URL ?? null,
       },
     },
   );
@@ -204,7 +204,7 @@ async function main() {
     ConfigVisibility.INTERNAL,
     {
       providerSelection: {
-        activeProvider: 'PHONEPE_STANDARD',
+        activeProvider: 'HDFC_SMARTGATEWAY',
       },
       currency: {
         defaultCurrencyCode: 'INR',

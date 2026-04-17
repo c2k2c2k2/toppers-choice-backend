@@ -59,6 +59,16 @@ export class PaymentsController {
   }
 
   @Public()
+  @Post('providers/hdfc/callback')
+  @ApiOkResponse({ type: PaymentCallbackAckResponseDto })
+  async handleHdfcCallback(@Req() request: Request) {
+    return this.paymentsService.handleHdfcSmartGatewayCallback(
+      request.body,
+      request.headers,
+    );
+  }
+
+  @Public()
   @Post('providers/phonepe/callback')
   @ApiOkResponse({ type: PaymentCallbackAckResponseDto })
   async handlePhonePeCallback(@Req() request: Request) {

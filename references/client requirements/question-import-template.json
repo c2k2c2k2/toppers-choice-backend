@@ -1,0 +1,289 @@
+{
+  "questions": [
+    {
+      "code": "polity-2026-0001",
+      "mediumId": "<optional-medium-id>",
+      "subjectId": "<required-subject-id>",
+      "topicId": "<optional-topic-id>",
+      "type": "SINGLE_CHOICE",
+      "difficulty": "MEDIUM",
+      "statementJson": {
+        "mr-IN": {
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "भारतीय राज्यघटनेचा मसुदा तयार होत असताना संविधान सभेचे अध्यक्ष कोण होते?"
+            }
+          ]
+        },
+        "en-IN": {
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Who presided over the Constituent Assembly while the Constitution was being drafted?"
+            }
+          ]
+        }
+      },
+      "explanationJson": {
+        "mr-IN": {
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "डॉ. राजेंद्र प्रसाद हे संविधान सभेचे अध्यक्ष होते."
+            }
+          ]
+        },
+        "en-IN": {
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Dr. Rajendra Prasad was the President of the Constituent Assembly."
+            }
+          ]
+        }
+      },
+      "metadataJson": {
+        "source": "Sample import template",
+        "year": 2026,
+        "marks": 1,
+        "negativeMarks": 0.25,
+        "tags": ["polity", "constitution"]
+      },
+      "correctAnswerJson": {
+        "optionKeys": ["B"]
+      },
+      "options": [
+        {
+          "optionKey": "A",
+          "orderIndex": 10,
+          "contentJson": {
+            "mr-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "जवाहरलाल नेहरू"
+                }
+              ]
+            },
+            "en-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "Jawaharlal Nehru"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "optionKey": "B",
+          "orderIndex": 20,
+          "contentJson": {
+            "mr-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "डॉ. राजेंद्र प्रसाद"
+                }
+              ]
+            },
+            "en-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "Dr. Rajendra Prasad"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "optionKey": "C",
+          "orderIndex": 30,
+          "contentJson": {
+            "mr-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "सरदार वल्लभभाई पटेल"
+                }
+              ]
+            },
+            "en-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "Sardar Vallabhbhai Patel"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "optionKey": "D",
+          "orderIndex": 40,
+          "contentJson": {
+            "mr-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "डॉ. बाबासाहेब आंबेडकर"
+                }
+              ]
+            },
+            "en-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "Dr. B. R. Ambedkar"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "mediaReferences": []
+    },
+    {
+      "code": "science-2026-0002",
+      "subjectId": "<required-subject-id>",
+      "topicId": "<optional-topic-id>",
+      "type": "MULTIPLE_CHOICE",
+      "difficulty": "EASY",
+      "statementJson": {
+        "en-IN": {
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Which of the following are greenhouse gases?"
+            }
+          ]
+        }
+      },
+      "explanationJson": {
+        "en-IN": {
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Carbon dioxide and methane are greenhouse gases."
+            }
+          ]
+        }
+      },
+      "metadataJson": {
+        "source": "Sample import template",
+        "year": 2026,
+        "marks": 2,
+        "negativeMarks": 0,
+        "tags": ["science", "environment"]
+      },
+      "correctAnswerJson": {
+        "optionKeys": ["A", "C"]
+      },
+      "options": [
+        {
+          "optionKey": "A",
+          "orderIndex": 10,
+          "contentJson": {
+            "en-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "Carbon dioxide"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "optionKey": "B",
+          "orderIndex": 20,
+          "contentJson": {
+            "en-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "Nitrogen"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "optionKey": "C",
+          "orderIndex": 30,
+          "contentJson": {
+            "en-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "Methane"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "optionKey": "D",
+          "orderIndex": 40,
+          "contentJson": {
+            "en-IN": {
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "Oxygen"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "mediaReferences": [
+        {
+          "fileAssetId": "<uploaded-image-file-asset-id>",
+          "usage": "STATEMENT",
+          "localeCode": "en-IN",
+          "orderIndex": 10
+        }
+      ]
+    },
+    {
+      "code": "english-2026-0003",
+      "subjectId": "<required-subject-id>",
+      "type": "TEXT_INPUT",
+      "difficulty": "MEDIUM",
+      "statementJson": {
+        "en-IN": {
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Fill in the blank: The sun rises in the ____."
+            }
+          ]
+        }
+      },
+      "explanationJson": {
+        "en-IN": {
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "The correct word is east."
+            }
+          ]
+        }
+      },
+      "metadataJson": {
+        "source": "Sample import template",
+        "year": 2026,
+        "marks": 1,
+        "negativeMarks": 0,
+        "tags": ["english", "fill-in-the-blank"]
+      },
+      "correctAnswerJson": {
+        "acceptedAnswers": ["east", "East"]
+      },
+      "mediaReferences": []
+    }
+  ]
+}
