@@ -42,7 +42,10 @@ Done when:
 - Question rich-content payloads now preserve the Dhurandhar editor contract on the backend by sanitizing nested `html` fields with an allowlist that keeps legacy Marathi font spans, table markup, and `data-question-math-*` attributes intact.
 - Question search indexing now extracts human-readable text from rich question HTML, including LaTeX stored inside inline and block math nodes, so admin search remains useful for mathematical questions and legacy Marathi authoring payloads.
 - Admin question summaries now expose a clean statement preview text for list-first CRUD screens, question deletion is supported with safety checks for already-used practice/test records, and student/practice visibility now treats `mediumId = null` questions as shared across mediums instead of hiding them behind a selected medium.
+- Question publish validation now enforces question code presence, active taxonomy links, and complete active-language statement/option content before a record can move to `PUBLISHED`, so admin-side checklists and backend rules stay aligned.
+- Question create/update conflict handling now returns a question-specific code conflict instead of a generic unique-constraint error when duplicate question codes are submitted.
 
 ## Verification Notes
 - Re-verified with `pnpm build` and focused question-module eslint after adding question rich-content sanitization plus search-fragment extraction parity with the Dhurandhar backend flow.
 - Re-verified with `pnpm build` after adding question statement preview summaries, guarded admin delete support, and shared-medium practice question visibility.
+- Re-verified with `pnpm build` after tightening publish validation for question codes, active taxonomy, and active-language completeness.

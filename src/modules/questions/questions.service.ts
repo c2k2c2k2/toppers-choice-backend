@@ -31,7 +31,13 @@ import {
   type QuestionRecord,
 } from './questions.types';
 import { sanitizeQuestionContent } from './question-rich-content.util';
-import { buildQuestionSearchText, normalizeOptionKey } from './questions.utils';
+import {
+  buildQuestionSearchText,
+  getQuestionLocalizedValue,
+  hasMeaningfulQuestionContent,
+  normalizeOptionKey,
+  type QuestionLocale,
+} from './questions.utils';
 
 type NormalizedOptionInput = {
   optionKey: string;
@@ -55,6 +61,8 @@ type QuestionMediaAssetRecord = {
   status: FileAssetStatus;
   contentType: string;
 };
+
+type QuestionLanguageMode = 'ENGLISH' | 'MARATHI' | 'BILINGUAL';
 
 @Injectable()
 export class QuestionsService {
@@ -128,52 +136,57 @@ export class QuestionsService {
     await this.validateMediaAssets(user.siteId, mediaReferences);
     this.validateCorrectAnswer(input.type, input.correctAnswerJson, options);
 
-    const questionId = await this.prisma.$transaction(async (tx) => {
-      const created = await tx.question.create({
-        data: {
-          siteId: user.siteId,
-          code: input.code ?? null,
-          mediumId: input.mediumId ?? null,
-          subjectId: input.subjectId,
-          topicId: input.topicId ?? null,
-          type: input.type,
-          difficulty: input.difficulty,
-          statementJson: statementJson as Prisma.InputJsonValue,
-          explanationJson:
-            explanationJson === undefined
-              ? Prisma.DbNull
-              : (explanationJson as Prisma.InputJsonValue),
-          metadataJson:
-            input.metadataJson === undefined
-              ? Prisma.DbNull
-              : (input.metadataJson as Prisma.InputJsonValue),
-          correctAnswerJson: input.correctAnswerJson as Prisma.InputJsonValue,
-          searchText: buildQuestionSearchText(
-            input.code,
-            statementJson,
-            explanationJson,
-            options.map((option) => option.contentJson),
-          ),
-          hasMedia: mediaReferences.length > 0,
-          createdByUserId: user.userId,
-          updatedByUserId: user.userId,
-        },
-        select: {
-          id: true,
-          siteId: true,
-        },
-      });
+    let questionId: string;
+    try {
+      questionId = await this.prisma.$transaction(async (tx) => {
+        const created = await tx.question.create({
+          data: {
+            siteId: user.siteId,
+            code: input.code ?? null,
+            mediumId: input.mediumId ?? null,
+            subjectId: input.subjectId,
+            topicId: input.topicId ?? null,
+            type: input.type,
+            difficulty: input.difficulty,
+            statementJson: statementJson as Prisma.InputJsonValue,
+            explanationJson:
+              explanationJson === undefined
+                ? Prisma.DbNull
+                : (explanationJson as Prisma.InputJsonValue),
+            metadataJson:
+              input.metadataJson === undefined
+                ? Prisma.DbNull
+                : (input.metadataJson as Prisma.InputJsonValue),
+            correctAnswerJson: input.correctAnswerJson as Prisma.InputJsonValue,
+            searchText: buildQuestionSearchText(
+              input.code,
+              statementJson,
+              explanationJson,
+              options.map((option) => option.contentJson),
+            ),
+            hasMedia: mediaReferences.length > 0,
+            createdByUserId: user.userId,
+            updatedByUserId: user.userId,
+          },
+          select: {
+            id: true,
+            siteId: true,
+          },
+        });
 
-      await this.syncQuestionOptions(tx, created.id, options);
-      await this.syncQuestionMediaReferences(tx, created.id, mediaReferences);
-      await this.syncQuestionFileAssetReferences(tx, {
-        siteId: created.siteId,
-        questionId: created.id,
-        mediaReferences,
-      });
+        await this.syncQuestionOptions(tx, created.id, options);
+        await this.syncQuestionMediaReferences(tx, created.id, mediaReferences);
+        await this.syncQuestionFileAssetReferences(tx, {
+          siteId: created.siteId,
+          questionId: created.id,
+          mediaReferences,
+        });
 
-      return created.id;
-    });
+        return created.id;
+      });
+    } catch (error) {
+      this.rethrowKnownQuestionConflict(error);
+    }
 
     return this.getAdminQuestion(user.siteId, questionId);
   }
@@ -258,59 +271,63 @@ export class QuestionsService {
       nextOptions,
     );
 
-    await this.prisma.$transaction(async (tx) => {
-      await tx.question.update({
-        where: { id: questionId },
-        data: {
-          code: input.code === undefined ? undefined : (input.code ?? null),
-          mediumId: input.mediumId === undefined ? undefined : nextMediumId,
-          subjectId: nextSubjectId,
-          topicId: input.topicId === undefined ? undefined : nextTopicId,
-          type: nextType,
-          difficulty: input.difficulty,
-          statementJson:
-            input.statementJson === undefined
-              ? undefined
-              : (nextStatementJson as Prisma.InputJsonValue),
-          explanationJson:
-            input.explanationJson === undefined
-              ? undefined
-              : nextExplanationJson === null
-                ? Prisma.DbNull
-                : (nextExplanationJson as Prisma.InputJsonValue),
-          metadataJson:
-            input.metadataJson === undefined
-              ? undefined
-              : input.metadataJson === null
-                ? Prisma.DbNull
-                : (input.metadataJson as Prisma.InputJsonValue),
-          correctAnswerJson:
-            input.correctAnswerJson === undefined
-              ? undefined
-              : (input.correctAnswerJson as Prisma.InputJsonValue),
-          searchText: buildQuestionSearchText(
-            input.code ?? existing.code,
-            nextStatementJson,
-            nextExplanationJson,
-            nextOptions.map((option) => option.contentJson),
-          ),
-          hasMedia: nextMediaReferences.length > 0,
-          updatedByUserId: user.userId,
-        },
-      });
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.question.update({
+          where: { id: questionId },
+          data: {
+            code: input.code === undefined ? undefined : (input.code ?? null),
+            mediumId: input.mediumId === undefined ? undefined : nextMediumId,
+            subjectId: nextSubjectId,
+            topicId: input.topicId === undefined ? undefined : nextTopicId,
+            type: nextType,
+            difficulty: input.difficulty,
+            statementJson:
+              input.statementJson === undefined
+                ? undefined
+                : (nextStatementJson as Prisma.InputJsonValue),
+            explanationJson:
+              input.explanationJson === undefined
+                ? undefined
+                : nextExplanationJson === null
+                  ? Prisma.DbNull
+                  : (nextExplanationJson as Prisma.InputJsonValue),
+            metadataJson:
+              input.metadataJson === undefined
+                ? undefined
+                : input.metadataJson === null
+                  ? Prisma.DbNull
+                  : (input.metadataJson as Prisma.InputJsonValue),
+            correctAnswerJson:
+              input.correctAnswerJson === undefined
+                ? undefined
+                : (input.correctAnswerJson as Prisma.InputJsonValue),
+            searchText: buildQuestionSearchText(
+              input.code ?? existing.code,
+              nextStatementJson,
+              nextExplanationJson,
+              nextOptions.map((option) => option.contentJson),
+            ),
+            hasMedia: nextMediaReferences.length > 0,
+            updatedByUserId: user.userId,
+          },
+        });
 
-      await this.syncQuestionOptions(tx, questionId, nextOptions);
-      await this.syncQuestionMediaReferences(
-        tx,
-        questionId,
-        nextMediaReferences,
-      );
-      await this.syncQuestionFileAssetReferences(tx, {
-        siteId: user.siteId,
-        questionId,
-        mediaReferences: nextMediaReferences,
+        await this.syncQuestionOptions(tx, questionId, nextOptions);
+        await this.syncQuestionMediaReferences(
+          tx,
+          questionId,
+          nextMediaReferences,
+        );
+        await this.syncQuestionFileAssetReferences(tx, {
+          siteId: user.siteId,
+          questionId,
+          mediaReferences: nextMediaReferences,
+        });
       });
-    });
+    } catch (error) {
+      this.rethrowKnownQuestionConflict(error);
+    }
 
     return this.getAdminQuestion(user.siteId, questionId);
   }
@@ -885,7 +902,146 @@ export class QuestionsService {
     }
   }
 
+  private resolveQuestionLanguageMode(question: QuestionRecord): QuestionLanguageMode {
+    const metadataMode =
+      question.metadataJson &&
+      typeof question.metadataJson === 'object' &&
+      typeof (question.metadataJson as Record<string, unknown>).languageMode ===
+        'string'
+        ? (question.metadataJson as Record<string, unknown>).languageMode
+        : null;
+
+    if (
+      metadataMode === 'ENGLISH' ||
+      metadataMode === 'MARATHI' ||
+      metadataMode === 'BILINGUAL'
+    ) {
+      return metadataMode;
+    }
+
+    const hasEnglish = this.hasLocalizedQuestionContent(
+      question.statementJson,
+      'en',
+    );
+    const hasMarathi =
+      this.hasLocalizedQuestionContent(question.statementJson, 'mr') ||
+      question.options.some((option) =>
+        this.hasLocalizedQuestionContent(option.contentJson, 'mr'),
+      ) ||
+      this.hasLocalizedQuestionContent(question.explanationJson, 'mr');
+
+    if (hasEnglish && hasMarathi) {
+      return 'BILINGUAL';
+    }
+
+    if (hasMarathi) {
+      return 'MARATHI';
+    }
+
+    return 'ENGLISH';
+  }
+
+  private getRequiredQuestionLocales(
+    languageMode: QuestionLanguageMode,
+  ): QuestionLocale[] {
+    if (languageMode === 'BILINGUAL') {
+      return ['en', 'mr'];
+    }
+
+    return [languageMode === 'MARATHI' ? 'mr' : 'en'];
+  }
+
+  private hasLocalizedQuestionContent(value: unknown, locale: QuestionLocale) {
+    return hasMeaningfulQuestionContent(getQuestionLocalizedValue(value, locale));
+  }
+
+  private hasQuestionMediaReference(
+    question: QuestionRecord,
+    usage: QuestionMediaUsage,
+    optionKey?: string,
+  ) {
+    return question.mediaReferences.some((reference) => {
+      if (reference.usage !== usage) {
+        return false;
+      }
+
+      return usage === QuestionMediaUsage.OPTION
+        ? reference.optionKey === optionKey
+        : true;
+    });
+  }
+
+  private optionHasPublishableContent(
+    question: QuestionRecord,
+    option: QuestionRecord['options'][number],
+    requiredLocales: QuestionLocale[],
+  ) {
+    if (
+      this.hasQuestionMediaReference(
+        question,
+        QuestionMediaUsage.OPTION,
+        option.optionKey,
+      )
+    ) {
+      return true;
+    }
+
+    return requiredLocales.every((locale) =>
+      this.hasLocalizedQuestionContent(option.contentJson, locale),
+    );
+  }
+
   private assertPublishableQuestion(question: QuestionRecord) {
+    if (!question.code?.trim()) {
+      throw new BadRequestException({
+        code: 'QUESTION_CODE_REQUIRED',
+        message: 'Published questions require a question code.',
+      });
+    }
+
+    if (!question.subject.isActive || !question.subject.examTrack.isActive) {
+      throw new BadRequestException({
+        code: 'QUESTION_SUBJECT_INACTIVE',
+        message:
+          'The linked exam track or subject is inactive, so the question cannot be published.',
+      });
+    }
+
+    if (question.medium && !question.medium.isActive) {
+      throw new BadRequestException({
+        code: 'QUESTION_MEDIUM_INACTIVE',
+        message:
+          'The linked medium is inactive, so the question cannot be published.',
+      });
+    }
+
+    if (question.topic && !question.topic.isActive) {
+      throw new BadRequestException({
+        code: 'QUESTION_TOPIC_INACTIVE',
+        message:
+          'The linked topic is inactive, so the question cannot be published.',
+      });
+    }
+
+    const languageMode = this.resolveQuestionLanguageMode(question);
+    const requiredLocales = this.getRequiredQuestionLocales(languageMode);
+    const missingStatementLocales = requiredLocales.filter(
+      (locale) =>
+        !this.hasLocalizedQuestionContent(question.statementJson, locale),
+    );
+
+    if (missingStatementLocales.length > 0) {
+      throw new BadRequestException({
+        code: 'QUESTION_STATEMENT_REQUIRED',
+        message:
+          missingStatementLocales.length === 2
+            ? 'Bilingual questions require statement content in both English and Marathi before publishing.'
+            : `Question statement is missing ${
+                missingStatementLocales[0] === 'en' ? 'English' : 'Marathi'
+              } content.`,
+      });
+    }
+
     if (
       question.type !== QuestionType.TEXT_INPUT &&
       question.options.length < 2
@@ -895,6 +1051,41 @@ export class QuestionsService {
         message:
           'Choice questions require at least two options before publishing.',
       });
+    }
+
+    if (question.type !== QuestionType.TEXT_INPUT) {
+      const incompleteOptionKeys = question.options
+        .filter(
+          (option) =>
+            hasMeaningfulQuestionContent(option.contentJson) &&
+            !this.optionHasPublishableContent(
+              question,
+              option,
+              requiredLocales,
+            ),
+        )
+        .map((option) => option.optionKey);
+
+      const publishableOptionCount = question.options.filter((option) =>
+        this.optionHasPublishableContent(question, option, requiredLocales),
+      ).length;
+
+      if (publishableOptionCount < 2) {
+        throw new BadRequestException({
+          code: 'QUESTION_OPTIONS_REQUIRED',
+          message:
+            'Choice questions require at least two complete options before publishing.',
+        });
+      }
+
+      if (incompleteOptionKeys.length > 0) {
+        throw new BadRequestException({
+          code: 'QUESTION_OPTION_CONTENT_INCOMPLETE',
+          message: `Complete option content for ${incompleteOptionKeys.join(
+            ', ',
+          )} in all active languages before publishing.`,
+        });
+      }
     }
 
     for (const reference of question.mediaReferences) {
@@ -923,6 +1114,20 @@ export class QuestionsService {
             : null,
       })),
     );
+  }
+
+  private rethrowKnownQuestionConflict(error: unknown): never {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      throw new ConflictException({
+        code: 'QUESTION_CODE_CONFLICT',
+        message: 'Question code must be unique within the site.',
+      });
+    }
+
+    throw error;
   }
 
   private async syncQuestionOptions(

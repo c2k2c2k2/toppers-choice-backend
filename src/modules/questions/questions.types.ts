@@ -66,6 +66,7 @@ export const questionSelect = Prisma.validator<Prisma.QuestionSelect>()({
       code: true,
       slug: true,
       name: true,
+      isActive: true,
     },
   },
   subject: {
@@ -75,12 +76,14 @@ export const questionSelect = Prisma.validator<Prisma.QuestionSelect>()({
       code: true,
       slug: true,
       name: true,
+      isActive: true,
       examTrack: {
         select: {
           id: true,
           code: true,
           slug: true,
           name: true,
+          isActive: true,
         },
       },
     },
@@ -91,6 +94,7 @@ export const questionSelect = Prisma.validator<Prisma.QuestionSelect>()({
       code: true,
       slug: true,
       name: true,
+      isActive: true,
     },
   },
   options: {

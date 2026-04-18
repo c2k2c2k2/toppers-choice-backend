@@ -5,6 +5,7 @@ import {
 
 export const QUESTION_CODE_PATTERN = /^[a-z0-9_-]+$/;
 export const OPTION_KEY_PATTERN = /^[A-Z0-9_-]+$/;
+export type QuestionLocale = 'en' | 'mr';
 
 export function normalizeOptionalText(value: unknown) {
   if (typeof value !== 'string') {
@@ -46,7 +47,7 @@ export function buildQuestionStatementPreviewText(
   value: unknown,
   maxLength = 180,
 ) {
-  const text = extractQuestionStatementText(value);
+  const text = extractQuestionContentText(value);
   if (!text) {
     return 'Question statement unavailable.';
   }
@@ -60,6 +61,32 @@ export function buildQuestionStatementPreviewText(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+export function getQuestionLocalizedValue(
+  value: unknown,
+  locale: QuestionLocale,
+): unknown {
+  if (!isRecord(value)) {
+    return value;
+  }
+
+  const localeKeys = locale === 'en' ? ['en-IN', 'en'] : ['mr-IN', 'mr'];
+  for (const localeKey of localeKeys) {
+    if (value[localeKey] !== undefined) {
+      return value[localeKey];
+    }
+  }
+
+  if (isRecord(value.translations)) {
+    for (const localeKey of localeKeys) {
+      if (value.translations[localeKey] !== undefined) {
+        return value.translations[localeKey];
+      }
+    }
+  }
+
+  return value;
 }
 
 function extractStructuredStatementText(value: Record<string, unknown>): string {
@@ -85,7 +112,7 @@ function extractStructuredStatementText(value: Record<string, unknown>): string 
 
   if (Array.isArray(value.blocks)) {
     value.blocks.forEach((block) => {
-      const blockText = extractQuestionStatementText(block);
+      const blockText = extractQuestionContentText(block);
       if (blockText) {
         fragments.push(blockText);
       }
@@ -95,7 +122,7 @@ function extractStructuredStatementText(value: Record<string, unknown>): string 
   return fragments.join(' ').replace(/\s+/gu, ' ').trim();
 }
 
-function extractQuestionStatementText(value: unknown): string {
+export function extractQuestionContentText(value: unknown): string {
   if (value === null || value === undefined) {
     return '';
   }
@@ -106,7 +133,7 @@ function extractQuestionStatementText(value: unknown): string {
 
   if (Array.isArray(value)) {
     return value
-      .map((entry) => extractQuestionStatementText(entry))
+      .map((entry) => extractQuestionContentText(entry))
       .filter(Boolean)
       .join(' ')
       .replace(/\s+/gu, ' ')
@@ -140,7 +167,7 @@ function extractQuestionStatementText(value: unknown): string {
 
   for (const localeKey of localeCandidates) {
     if (value[localeKey] !== undefined) {
-      const localizedText = extractQuestionStatementText(value[localeKey]);
+      const localizedText = extractQuestionContentText(value[localeKey]);
       if (localizedText) {
         return localizedText;
       }
@@ -148,13 +175,17 @@ function extractQuestionStatementText(value: unknown): string {
   }
 
   if (isRecord(value.translations)) {
-    const translatedText = extractQuestionStatementText(value.translations);
+    const translatedText = extractQuestionContentText(value.translations);
     if (translatedText) {
       return translatedText;
     }
   }
 
   return Object.values(value)
-    .map((entry) => extractQuestionStatementText(entry))
+    .map((entry) => extractQuestionContentText(entry))
     .find((entry) => entry.length > 0) ?? '';
+}
+
+export function hasMeaningfulQuestionContent(value: unknown): boolean {
+  return extractQuestionContentText(value).length > 0;
 }
