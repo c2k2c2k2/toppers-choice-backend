@@ -63,6 +63,20 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
 
+function isStructuredQuestionContentNode(
+  value: unknown,
+): value is Record<string, unknown> {
+  return (
+    isRecord(value) &&
+    (Array.isArray(value.blocks) ||
+      typeof value.html === 'string' ||
+      typeof value.text === 'string' ||
+      typeof value.contentHtml === 'string' ||
+      typeof value.content === 'string' ||
+      typeof value.body === 'string')
+  );
+}
+
 export function getQuestionLocalizedValue(
   value: unknown,
   locale: QuestionLocale,
@@ -86,10 +100,12 @@ export function getQuestionLocalizedValue(
     }
   }
 
-  return value;
+  return isStructuredQuestionContentNode(value) ? value : undefined;
 }
 
-function extractStructuredStatementText(value: Record<string, unknown>): string {
+function extractStructuredStatementText(
+  value: Record<string, unknown>,
+): string {
   const fragments: string[] = [];
 
   if (typeof value.html === 'string') {
@@ -144,14 +160,7 @@ export function extractQuestionContentText(value: unknown): string {
     return '';
   }
 
-  if (
-    Array.isArray(value.blocks) ||
-    typeof value.html === 'string' ||
-    typeof value.text === 'string' ||
-    typeof value.contentHtml === 'string' ||
-    typeof value.content === 'string' ||
-    typeof value.body === 'string'
-  ) {
+  if (isStructuredQuestionContentNode(value)) {
     return extractStructuredStatementText(value);
   }
 
@@ -174,16 +183,19 @@ export function extractQuestionContentText(value: unknown): string {
     }
   }
 
-  if (isRecord(value.translations)) {
-    const translatedText = extractQuestionContentText(value.translations);
+  const translations = value['translations'];
+  if (isRecord(translations)) {
+    const translatedText = extractQuestionContentText(translations);
     if (translatedText) {
       return translatedText;
     }
   }
 
-  return Object.values(value)
-    .map((entry) => extractQuestionContentText(entry))
-    .find((entry) => entry.length > 0) ?? '';
+  return (
+    Object.values(value)
+      .map((entry) => extractQuestionContentText(entry))
+      .find((entry) => entry.length > 0) ?? ''
+  );
 }
 
 export function hasMeaningfulQuestionContent(value: unknown): boolean {
