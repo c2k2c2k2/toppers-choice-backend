@@ -15,6 +15,7 @@ import { StreamableFile } from '@nestjs/common';
 import type { Response } from 'express';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { ObjectStorageService } from '../../infra/storage/object-storage.service';
+import { buildContentDispositionHeader } from '../../common/http/content-disposition.util';
 import { AuthenticatedUser } from '../auth/auth.types';
 import { AuthorizationService } from '../authorization/authorization.service';
 import {
@@ -263,7 +264,10 @@ export class FilesService {
     response.setHeader('Cache-Control', cacheControl);
     response.setHeader(
       'Content-Disposition',
-      `${isInlineAssetContentType(asset.contentType) ? 'inline' : 'attachment'}; filename="${this.escapeContentDispositionFilename(asset.originalFileName)}"`,
+      buildContentDispositionHeader(
+        isInlineAssetContentType(asset.contentType) ? 'inline' : 'attachment',
+        asset.originalFileName,
+      ),
     );
 
     if (object.contentLength !== null) {
@@ -387,9 +391,5 @@ export class FilesService {
       month,
       `${objectId}.${extension}`,
     ].join('/');
-  }
-
-  private escapeContentDispositionFilename(value: string) {
-    return value.replaceAll('"', '\\"');
   }
 }

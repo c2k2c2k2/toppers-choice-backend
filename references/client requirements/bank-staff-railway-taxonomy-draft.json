@@ -1,0 +1,180 @@
+{
+  "version": "2026-05-11",
+  "modelDecision": "Add a dedicated Bank, Staff, Railway and allied exams track. Keep General Knowledge and English as deferred references, define Mathematics topics explicitly, and add subject-only Banking and Marketing Management buckets to fit the supplied note set.",
+  "mediums": [
+    {
+      "code": "en",
+      "slug": "english",
+      "name": "English"
+    },
+    {
+      "code": "mr",
+      "slug": "marathi",
+      "name": "Marathi"
+    }
+  ],
+  "examTracks": [
+    {
+      "code": "bank-staff-railway-allied",
+      "slug": "bank-staff-railway-allied",
+      "name": "Bank, Staff, Railway and Allied Exams",
+      "shortName": "Bank, Staff, Railway",
+      "englishName": "Bank, Staff, Railway and Allied Exams",
+      "nativeName": null,
+      "defaultMediumCode": "en",
+      "subjects": [
+        {
+          "code": "general-knowledge",
+          "slug": "general-knowledge",
+          "name": "General Knowledge",
+          "englishName": "General Knowledge",
+          "nativeName": null,
+          "topicEntryMode": "DEFERRED",
+          "entryNotes": [
+            "Please refer GK for MPSC English medium."
+          ],
+          "topics": []
+        },
+        {
+          "code": "english",
+          "slug": "english",
+          "name": "English",
+          "englishName": "English",
+          "nativeName": null,
+          "topicEntryMode": "DEFERRED",
+          "entryNotes": [
+            "Please refer English for MPSC English medium."
+          ],
+          "topics": []
+        },
+        {
+          "code": "test-of-reasoning",
+          "slug": "test-of-reasoning",
+          "name": "Test of Reasoning",
+          "englishName": "Test of Reasoning",
+          "nativeName": null,
+          "topicEntryMode": "SUBJECT_ONLY",
+          "entryNotes": [
+            "The syllabus names this subject but does not provide subtopics."
+          ],
+          "topics": []
+        },
+        {
+          "code": "mathematics",
+          "slug": "mathematics",
+          "name": "Mathematics",
+          "englishName": "Mathematics",
+          "nativeName": null,
+          "topicEntryMode": "FULL",
+          "entryNotes": [],
+          "topics": [
+            {
+              "code": "area-volume",
+              "slug": "area-volume",
+              "name": "Area & Volume",
+              "englishName": "Area & Volume",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "average",
+              "slug": "average",
+              "name": "Average",
+              "englishName": "Average",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "lcm-hcf",
+              "slug": "lcm-hcf",
+              "name": "LCM & HCF",
+              "englishName": "LCM & HCF",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "number-system",
+              "slug": "number-system",
+              "name": "Number System",
+              "englishName": "Number System",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "percentage",
+              "slug": "percentage",
+              "name": "Percentage",
+              "englishName": "Percentage",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "profit-loss",
+              "slug": "profit-loss",
+              "name": "Profit & Loss",
+              "englishName": "Profit & Loss",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "ratio-proportion",
+              "slug": "ratio-proportion",
+              "name": "Ratio & Proportion",
+              "englishName": "Ratio & Proportion",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "simple-compound-interest",
+              "slug": "simple-compound-interest",
+              "name": "Simple Interest and Compound Interest",
+              "englishName": "Simple Interest and Compound Interest",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "time-distance",
+              "slug": "time-distance",
+              "name": "Time and Distance",
+              "englishName": "Time and Distance",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "time-work",
+              "slug": "time-work",
+              "name": "Time and Work",
+              "englishName": "Time and Work",
+              "nativeName": null,
+              "topics": []
+            }
+          ]
+        },
+        {
+          "code": "banking",
+          "slug": "banking",
+          "name": "Banking",
+          "englishName": "Banking",
+          "nativeName": null,
+          "topicEntryMode": "SUBJECT_ONLY",
+          "entryNotes": [
+            "Added to accommodate the supplied Banking note set."
+          ],
+          "topics": []
+        },
+        {
+          "code": "marketing-management",
+          "slug": "marketing-management",
+          "name": "Marketing Management",
+          "englishName": "Marketing Management",
+          "nativeName": null,
+          "topicEntryMode": "SUBJECT_ONLY",
+          "entryNotes": [
+            "Added to accommodate the supplied Marketing Management note."
+          ],
+          "topics": []
+        }
+      ]
+    }
+  ]
+}

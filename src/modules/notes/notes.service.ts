@@ -23,6 +23,7 @@ import {
 } from '@prisma/client';
 import type { Response } from 'express';
 import { randomUUID } from 'node:crypto';
+import { buildContentDispositionHeader } from '../../common/http/content-disposition.util';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { ObjectStorageService } from '../../infra/storage/object-storage.service';
 import {
@@ -935,7 +936,7 @@ export class NotesService {
     response.setHeader('Cache-Control', 'private, no-store');
     response.setHeader(
       'Content-Disposition',
-      `inline; filename="${fileAsset.originalFileName.replaceAll('"', '\\"')}"`,
+      buildContentDispositionHeader('inline', fileAsset.originalFileName),
     );
 
     if (object.eTag) {

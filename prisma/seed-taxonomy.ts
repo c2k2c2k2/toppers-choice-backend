@@ -91,10 +91,16 @@ type ExistingTopic = {
   name: string;
 };
 
-const TAXONOMY_DRAFT_PATH = resolve(
-  __dirname,
-  '../references/client requirements/mpsc-taxonomy-canonical-draft.json',
-);
+const TAXONOMY_DRAFT_PATHS = [
+  resolve(
+    __dirname,
+    '../references/client requirements/mpsc-taxonomy-canonical-draft.json',
+  ),
+  resolve(
+    __dirname,
+    '../references/client requirements/bank-staff-railway-taxonomy-draft.json',
+  ),
+];
 
 const MEDIUM_CODE_ALIASES: Record<string, string[]> = {
   en: ['english'],
@@ -600,6 +606,47 @@ function normalize(value: string) {
 }
 
 async function loadDraft() {
-  const raw = await readFile(TAXONOMY_DRAFT_PATH, 'utf8');
-  return JSON.parse(raw) as TaxonomyDraft;
+  const payloads = await Promise.all(
+    TAXONOMY_DRAFT_PATHS.map(async (filePath) => {
+      const raw = await readFile(filePath, 'utf8');
+      return JSON.parse(raw) as TaxonomyDraft;
+    }),
+  );
+
+  const mediumByCode = new Map<string, MediumDraft>();
+  const examTrackByCode = new Map<string, ExamTrackDraft>();
+
+  for (const payload of payloads) {
+    for (const medium of payload.mediums) {
+      const existingMedium = mediumByCode.get(medium.code);
+      if (existingMedium) {
+        const sameMedium =
+          existingMedium.slug === medium.slug &&
+          existingMedium.name === medium.name;
+        if (!sameMedium) {
+          throw new Error(
+            `Conflicting medium draft for code "${medium.code}".`,
+          );
+        }
+        continue;
+      }
+
+      mediumByCode.set(medium.code, medium);
+    }
+
+    for (const examTrack of payload.examTracks) {
+      if (examTrackByCode.has(examTrack.code)) {
+        throw new Error(
+          `Duplicate exam track draft for code "${examTrack.code}".`,
+        );
+      }
+
+      examTrackByCode.set(examTrack.code, examTrack);
+    }
+  }
+
+  return {
+    mediums: Array.from(mediumByCode.values()),
+    examTracks: Array.from(examTrackByCode.values()),
+  } satisfies TaxonomyDraft;
 }
