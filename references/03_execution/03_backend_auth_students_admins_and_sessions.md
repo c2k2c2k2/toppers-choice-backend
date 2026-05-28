@@ -5,7 +5,7 @@
 
 ## Prompt
 ```text
-We are implementing Topper's Choice backend step B03: authentication and user identity lifecycle.
+We are implementing Toppers' Choice backend step B03: authentication and user identity lifecycle.
 
 Read these references first:
 - references/01_product/01_toppers_choice_product_understanding.md

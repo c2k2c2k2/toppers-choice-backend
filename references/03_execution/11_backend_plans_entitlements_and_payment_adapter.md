@@ -5,7 +5,7 @@
 
 ## Prompt
 ```text
-We are implementing Topper's Choice backend step B11: plans, entitlements, and provider-agnostic payment integration.
+We are implementing Toppers' Choice backend step B11: plans, entitlements, and provider-agnostic payment integration.
 
 Read these references first:
 - references/01_product/01_toppers_choice_product_understanding.md

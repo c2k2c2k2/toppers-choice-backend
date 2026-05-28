@@ -1,7 +1,7 @@
 # MPSC Taxonomy Import Blueprint
 
 ## Purpose
-This file is the operational blueprint for entering the MPSC syllabus data into the current Topper's Choice system without weakening downstream filters for notes, questions, tests, or structured content.
+This file is the operational blueprint for entering the MPSC syllabus data into the current Toppers' Choice system without weakening downstream filters for notes, questions, tests, or structured content.
 
 ## Confirmed Modeling Decision
 - `MPSC - English Medium` and `एमपीएससी व तत्सम स्पर्धा परीक्षा` are separate exam tracks.

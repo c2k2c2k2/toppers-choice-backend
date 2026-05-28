@@ -43,7 +43,7 @@ describe('SiteSettingsService', () => {
       id: 'site_1',
       code: 'toppers-choice',
       slug: 'toppers-choice',
-      name: "Topper's Choice",
+      name: "Toppers' Choice",
       primaryDomain: null,
       defaultLocale: 'mr-IN',
       timezone: 'Asia/Kolkata',
@@ -80,7 +80,7 @@ describe('SiteSettingsService', () => {
         visibility: ConfigVisibility.PUBLIC,
         configJson: {
           branding: {
-            displayName: "Topper's Choice",
+            displayName: "Toppers' Choice",
           },
         },
         publishedAt: new Date('2026-03-25T18:30:00.000Z'),
@@ -92,7 +92,7 @@ describe('SiteSettingsService', () => {
 
     expect(first.publicConfig.site).toEqual({
       branding: {
-        displayName: "Topper's Choice",
+        displayName: "Toppers' Choice",
       },
     });
     expect(first.publicConfig.platform).toMatchObject({
@@ -110,7 +110,7 @@ describe('SiteSettingsService', () => {
       id: 'site_1',
       code: 'toppers-choice',
       slug: 'toppers-choice',
-      name: "Topper's Choice",
+      name: "Toppers' Choice",
       primaryDomain: null,
       defaultLocale: 'mr-IN',
       timezone: 'Asia/Kolkata',
@@ -133,7 +133,7 @@ describe('SiteSettingsService', () => {
         visibility: ConfigVisibility.PUBLIC,
         configJson: {
           branding: {
-            displayName: "Topper's Choice",
+            displayName: "Toppers' Choice",
           },
         },
         publishedAt: new Date('2026-03-25T18:30:00.000Z'),

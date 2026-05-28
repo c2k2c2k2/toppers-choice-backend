@@ -50,7 +50,7 @@ type ImportSummary = {
 type QuestionLanguageMode = 'ENGLISH' | 'MARATHI' | 'BILINGUAL';
 
 const HELP_TEXT = `
-Import question files into Topper's Choice.
+Import question files into Toppers' Choice.
 
 Usage:
   pnpm questions:import --input <file-or-directory> --exam-track <value> --subject <value> [options]

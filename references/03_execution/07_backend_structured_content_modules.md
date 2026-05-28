@@ -5,7 +5,7 @@
 
 ## Prompt
 ```text
-We are implementing Topper's Choice backend step B07: structured content modules for non-note learning content.
+We are implementing Toppers' Choice backend step B07: structured content modules for non-note learning content.
 
 Read these references first:
 - references/01_product/01_toppers_choice_product_understanding.md

@@ -95,7 +95,7 @@ describe('Backend foundation (e2e)', () => {
     };
     const pathKeys = Object.keys(body.paths);
 
-    expect(body.info.title).toBe("Topper's Choice Backend API");
+    expect(body.info.title).toBe("Toppers' Choice Backend API");
     expect(pathKeys.some((path) => path.endsWith('/health'))).toBe(true);
   });
 

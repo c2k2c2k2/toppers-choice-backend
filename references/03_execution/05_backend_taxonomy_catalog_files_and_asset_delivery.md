@@ -5,7 +5,7 @@
 
 ## Prompt
 ```text
-We are implementing Topper's Choice backend step B05: taxonomy foundation, file assets, and secure asset delivery.
+We are implementing Toppers' Choice backend step B05: taxonomy foundation, file assets, and secure asset delivery.
 
 Read these references first:
 - references/02_architecture/01_backend_kickoff_plan.md

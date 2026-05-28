@@ -84,7 +84,7 @@ class NotificationTemplateBaseDto {
   @IsEnum(NotificationChannel)
   channel?: NotificationChannel;
 
-  @ApiPropertyOptional({ example: "Welcome to Topper's Choice" })
+  @ApiPropertyOptional({ example: "Welcome to Toppers' Choice" })
   @Transform(({ value }) => normalizeOptionalText(value))
   @IsOptional()
   @IsString()

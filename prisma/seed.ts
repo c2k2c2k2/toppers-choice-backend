@@ -53,7 +53,7 @@ async function main() {
     },
     update: {
       slug: DEFAULT_SITE_CODE,
-      name: "Topper's Choice",
+      name: "Toppers' Choice",
       status: SiteStatus.ACTIVE,
       isDefault: true,
       defaultLocale: 'mr-IN',
@@ -62,7 +62,7 @@ async function main() {
     create: {
       code: DEFAULT_SITE_CODE,
       slug: DEFAULT_SITE_CODE,
-      name: "Topper's Choice",
+      name: "Toppers' Choice",
       status: SiteStatus.ACTIVE,
       isDefault: true,
       defaultLocale: 'mr-IN',
@@ -77,8 +77,8 @@ async function main() {
     ConfigVisibility.PUBLIC,
     {
       branding: {
-        displayName: "Topper's Choice",
-        shortName: "Topper's Choice",
+        displayName: "Toppers' Choice",
+        shortName: "Toppers' Choice",
         tagline: 'Competitive exam preparation platform for serious students.',
       },
       support: {
@@ -355,7 +355,7 @@ async function main() {
       },
       update: {
         fullName:
-          process.env.SEED_ADMIN_FULL_NAME?.trim() || "Topper's Choice Admin",
+          process.env.SEED_ADMIN_FULL_NAME?.trim() || "Toppers' Choice Admin",
         passwordHash: await hashPassword(process.env.SEED_ADMIN_PASSWORD),
         userType: UserType.ADMIN,
         status: UserStatus.ACTIVE,
@@ -364,7 +364,7 @@ async function main() {
         siteId: site.id,
         email: process.env.SEED_ADMIN_EMAIL.trim().toLowerCase(),
         fullName:
-          process.env.SEED_ADMIN_FULL_NAME?.trim() || "Topper's Choice Admin",
+          process.env.SEED_ADMIN_FULL_NAME?.trim() || "Toppers' Choice Admin",
         passwordHash: await hashPassword(process.env.SEED_ADMIN_PASSWORD),
         userType: UserType.ADMIN,
         status: UserStatus.ACTIVE,

@@ -5,7 +5,7 @@
 
 ## Prompt
 ```text
-We are implementing Topper's Choice backend step B10: tests, attempts, and result snapshots.
+We are implementing Toppers' Choice backend step B10: tests, attempts, and result snapshots.
 
 Read these references first:
 - references/02_architecture/01_backend_kickoff_plan.md

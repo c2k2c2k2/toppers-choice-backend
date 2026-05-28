@@ -5,7 +5,7 @@
 
 ## Prompt
 ```text
-We are implementing Topper's Choice backend step B06: notes, preview rules, and secure note delivery.
+We are implementing Toppers' Choice backend step B06: notes, preview rules, and secure note delivery.
 
 Read these references first:
 - references/01_product/01_toppers_choice_product_understanding.md

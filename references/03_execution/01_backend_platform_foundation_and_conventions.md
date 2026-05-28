@@ -6,7 +6,7 @@
 
 ## Prompt
 ```text
-We are implementing Topper's Choice backend step B01: platform foundation and conventions.
+We are implementing Toppers' Choice backend step B01: platform foundation and conventions.
 
 Read these references first:
 - references/01_product/01_toppers_choice_product_understanding.md

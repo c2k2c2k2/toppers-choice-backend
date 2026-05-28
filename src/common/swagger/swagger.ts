@@ -27,9 +27,9 @@ export function setupSwagger(
   const document = SwaggerModule.createDocument(
     app,
     new DocumentBuilder()
-      .setTitle("Topper's Choice Backend API")
+      .setTitle("Toppers' Choice Backend API")
       .setDescription(
-        "Production-ready backend foundation for Topper's Choice.",
+        "Production-ready backend foundation for Toppers' Choice.",
       )
       .setVersion('1.0.0')
       .addServer(`/${apiPrefix}`, 'Versioned REST API')

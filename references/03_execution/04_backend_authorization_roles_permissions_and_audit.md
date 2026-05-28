@@ -5,7 +5,7 @@
 
 ## Prompt
 ```text
-We are implementing Topper's Choice backend step B04: authorization, audit, and admin access control.
+We are implementing Toppers' Choice backend step B04: authorization, audit, and admin access control.
 
 Read these references first:
 - references/02_architecture/01_backend_kickoff_plan.md
@@ -16,7 +16,7 @@ Read these references first:
 Task:
 - Build the RBAC + UBAC layer for the whole backend.
 - Add roles, permissions, user-role assignment, optional user overrides, audit logging, admin-only route protection, and policy-based route guards.
-- Seed initial admin roles aligned to Topper's Choice operations.
+- Seed initial admin roles aligned to Toppers' Choice operations.
 
 Must include:
 - `Role`, `Permission`, `UserRole`, and optional direct user permission overrides

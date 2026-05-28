@@ -5,7 +5,7 @@
 
 ## Prompt
 ```text
-We are implementing Topper's Choice backend step B02: site settings, site-aware configuration, and seed baseline.
+We are implementing Toppers' Choice backend step B02: site settings, site-aware configuration, and seed baseline.
 
 Read these references first:
 - references/02_architecture/01_backend_kickoff_plan.md
@@ -16,7 +16,7 @@ Read these references first:
 Task:
 - Create the site-aware runtime configuration foundation for a SaaS-ready but single-site V1.
 - Add core models and services for `Site`, versioned site config/app config, and publishable runtime settings.
-- Seed one default Topper's Choice site and the minimum foundational settings needed by later modules.
+- Seed one default Toppers' Choice site and the minimum foundational settings needed by later modules.
 - Make business config database-driven wherever possible, with env fallback only for true infrastructure or secret values.
 
 Must include:

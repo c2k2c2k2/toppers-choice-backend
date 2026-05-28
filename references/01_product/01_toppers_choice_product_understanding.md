@@ -1,7 +1,7 @@
-# Topper's Choice Product Understanding
+# Toppers' Choice Product Understanding
 
 ## Summary
-Topper's Choice is a production-grade education platform for competitive exam preparation with three frontend surfaces: landing page, student app, and admin panel. The platform must be dynamic, admin-driven, mobile-first for students, and maintainable enough to become a SaaS-style product later.
+Toppers' Choice is a production-grade education platform for competitive exam preparation with three frontend surfaces: landing page, student app, and admin panel. The platform must be dynamic, admin-driven, mobile-first for students, and maintainable enough to become a SaaS-style product later.
 
 ## Major Modules
 - Notes for MPSC and allied exams

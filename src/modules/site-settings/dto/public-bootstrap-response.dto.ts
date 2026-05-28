@@ -5,7 +5,7 @@ export class PublicBootstrapResponseDto {
     example: {
       code: 'toppers-choice',
       slug: 'toppers-choice',
-      name: "Topper's Choice",
+      name: "Toppers' Choice",
       primaryDomain: null,
       defaultLocale: 'mr-IN',
       timezone: 'Asia/Kolkata',
@@ -17,7 +17,7 @@ export class PublicBootstrapResponseDto {
     example: {
       site: {
         branding: {
-          displayName: "Topper's Choice",
+          displayName: "Toppers' Choice",
           tagline: 'Competitive exam preparation platform',
         },
       },

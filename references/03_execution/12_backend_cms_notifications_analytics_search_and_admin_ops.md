@@ -5,7 +5,7 @@
 
 ## Prompt
 ```text
-We are implementing Topper's Choice backend step B12: CMS, notifications, analytics, search, admin ops, and release hardening.
+We are implementing Toppers' Choice backend step B12: CMS, notifications, analytics, search, admin ops, and release hardening.
 
 Read these references first:
 - references/02_architecture/01_backend_kickoff_plan.md
