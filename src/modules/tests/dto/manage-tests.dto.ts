@@ -19,10 +19,12 @@ import {
   ValidateNested,
 } from 'class-validator';
 import {
+  QuestionDifficulty,
   TestAccessType,
   TestAttemptStatus,
   TestFamily,
   TestStatus,
+  QuestionType,
 } from '@prisma/client';
 import {
   normalizeOptionalCode,
@@ -65,6 +67,18 @@ function normalizeOptionalBoolean(value: unknown) {
   return value;
 }
 
+function normalizeOptionalNumber(value: unknown) {
+  if (typeof value === 'number') {
+    return value;
+  }
+
+  if (typeof value === 'string' && value.trim().length > 0) {
+    return Number(value);
+  }
+
+  return value;
+}
+
 export class TestQuestionInputDto {
   @ApiProperty({ example: 'cmag4question001' })
   @IsString()
@@ -78,26 +92,96 @@ export class TestQuestionInputDto {
   orderIndex?: number;
 
   @ApiPropertyOptional({ example: 2 })
-  @Transform(({ value }) =>
-    typeof value === 'string' && value.trim().length > 0
-      ? Number(value)
-      : value,
-  )
+  @Transform(({ value }: { value: unknown }) => normalizeOptionalNumber(value))
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   positiveMarks?: number;
 
   @ApiPropertyOptional({ example: 0.5 })
-  @Transform(({ value }) =>
-    typeof value === 'string' && value.trim().length > 0
-      ? Number(value)
-      : value,
-  )
+  @Transform(({ value }: { value: unknown }) => normalizeOptionalNumber(value))
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   negativeMarks?: number;
+}
+
+export class TestQuestionGenerationRuleDto {
+  @ApiPropertyOptional({ example: 'History section' })
+  @Transform(({ value }) => normalizeOptionalText(value))
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  label?: string;
+
+  @ApiPropertyOptional({ example: 'cmag4subject001' })
+  @IsOptional()
+  @IsString()
+  subjectId?: string;
+
+  @ApiPropertyOptional({
+    type: [String],
+    example: ['cmag4topic001', 'cmag4topic002'],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayUnique()
+  topicIds?: string[];
+
+  @ApiPropertyOptional({ enum: QuestionDifficulty })
+  @IsOptional()
+  @IsEnum(QuestionDifficulty)
+  difficulty?: QuestionDifficulty;
+
+  @ApiPropertyOptional({ enum: QuestionType })
+  @IsOptional()
+  @IsEnum(QuestionType)
+  type?: QuestionType;
+
+  @ApiPropertyOptional({ example: 20 })
+  @Transform(({ value }) => normalizeOptionalInteger(value))
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(300)
+  questionCount?: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @Transform(({ value }: { value: unknown }) => normalizeOptionalNumber(value))
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  positiveMarks?: number;
+
+  @ApiPropertyOptional({ example: 0.25 })
+  @Transform(({ value }: { value: unknown }) => normalizeOptionalNumber(value))
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  negativeMarks?: number;
+}
+
+export class GenerateTestQuestionsDto extends TestQuestionGenerationRuleDto {
+  @ApiPropertyOptional({ default: true })
+  @Transform(({ value }) => normalizeOptionalBoolean(value))
+  @IsOptional()
+  @IsBoolean()
+  replaceExisting?: boolean;
+
+  @ApiPropertyOptional({ default: true })
+  @Transform(({ value }) => normalizeOptionalBoolean(value))
+  @IsOptional()
+  @IsBoolean()
+  randomize?: boolean;
+
+  @ApiPropertyOptional({ type: [TestQuestionGenerationRuleDto] })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TestQuestionGenerationRuleDto)
+  @ArrayMinSize(1)
+  sections?: TestQuestionGenerationRuleDto[];
 }
 
 class TestMutationBaseDto {
@@ -110,7 +194,7 @@ class TestMutationBaseDto {
   code?: string;
 
   @ApiPropertyOptional({ example: 'mpsc-prelims-mock-test-1' })
-  @Transform(({ value }) =>
+  @Transform(({ value }: { value: unknown }) =>
     typeof value === 'string' && value.trim().length > 0
       ? slugifyTestValue(value)
       : value,
@@ -213,12 +297,13 @@ class TestMutationBaseDto {
   availableUntil?: string;
 
   @ApiProperty({ type: [TestQuestionInputDto] })
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => TestQuestionInputDto)
   @ArrayMinSize(1)
   @ArrayUnique((item: TestQuestionInputDto) => item.questionId)
-  questions!: TestQuestionInputDto[];
+  questions?: TestQuestionInputDto[];
 }
 
 export class CreateTestDto extends TestMutationBaseDto {}

@@ -8,6 +8,7 @@ import {
 import {
   CatalogVisibility,
   Prisma,
+  QuestionDifficulty,
   QuestionStatus,
   QuestionType,
   TestAccessType,
@@ -25,6 +26,7 @@ import {
 } from '../questions/questions.types';
 import type {
   CreateTestDto,
+  GenerateTestQuestionsDto,
   ListAdminTestsQueryDto,
   ListPublishedTestsQueryDto,
   ListTestAttemptsQueryDto,
@@ -50,9 +52,7 @@ import {
 } from './tests.types';
 import { TestsEntitlementService } from './tests.entitlement.service';
 import {
-  buildTestSearchText,
   calculatePercentage,
-  isTestLive,
   normalizeAnswerText,
   normalizeOptionKeys,
   normalizeOptionalText,
@@ -72,6 +72,17 @@ type ResolvedTestScope = {
   examTrackId: string | null;
   mediumId: string | null;
   subjectId: string | null;
+};
+
+type NormalizedGenerationRule = {
+  label: string | null;
+  subjectId: string | null;
+  topicIds: string[];
+  difficulty: QuestionDifficulty | null;
+  type: QuestionType | null;
+  questionCount: number;
+  positiveMarks: number;
+  negativeMarks: number;
 };
 
 type AttemptQuestionScore = {
@@ -137,7 +148,7 @@ export class TestsService {
 
   async createTest(user: AuthenticatedUser, input: CreateTestDto) {
     const scope = await this.resolveTestScope(user.siteId, input);
-    const questions = this.normalizeTestQuestionInputs(input.questions);
+    const questions = this.normalizeTestQuestionInputs(input.questions ?? []);
     const sourceQuestions = await this.loadSourceQuestions(
       user.siteId,
       questions.map((item) => item.questionId),
@@ -316,6 +327,132 @@ export class TestsService {
         await this.syncTestQuestions(tx, user.siteId, testId, questions);
       }
 
+      await this.refreshTestMetrics(tx, testId, user.userId);
+    });
+
+    return this.getAdminTest(user.siteId, testId);
+  }
+
+  async generateTestQuestions(
+    user: AuthenticatedUser,
+    testId: string,
+    input: GenerateTestQuestionsDto,
+  ) {
+    const existing = await this.prisma.test.findFirst({
+      where: {
+        id: testId,
+        siteId: user.siteId,
+      },
+      select: testDetailSelect,
+    });
+
+    if (!existing) {
+      throw new NotFoundException({
+        code: 'TEST_NOT_FOUND',
+        message: 'Test was not found.',
+      });
+    }
+
+    if (existing.status !== TestStatus.DRAFT) {
+      throw new BadRequestException({
+        code: 'TEST_GENERATION_REQUIRES_DRAFT',
+        message: 'Questions can be generated only for draft tests.',
+      });
+    }
+
+    const scope = await this.resolveTestScope(user.siteId, {
+      family: existing.family,
+      examTrackId: existing.examTrackId ?? undefined,
+      mediumId: existing.mediumId ?? undefined,
+      subjectId: existing.subjectId ?? undefined,
+    });
+    const replaceExisting = input.replaceExisting ?? true;
+    const randomize = input.randomize ?? true;
+    const rules = this.normalizeGenerationRules(input, existing.subjectId);
+    const usedQuestionIds = new Set<string>(
+      replaceExisting
+        ? []
+        : existing.questions.map((question) => question.questionId),
+    );
+    const generatedQuestions: NormalizedTestQuestionInput[] = replaceExisting
+      ? []
+      : existing.questions.map((question) => ({
+          questionId: question.questionId,
+          orderIndex: question.orderIndex,
+          positiveMarks: question.positiveMarks,
+          negativeMarks: question.negativeMarks,
+        }));
+
+    for (const rule of rules) {
+      const candidates = await this.loadGenerationCandidates(
+        user.siteId,
+        scope,
+        rule,
+        usedQuestionIds,
+      );
+      const selected = (
+        randomize ? shuffleArray(candidates) : candidates
+      ).slice(0, rule.questionCount);
+
+      if (selected.length < rule.questionCount) {
+        throw new BadRequestException({
+          code: 'TEST_GENERATION_POOL_TOO_SMALL',
+          message: `Only ${selected.length} published questions matched ${rule.label ?? 'one generator rule'}, but ${rule.questionCount} were requested.`,
+        });
+      }
+
+      for (const question of selected) {
+        usedQuestionIds.add(question.id);
+        generatedQuestions.push({
+          questionId: question.id,
+          orderIndex: generatedQuestions.length + 1,
+          positiveMarks: rule.positiveMarks,
+          negativeMarks: rule.negativeMarks,
+        });
+      }
+    }
+
+    const sourceQuestions = await this.loadSourceQuestions(
+      user.siteId,
+      generatedQuestions.map((question) => question.questionId),
+    );
+    this.validateQuestionsAgainstScope(scope, sourceQuestions);
+
+    const existingConfig =
+      existing.configJson &&
+      typeof existing.configJson === 'object' &&
+      !Array.isArray(existing.configJson)
+        ? (existing.configJson as Record<string, unknown>)
+        : {};
+
+    await this.prisma.$transaction(async (tx) => {
+      await this.syncTestQuestions(tx, user.siteId, testId, generatedQuestions);
+      await tx.test.update({
+        where: {
+          id: testId,
+        },
+        data: {
+          configJson: {
+            ...existingConfig,
+            generatedQuestionBlueprint: {
+              generatedAt: new Date().toISOString(),
+              replaceExisting,
+              randomize,
+              sections: rules.map((rule) => ({
+                label: rule.label,
+                subjectId: rule.subjectId,
+                topicIds: rule.topicIds,
+                difficulty: rule.difficulty,
+                type: rule.type,
+                questionCount: rule.questionCount,
+                positiveMarks: rule.positiveMarks,
+                negativeMarks: rule.negativeMarks,
+              })),
+            },
+          } as Prisma.InputJsonValue,
+          updatedByUserId: user.userId,
+        },
+      });
       await this.refreshTestMetrics(tx, testId, user.userId);
     });
 
@@ -1006,6 +1143,82 @@ export class TestsService {
     }
   }
 
+  private normalizeGenerationRules(
+    input: GenerateTestQuestionsDto,
+    fallbackSubjectId: string | null,
+  ): NormalizedGenerationRule[] {
+    const sourceRules =
+      input.sections && input.sections.length > 0 ? input.sections : [input];
+
+    return sourceRules.map((rule, index) => {
+      const questionCount = rule.questionCount ?? input.questionCount;
+
+      if (!questionCount) {
+        throw new BadRequestException({
+          code: 'TEST_GENERATION_COUNT_REQUIRED',
+          message: 'Each generator rule requires a question count.',
+        });
+      }
+
+      const topicIds =
+        rule.topicIds === undefined
+          ? (input.topicIds ?? [])
+          : (rule.topicIds ?? []);
+
+      return {
+        label: rule.label ?? `Section ${index + 1}`,
+        subjectId: rule.subjectId ?? input.subjectId ?? fallbackSubjectId,
+        topicIds: Array.from(new Set(topicIds)),
+        difficulty: rule.difficulty ?? input.difficulty ?? null,
+        type: rule.type ?? input.type ?? null,
+        questionCount,
+        positiveMarks: rule.positiveMarks ?? input.positiveMarks ?? 1,
+        negativeMarks: rule.negativeMarks ?? input.negativeMarks ?? 0,
+      };
+    });
+  }
+
+  private async loadGenerationCandidates(
+    siteId: string,
+    scope: ResolvedTestScope,
+    rule: NormalizedGenerationRule,
+    excludedQuestionIds: Set<string>,
+  ) {
+    const candidates = await this.prisma.question.findMany({
+      where: {
+        siteId,
+        status: QuestionStatus.PUBLISHED,
+        id:
+          excludedQuestionIds.size > 0
+            ? {
+                notIn: Array.from(excludedQuestionIds),
+              }
+            : undefined,
+        mediumId: scope.mediumId ?? undefined,
+        subjectId: rule.subjectId ?? scope.subjectId ?? undefined,
+        topicId:
+          rule.topicIds.length > 0
+            ? {
+                in: rule.topicIds,
+              }
+            : undefined,
+        difficulty: rule.difficulty ?? undefined,
+        type: rule.type ?? undefined,
+        subject: scope.examTrackId
+          ? {
+              examTrackId: scope.examTrackId,
+            }
+          : undefined,
+      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
+      select: {
+        id: true,
+      },
+    });
+
+    return candidates;
+  }
+
   private buildTestSlug(slug: string | undefined, title: string) {
     const normalizedSlug = normalizeOptionalText(slug);
     const source = typeof normalizedSlug === 'string' ? normalizedSlug : title;
@@ -1317,7 +1530,11 @@ export class TestsService {
 
       return acceptedAnswers
         .map((item) => normalizeAnswerText(item))
-        .includes(normalizeAnswerText(String(answerJson.text ?? '')));
+        .includes(
+          normalizeAnswerText(
+            typeof answerJson.text === 'string' ? answerJson.text : '',
+          ),
+        );
     }
 
     const correctOptionKeys = normalizeOptionKeys(

@@ -23,6 +23,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { AuthenticatedUser } from '../auth/auth.types';
 import {
   CreateTestDto,
+  GenerateTestQuestionsDto,
   ListAdminTestsQueryDto,
   UpdateTestDto,
 } from './dto/manage-tests.dto';
@@ -112,6 +113,32 @@ export class AdminTestsController {
     @Body() body: UpdateTestDto,
   ) {
     return this.testsService.updateTest(user, testId, body);
+  }
+
+  @Post(':testId/generate-questions')
+  @Policy('academics.tests.manage')
+  @Audit({
+    action: 'admin.tests.generateQuestions',
+    resourceType: 'test',
+    resourceIdParam: 'testId',
+    includeBodyKeys: [
+      'questionCount',
+      'subjectId',
+      'topicIds',
+      'difficulty',
+      'type',
+      'replaceExisting',
+      'randomize',
+      'sections',
+    ],
+  })
+  @ApiOkResponse({ type: AdminTestDetailResponseDto })
+  async generateQuestions(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('testId') testId: string,
+    @Body() body: GenerateTestQuestionsDto,
+  ) {
+    return this.testsService.generateTestQuestions(user, testId, body);
   }
 
   @Post(':testId/publish')
