@@ -8,6 +8,7 @@ import {
   PaymentProvider,
   PlanStatus,
   SubscriptionStatus,
+  TrialAccessStatus,
 } from '@prisma/client';
 
 export class PaymentPlanEntitlementResponseDto {
@@ -348,4 +349,62 @@ export class PaymentCallbackAckResponseDto {
 
   @ApiPropertyOptional({ nullable: true })
   orderId!: string | null;
+}
+
+export class TrialPolicyResponseDto {
+  @ApiProperty()
+  enabled!: boolean;
+
+  @ApiProperty()
+  totalSeconds!: number;
+
+  @ApiProperty()
+  totalMinutes!: number;
+
+  @ApiProperty()
+  heartbeatSeconds!: number;
+
+  @ApiProperty()
+  maxHeartbeatGapSeconds!: number;
+}
+
+export class TrialAccessResponseDto {
+  @ApiPropertyOptional({ nullable: true })
+  id!: string | null;
+
+  @ApiProperty({ enum: TrialAccessStatus })
+  status!: TrialAccessStatus;
+
+  @ApiProperty()
+  enabled!: boolean;
+
+  @ApiProperty()
+  consumedSeconds!: number;
+
+  @ApiProperty()
+  remainingSeconds!: number;
+
+  @ApiProperty()
+  totalSeconds!: number;
+
+  @ApiProperty()
+  hasAccess!: boolean;
+
+  @ApiPropertyOptional({ nullable: true })
+  startedAt!: Date | null;
+
+  @ApiPropertyOptional({ nullable: true })
+  lastHeartbeatAt!: Date | null;
+
+  @ApiPropertyOptional({ nullable: true })
+  lastStoppedAt!: Date | null;
+
+  @ApiPropertyOptional({ nullable: true })
+  exhaustedAt!: Date | null;
+
+  @ApiPropertyOptional({ nullable: true })
+  disabledAt!: Date | null;
+
+  @ApiProperty({ type: TrialPolicyResponseDto })
+  policy!: TrialPolicyResponseDto;
 }

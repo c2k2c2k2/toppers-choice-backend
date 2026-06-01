@@ -4,6 +4,9 @@ import { PLATFORM_PUBLIC_RUNTIME_CONFIG_KEY } from '../site-settings/site-settin
 import { SiteSettingsService } from '../site-settings/site-settings.service';
 import {
   DEFAULT_PAYMENT_ORDER_EXPIRY_MINUTES,
+  DEFAULT_TRIAL_HEARTBEAT_SECONDS,
+  DEFAULT_TRIAL_MAX_HEARTBEAT_GAP_SECONDS,
+  DEFAULT_TRIAL_TOTAL_MINUTES,
   HDFC_RETURN_PATH,
   PAYMENT_SUBSCRIPTION_MODE_VALUES,
   PAYMENTS_ACTIVE_PROVIDER_PATH,
@@ -12,6 +15,10 @@ import {
   PAYMENTS_PRACTICE_PREMIUM_REQUIRED_PATH,
   PAYMENTS_RUNTIME_CONFIG_KEY,
   PAYMENTS_SUBSCRIPTION_MODE_PATH,
+  PAYMENTS_TRIAL_ENABLED_PATH,
+  PAYMENTS_TRIAL_HEARTBEAT_SECONDS_PATH,
+  PAYMENTS_TRIAL_MAX_HEARTBEAT_GAP_SECONDS_PATH,
+  PAYMENTS_TRIAL_TOTAL_MINUTES_PATH,
   PHONEPE_CALLBACK_PATH,
   PHONEPE_PAY_PATH,
   PHONEPE_REDIRECT_MODE_PATH,
@@ -107,6 +114,57 @@ export class PaymentSettingsService {
         fallback: false,
       },
     );
+  }
+
+  async getTrialPolicy() {
+    const [enabled, totalMinutes, heartbeatSeconds, maxHeartbeatGapSeconds] =
+      await Promise.all([
+        this.siteSettingsService.getBooleanSetting(
+          PAYMENTS_RUNTIME_CONFIG_KEY,
+          PAYMENTS_TRIAL_ENABLED_PATH,
+          {
+            fallback: true,
+          },
+        ),
+        this.siteSettingsService.getNumberSetting(
+          PAYMENTS_RUNTIME_CONFIG_KEY,
+          PAYMENTS_TRIAL_TOTAL_MINUTES_PATH,
+          {
+            fallback: DEFAULT_TRIAL_TOTAL_MINUTES,
+            min: 1,
+            max: 24 * 60,
+            integer: true,
+          },
+        ),
+        this.siteSettingsService.getNumberSetting(
+          PAYMENTS_RUNTIME_CONFIG_KEY,
+          PAYMENTS_TRIAL_HEARTBEAT_SECONDS_PATH,
+          {
+            fallback: DEFAULT_TRIAL_HEARTBEAT_SECONDS,
+            min: 10,
+            max: 10 * 60,
+            integer: true,
+          },
+        ),
+        this.siteSettingsService.getNumberSetting(
+          PAYMENTS_RUNTIME_CONFIG_KEY,
+          PAYMENTS_TRIAL_MAX_HEARTBEAT_GAP_SECONDS_PATH,
+          {
+            fallback: DEFAULT_TRIAL_MAX_HEARTBEAT_GAP_SECONDS,
+            min: 10,
+            max: 30 * 60,
+            integer: true,
+          },
+        ),
+      ]);
+
+    return {
+      enabled,
+      totalSeconds: totalMinutes * 60,
+      totalMinutes,
+      heartbeatSeconds,
+      maxHeartbeatGapSeconds,
+    };
   }
 
   async getPhonePeRuntimeConfig(): Promise<PhonePeRuntimeConfig> {

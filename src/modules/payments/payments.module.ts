@@ -13,21 +13,27 @@ import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 import { PlansService } from './plans.service';
 import { PublicPlansController } from './public-plans.controller';
+import { PublicTrialPolicyController } from './public-trial-policy.controller';
 import { HdfcSmartGatewayPaymentProviderService } from './providers/hdfc-smartgateway-payment-provider.service';
 import { PhonePePaymentProviderService } from './providers/phonepe-payment-provider.service';
+import { TrialAccessController } from './trial-access.controller';
+import { TrialAccessService } from './trial-access.service';
 
 @Module({
   imports: [AuthorizationModule, SiteSettingsModule, IdempotencyModule],
   controllers: [
     PublicPlansController,
+    PublicTrialPolicyController,
     AdminPlansController,
     EntitlementsController,
     AdminEntitlementsController,
     PaymentsController,
     AdminPaymentsController,
+    TrialAccessController,
   ],
   providers: [
     PlansService,
+    TrialAccessService,
     EntitlementsService,
     PaymentSettingsService,
     PaymentGatewayService,
@@ -35,6 +41,6 @@ import { PhonePePaymentProviderService } from './providers/phonepe-payment-provi
     PhonePePaymentProviderService,
     PaymentsService,
   ],
-  exports: [EntitlementsService, PlansService, PaymentsService],
+  exports: [EntitlementsService, PlansService, PaymentsService, TrialAccessService],
 })
 export class PaymentsModule {}

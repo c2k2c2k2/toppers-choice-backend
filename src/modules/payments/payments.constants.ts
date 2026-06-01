@@ -6,6 +6,11 @@ export const PAYMENTS_ORDER_EXPIRY_MINUTES_PATH = 'checkout.orderExpiryMinutes';
 export const PAYMENTS_SUBSCRIPTION_MODE_PATH = 'checkout.subscriptionMode';
 export const PAYMENTS_PRACTICE_PREMIUM_REQUIRED_PATH =
   'practice.premiumRequired';
+export const PAYMENTS_TRIAL_ENABLED_PATH = 'trial.enabled';
+export const PAYMENTS_TRIAL_TOTAL_MINUTES_PATH = 'trial.totalMinutes';
+export const PAYMENTS_TRIAL_HEARTBEAT_SECONDS_PATH = 'trial.heartbeatSeconds';
+export const PAYMENTS_TRIAL_MAX_HEARTBEAT_GAP_SECONDS_PATH =
+  'trial.maxHeartbeatGapSeconds';
 export const HDFC_RETURN_PATH = 'providers.hdfc.returnPath';
 export const PHONEPE_PAY_PATH = 'providers.phonepe.payPath';
 export const PHONEPE_STATUS_PATH_TEMPLATE =
@@ -15,6 +20,9 @@ export const PHONEPE_RETURN_PATH = 'providers.phonepe.returnPath';
 export const PHONEPE_REDIRECT_MODE_PATH = 'providers.phonepe.redirectMode';
 
 export const DEFAULT_PAYMENT_ORDER_EXPIRY_MINUTES = 30;
+export const DEFAULT_TRIAL_TOTAL_MINUTES = 20;
+export const DEFAULT_TRIAL_HEARTBEAT_SECONDS = 30;
+export const DEFAULT_TRIAL_MAX_HEARTBEAT_GAP_SECONDS = 90;
 export const PAYMENT_SUBSCRIPTION_MODE_VALUES = [
   'EXTEND_ACTIVE',
   'REPLACE_ACTIVE',

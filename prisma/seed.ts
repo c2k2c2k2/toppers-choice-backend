@@ -213,6 +213,12 @@ async function main() {
         orderExpiryMinutes: 30,
         subscriptionMode: 'EXTEND_ACTIVE',
       },
+      trial: {
+        enabled: true,
+        totalMinutes: 20,
+        heartbeatSeconds: 30,
+        maxHeartbeatGapSeconds: 90,
+      },
       practice: {
         premiumRequired: false,
       },

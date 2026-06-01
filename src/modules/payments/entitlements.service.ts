@@ -14,6 +14,7 @@ import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuthenticatedUser } from '../auth/auth.types';
 import { PlansService } from './plans.service';
 import { PaymentSettingsService } from './payment-settings.service';
+import { TrialAccessService } from './trial-access.service';
 import {
   isActiveEntitlement,
   mapEntitlement,
@@ -32,6 +33,7 @@ export class EntitlementsService {
     private readonly prisma: PrismaService,
     private readonly plansService: PlansService,
     private readonly paymentSettingsService: PaymentSettingsService,
+    private readonly trialAccessService: TrialAccessService,
   ) {}
 
   async listCurrentUserEntitlements(user: AuthenticatedUser) {
@@ -217,11 +219,17 @@ export class EntitlementsService {
       EntitlementKind.ALL_PREMIUM,
     ]);
 
-    return entitlements.some(
+    const hasPurchasedOrGrantedAccess = entitlements.some(
       (entitlement) =>
         acceptedKinds.has(entitlement.kind) &&
         this.matchesScope(entitlement.scopeJson, criteria),
     );
+
+    if (hasPurchasedOrGrantedAccess) {
+      return true;
+    }
+
+    return this.trialAccessService.hasActiveTrialAccess(siteId, userId);
   }
 
   async canUsePractice(

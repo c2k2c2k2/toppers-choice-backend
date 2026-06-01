@@ -234,6 +234,12 @@ enum EntitlementSourceType {
   SYSTEM_ADJUSTMENT
 }
 
+enum TrialAccessStatus {
+  ACTIVE
+  EXHAUSTED
+  DISABLED
+}
+
 enum SubscriptionStatus {
   PENDING
   ACTIVE
@@ -370,6 +376,8 @@ model Site {
   planEntitlements         PlanEntitlement[]
   subscriptions            Subscription[]
   entitlements             Entitlement[]
+  trialAccesses            TrialAccess[]
+  trialUsageEvents         TrialUsageEvent[]
   paymentOrders            PaymentOrder[]
   paymentTransactions      PaymentTransaction[]
   paymentEvents            PaymentEvent[]
@@ -470,6 +478,8 @@ model User {
   subscriptions                    Subscription[]
   entitlements                     Entitlement[]                 @relation("EntitlementSubject")
   grantedEntitlements              Entitlement[]                 @relation("EntitlementGrantActor")
+  trialAccess                      TrialAccess?
+  trialUsageEvents                 TrialUsageEvent[]
   paymentOrders                    PaymentOrder[]
   createdCmsPages                  CmsPage[]                     @relation("CmsPageCreator")
   updatedCmsPages                  CmsPage[]                     @relation("CmsPageUpdater")
@@ -774,6 +784,51 @@ model Entitlement {
   @@index([subscriptionId])
   @@index([paymentOrderId])
   @@map("entitlements")
+}
+
+model TrialAccess {
+  id              String            @id @default(cuid())
+  siteId          String
+  userId          String            @unique
+  status          TrialAccessStatus @default(ACTIVE)
+  consumedSeconds Int               @default(0)
+  startedAt       DateTime?
+  lastHeartbeatAt DateTime?
+  lastStoppedAt   DateTime?
+  exhaustedAt     DateTime?
+  disabledAt      DateTime?
+  metadataJson    Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  site            Site              @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usageEvents     TrialUsageEvent[]
+
+  @@unique([siteId, userId])
+  @@index([siteId, status, updatedAt])
+  @@index([siteId, userId, status])
+  @@map("trial_accesses")
+}
+
+model TrialUsageEvent {
+  id               String      @id @default(cuid())
+  siteId           String
+  userId           String
+  trialAccessId    String
+  eventType        String
+  chargedSeconds   Int         @default(0)
+  consumedSeconds  Int
+  remainingSeconds Int
+  occurredAt       DateTime    @default(now())
+  metadataJson     Json?
+  createdAt        DateTime    @default(now())
+  site             Site        @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trialAccess      TrialAccess @relation(fields: [trialAccessId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, userId, occurredAt])
+  @@index([trialAccessId, occurredAt])
+  @@map("trial_usage_events")
 }
 
 model PaymentOrder {
