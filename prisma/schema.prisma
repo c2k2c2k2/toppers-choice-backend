@@ -920,6 +920,7 @@ model ExamTrack {
   slug             String
   name             String
   shortName        String?
+  defaultMediumId  String?
   description      String?
   orderIndex       Int                     @default(0)
   visibility       CatalogVisibility       @default(PUBLIC)
@@ -927,6 +928,7 @@ model ExamTrack {
   createdAt        DateTime                @default(now())
   updatedAt        DateTime                @updatedAt
   site             Site                    @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  defaultMedium    Medium?                 @relation("ExamTrackDefaultMedium", fields: [defaultMediumId], references: [id], onDelete: SetNull)
   contentEntries   ContentEntryExamTrack[]
   subjects         Subject[]
   practiceSessions PracticeSession[]
@@ -936,6 +938,7 @@ model ExamTrack {
   @@unique([siteId, slug])
   @@index([siteId, isActive, orderIndex])
   @@index([siteId, visibility, orderIndex])
+  @@index([siteId, defaultMediumId])
   @@map("exam_tracks")
 }
 
@@ -952,6 +955,7 @@ model Medium {
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
   site             Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  defaultForTracks ExamTrack[]          @relation("ExamTrackDefaultMedium")
   contentEntries   ContentEntryMedium[]
   questions        Question[]
   practiceSessions PracticeSession[]

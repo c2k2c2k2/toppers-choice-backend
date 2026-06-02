@@ -93,6 +93,15 @@ export class CreateExamTrackDto extends TaxonomyMutationBaseDto {
   @IsString()
   @MaxLength(40)
   shortName?: string;
+
+  @ApiPropertyOptional({
+    example: 'cmag4b4ph0000x5r7snyza456',
+    nullable: true,
+  })
+  @Transform(({ value }) => normalizeOptionalText(value))
+  @IsOptional()
+  @IsString()
+  defaultMediumId?: string | null;
 }
 
 export class UpdateExamTrackDto extends PartialType(CreateExamTrackDto) {}

@@ -63,6 +63,10 @@ export class TaxonomyService {
   }
 
   async createExamTrack(siteId: string, input: CreateExamTrackDto) {
+    if (input.defaultMediumId) {
+      await this.ensureMediumExists(siteId, input.defaultMediumId);
+    }
+
     const record = await this.prisma.examTrack.create({
       data: {
         siteId,
@@ -70,6 +74,7 @@ export class TaxonomyService {
         slug: this.resolveSlug(input.slug, input.name),
         name: input.name.trim(),
         shortName: input.shortName?.trim() || null,
+        defaultMediumId: input.defaultMediumId ?? null,
         description: input.description?.trim() || null,
         visibility: input.visibility ?? CatalogVisibility.PUBLIC,
         isActive: input.isActive ?? true,
@@ -89,6 +94,10 @@ export class TaxonomyService {
   ) {
     await this.ensureExamTrackExists(siteId, examTrackId);
 
+    if (input.defaultMediumId) {
+      await this.ensureMediumExists(siteId, input.defaultMediumId);
+    }
+
     const record = await this.prisma.examTrack.update({
       where: { id: examTrackId },
       data: {
@@ -105,6 +114,10 @@ export class TaxonomyService {
           input.shortName === undefined
             ? undefined
             : input.shortName?.trim() || null,
+        defaultMediumId:
+          input.defaultMediumId === undefined
+            ? undefined
+            : input.defaultMediumId ?? null,
         description:
           input.description === undefined
             ? undefined

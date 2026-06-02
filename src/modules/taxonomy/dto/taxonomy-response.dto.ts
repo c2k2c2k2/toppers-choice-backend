@@ -39,6 +39,9 @@ class TaxonomyItemResponseDto {
 export class ExamTrackResponseDto extends TaxonomyItemResponseDto {
   @ApiPropertyOptional({ nullable: true })
   shortName!: string | null;
+
+  @ApiPropertyOptional({ nullable: true })
+  defaultMediumId!: string | null;
 }
 
 export class MediumResponseDto extends TaxonomyItemResponseDto {}
