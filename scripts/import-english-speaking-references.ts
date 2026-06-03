@@ -29,6 +29,7 @@ type ImportOptions = {
   adminEmail?: string;
   directory: string;
   siteCode?: string;
+  skipExisting: boolean;
   visibility: CatalogVisibility;
 };
 
@@ -59,7 +60,7 @@ async function main() {
     const results: Array<{
       sentenceCount: number;
       slug: string;
-      status: 'created' | 'updated';
+      status: 'created' | 'skipped' | 'updated';
       title: string;
     }> = [];
 
@@ -94,6 +95,16 @@ async function main() {
       });
 
       if (existingTopic) {
+        if (options.skipExisting) {
+          results.push({
+            sentenceCount: sentences.length,
+            slug,
+            status: 'skipped',
+            title,
+          });
+          continue;
+        }
+
         await englishSpeakingService.updateTopic(actor, existingTopic.id, {
           accessType: options.accessType,
           sentences: sentences.map((sentence, index) => ({
@@ -130,13 +141,27 @@ async function main() {
       });
     }
 
+    let createdCount = 0;
+    let updatedCount = 0;
+    let skippedCount = 0;
+
     for (const result of results) {
+      if (result.status === 'created') {
+        createdCount += 1;
+      } else if (result.status === 'updated') {
+        updatedCount += 1;
+      } else {
+        skippedCount += 1;
+      }
+
       console.log(
         `${result.status.toUpperCase()} ${result.slug} (${result.sentenceCount} sentences) - ${result.title}`,
       );
     }
 
-    console.log(`Imported ${results.length} English speaking topic(s).`);
+    console.log(
+      `English speaking import complete: ${createdCount} created, ${updatedCount} updated, ${skippedCount} skipped.`,
+    );
   } finally {
     await app.close();
   }
@@ -151,6 +176,7 @@ function parseArgs(argv: string[]): ImportOptions {
   );
   let adminEmail: string | undefined;
   let siteCode: string | undefined;
+  let skipExisting = false;
   let visibility: CatalogVisibility = CatalogVisibility.AUTHENTICATED;
   let accessType: ContentAccessType = ContentAccessType.FREE;
 
@@ -183,6 +209,9 @@ function parseArgs(argv: string[]): ImportOptions {
           index += 1;
         }
         break;
+      case '--skip-existing':
+        skipExisting = true;
+        break;
       case '--visibility':
         visibility = parseVisibility(requireValue(flag, nextValue));
         if (!inlineValue) {
@@ -205,6 +234,7 @@ function parseArgs(argv: string[]): ImportOptions {
     adminEmail,
     directory,
     siteCode,
+    skipExisting,
     visibility,
   };
 }

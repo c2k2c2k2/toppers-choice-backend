@@ -20,7 +20,7 @@ export const PHONEPE_RETURN_PATH = 'providers.phonepe.returnPath';
 export const PHONEPE_REDIRECT_MODE_PATH = 'providers.phonepe.redirectMode';
 
 export const DEFAULT_PAYMENT_ORDER_EXPIRY_MINUTES = 30;
-export const DEFAULT_TRIAL_TOTAL_MINUTES = 20;
+export const DEFAULT_TRIAL_TOTAL_MINUTES = 24 * 60;
 export const DEFAULT_TRIAL_HEARTBEAT_SECONDS = 30;
 export const DEFAULT_TRIAL_MAX_HEARTBEAT_GAP_SECONDS = 90;
 export const PAYMENT_SUBSCRIPTION_MODE_VALUES = [

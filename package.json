@@ -19,6 +19,7 @@
     "questions:import": "ts-node --transpile-only scripts/import-questions.ts",
     "english-speaking:import": "ts-node --transpile-only scripts/import-english-speaking-references.ts",
     "english-speaking:smoke-test": "ts-node --transpile-only scripts/smoke-test-english-speaking-audio.ts",
+    "english-speaking:switch-to-v3": "ts-node --transpile-only scripts/switch-english-speaking-to-eleven-v3.ts",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",

@@ -57,25 +57,21 @@ export class TrialAccessService {
         return record;
       }
 
-      if (mapped.remainingSeconds <= 0) {
+      if (!mapped.hasAccess) {
         return this.markExhaustedIfNeeded(tx, record, policy, now);
       }
 
-      const updated = await tx.trialAccess.update({
+      return tx.trialAccess.update({
         where: { id: record.id },
         data: {
           status: TrialAccessStatus.ACTIVE,
           startedAt: record.startedAt ?? now,
-          lastHeartbeatAt: now,
+          lastHeartbeatAt: null,
           lastStoppedAt: null,
           exhaustedAt: null,
         },
         select: trialAccessSelect,
       });
-
-      await this.recordUsageEvent(tx, updated, policy, 'START', 0, now);
-
-      return updated;
     });
 
     return this.mapTrial(trial, policy);
@@ -92,40 +88,11 @@ export class TrialAccessService {
         return record;
       }
 
-      const chargedSeconds = this.resolveChargedSeconds(record, policy, now);
-      const nextConsumedSeconds = Math.min(
-        record.consumedSeconds + chargedSeconds,
-        policy.totalSeconds,
-      );
-      const exhaustedAt =
-        nextConsumedSeconds >= policy.totalSeconds ? (record.exhaustedAt ?? now) : null;
+      if (!this.mapTrial(record, policy, now).hasAccess) {
+        return this.markExhaustedIfNeeded(tx, record, policy, now);
+      }
 
-      const updated = await tx.trialAccess.update({
-        where: { id: record.id },
-        data: {
-          status:
-            nextConsumedSeconds >= policy.totalSeconds
-              ? TrialAccessStatus.EXHAUSTED
-              : TrialAccessStatus.ACTIVE,
-          consumedSeconds: nextConsumedSeconds,
-          startedAt: record.startedAt ?? now,
-          lastHeartbeatAt: now,
-          lastStoppedAt: null,
-          exhaustedAt,
-        },
-        select: trialAccessSelect,
-      });
-
-      await this.recordUsageEvent(
-        tx,
-        updated,
-        policy,
-        'HEARTBEAT',
-        chargedSeconds,
-        now,
-      );
-
-      return updated;
+      return record;
     });
 
     return this.mapTrial(trial, policy);
@@ -155,39 +122,18 @@ export class TrialAccessService {
         return record;
       }
 
-      const chargedSeconds = this.resolveChargedSeconds(record, policy, now);
-      const nextConsumedSeconds = Math.min(
-        record.consumedSeconds + chargedSeconds,
-        policy.totalSeconds,
-      );
-      const exhaustedAt =
-        nextConsumedSeconds >= policy.totalSeconds ? (record.exhaustedAt ?? now) : null;
+      if (!this.mapTrial(record, policy, now).hasAccess) {
+        return this.markExhaustedIfNeeded(tx, record, policy, now);
+      }
 
-      const updated = await tx.trialAccess.update({
+      return tx.trialAccess.update({
         where: { id: record.id },
         data: {
-          status:
-            nextConsumedSeconds >= policy.totalSeconds
-              ? TrialAccessStatus.EXHAUSTED
-              : TrialAccessStatus.ACTIVE,
-          consumedSeconds: nextConsumedSeconds,
           lastHeartbeatAt: null,
           lastStoppedAt: now,
-          exhaustedAt,
         },
         select: trialAccessSelect,
       });
-
-      await this.recordUsageEvent(
-        tx,
-        updated,
-        policy,
-        'STOP',
-        chargedSeconds,
-        now,
-      );
-
-      return updated;
     });
 
     return this.mapTrial(trial, policy);
@@ -200,21 +146,36 @@ export class TrialAccessService {
       return false;
     }
 
-    const trial = await this.prisma.trialAccess.findUnique({
-      where: {
-        siteId_userId: {
+    const now = new Date();
+    const trial = await this.prisma.$transaction(async (tx) => {
+      const record = await tx.trialAccess.upsert({
+        where: {
+          siteId_userId: {
+            siteId,
+            userId,
+          },
+        },
+        update: {},
+        create: {
           siteId,
           userId,
+          startedAt: now,
+          metadataJson: {
+            source: 'student_trial',
+            autoStartedBy: 'entitlement_gate',
+          } satisfies Prisma.JsonObject,
         },
-      },
-      select: trialAccessSelect,
+        select: trialAccessSelect,
+      });
+
+      if (!this.mapTrial(record, policy, now).hasAccess) {
+        return this.markExhaustedIfNeeded(tx, record, policy, now);
+      }
+
+      return record;
     });
 
-    if (!trial) {
-      return true;
-    }
-
-    return this.mapTrial(trial, policy).hasAccess;
+    return this.mapTrial(trial, policy, now).hasAccess;
   }
 
   private async getOrCreateTrialAccess(
@@ -285,67 +246,21 @@ export class TrialAccessService {
     });
   }
 
-  private resolveChargedSeconds(
-    record: TrialAccessRecord,
+  private mapTrial(
+    record: TrialAccessRecord | null,
     policy: TrialPolicy,
-    now: Date,
+    now = new Date(),
   ) {
-    if (
-      !policy.enabled ||
-      policy.totalSeconds <= 0 ||
-      record.status === TrialAccessStatus.EXHAUSTED
-    ) {
-      return 0;
-    }
-
-    const previousAt = record.lastHeartbeatAt;
-    if (!previousAt) {
-      return 0;
-    }
-
-    const elapsedSeconds = Math.max(
-      0,
-      Math.floor((now.getTime() - previousAt.getTime()) / 1000),
-    );
-
-    return Math.min(elapsedSeconds, policy.maxHeartbeatGapSeconds);
-  }
-
-  private async recordUsageEvent(
-    tx: Prisma.TransactionClient,
-    record: TrialAccessRecord,
-    policy: TrialPolicy,
-    eventType: string,
-    chargedSeconds: number,
-    occurredAt: Date,
-  ) {
-    const remainingSeconds = Math.max(
-      0,
-      policy.totalSeconds - record.consumedSeconds,
-    );
-
-    await tx.trialUsageEvent.create({
-      data: {
-        siteId: record.siteId,
-        userId: record.userId,
-        trialAccessId: record.id,
-        eventType,
-        chargedSeconds,
-        consumedSeconds: record.consumedSeconds,
-        remainingSeconds,
-        occurredAt,
-        metadataJson: {
-          policyTotalSeconds: policy.totalSeconds,
-          policyHeartbeatSeconds: policy.heartbeatSeconds,
-          policyMaxHeartbeatGapSeconds: policy.maxHeartbeatGapSeconds,
-        } satisfies Prisma.JsonObject,
-      },
-    });
-  }
-
-  private mapTrial(record: TrialAccessRecord | null, policy: TrialPolicy) {
-    const consumedSeconds = record?.consumedSeconds ?? 0;
+    const startedAt = record?.startedAt ?? null;
+    const elapsedSeconds = startedAt
+      ? Math.max(0, Math.floor((now.getTime() - startedAt.getTime()) / 1000))
+      : 0;
+    const consumedSeconds = Math.min(policy.totalSeconds, elapsedSeconds);
     const remainingSeconds = Math.max(0, policy.totalSeconds - consumedSeconds);
+    const expiresAt =
+      startedAt && policy.totalSeconds > 0
+        ? new Date(startedAt.getTime() + policy.totalSeconds * 1000)
+        : null;
     const hasAccess =
       policy.enabled &&
       remainingSeconds > 0 &&
@@ -355,14 +270,17 @@ export class TrialAccessService {
     return {
       id: record?.id ?? null,
       status: policy.enabled
-        ? (record?.status ?? TrialAccessStatus.ACTIVE)
+        ? remainingSeconds > 0
+          ? (record?.status ?? TrialAccessStatus.ACTIVE)
+          : TrialAccessStatus.EXHAUSTED
         : TrialAccessStatus.DISABLED,
       enabled: policy.enabled,
       consumedSeconds,
       remainingSeconds,
       totalSeconds: policy.totalSeconds,
       hasAccess,
-      startedAt: record?.startedAt ?? null,
+      startedAt,
+      expiresAt,
       lastHeartbeatAt: record?.lastHeartbeatAt ?? null,
       lastStoppedAt: record?.lastStoppedAt ?? null,
       exhaustedAt: record?.exhaustedAt ?? null,

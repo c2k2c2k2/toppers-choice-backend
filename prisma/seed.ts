@@ -215,7 +215,7 @@ async function main() {
       },
       trial: {
         enabled: true,
-        totalMinutes: 20,
+        totalMinutes: 24 * 60,
         heartbeatSeconds: 30,
         maxHeartbeatGapSeconds: 90,
       },
@@ -274,7 +274,7 @@ async function main() {
     ConfigVisibility.INTERNAL,
     {
       tts: {
-        modelId: 'eleven_multilingual_v2',
+        modelId: 'eleven_v3',
         outputFormat: 'mp3_22050_32',
         voiceIds: {
           default: 'pNInz6obpgDQGcFmaJgB',

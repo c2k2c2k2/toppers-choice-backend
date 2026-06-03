@@ -394,6 +394,9 @@ export class TrialAccessResponseDto {
   startedAt!: Date | null;
 
   @ApiPropertyOptional({ nullable: true })
+  expiresAt!: Date | null;
+
+  @ApiPropertyOptional({ nullable: true })
   lastHeartbeatAt!: Date | null;
 
   @ApiPropertyOptional({ nullable: true })

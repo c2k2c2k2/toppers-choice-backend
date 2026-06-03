@@ -122,9 +122,12 @@ export class EnglishSpeakingSettingsService {
     );
 
     return {
-      languageCode: modelId.startsWith('eleven_multilingual_')
-        ? undefined
-        : languageConfig.languageCode,
+      // Let the multilingual and v3 models infer the language from text.
+      // This avoids Marathi failures we have seen when forcing language_code
+      // and keeps v3 closer to the portal behavior that was approved.
+      languageCode: this.shouldForceLanguageCode(modelId)
+        ? languageConfig.languageCode
+        : undefined,
       modelId,
       outputFormat,
       voiceId,
@@ -136,6 +139,12 @@ export class EnglishSpeakingSettingsService {
         useSpeakerBoost,
       },
     };
+  }
+
+  private shouldForceLanguageCode(modelId: string) {
+    return !(
+      modelId === 'eleven_v3' || modelId.startsWith('eleven_multilingual_')
+    );
   }
 
   private async resolveSiteCode(siteId: string) {

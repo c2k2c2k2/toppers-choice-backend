@@ -16,7 +16,7 @@ export const ENGLISH_SPEAKING_VOICE_SETTINGS_SPEED_PATH =
 export const ENGLISH_SPEAKING_VOICE_SETTINGS_SPEAKER_BOOST_PATH =
   'tts.voiceSettings.useSpeakerBoost';
 
-export const ENGLISH_SPEAKING_DEFAULT_MODEL_ID = 'eleven_multilingual_v2';
+export const ENGLISH_SPEAKING_DEFAULT_MODEL_ID = 'eleven_v3';
 export const ENGLISH_SPEAKING_DEFAULT_OUTPUT_FORMAT = 'mp3_22050_32';
 export const ENGLISH_SPEAKING_DEFAULT_VOICE_ID = 'pNInz6obpgDQGcFmaJgB';
 export const ENGLISH_SPEAKING_AUDIO_CONTENT_TYPE = 'audio/mpeg';
