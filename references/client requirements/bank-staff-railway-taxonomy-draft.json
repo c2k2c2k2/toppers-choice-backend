@@ -29,11 +29,164 @@
           "name": "General Knowledge",
           "englishName": "General Knowledge",
           "nativeName": null,
-          "topicEntryMode": "DEFERRED",
+          "topicEntryMode": "FULL",
           "entryNotes": [
-            "Please refer GK for MPSC English medium."
+            "Replicated from the MPSC English Medium General Knowledge taxonomy for Banking track reuse."
           ],
-          "topics": []
+          "topics": [
+            {
+              "code": "computer",
+              "slug": "computer",
+              "name": "Computer",
+              "englishName": "Computer",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "political-science",
+              "slug": "political-science",
+              "name": "Political Science",
+              "englishName": "Political Science",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "banking",
+              "slug": "banking",
+              "name": "Banking",
+              "englishName": "Banking",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "commerce-economics",
+              "slug": "commerce-economics",
+              "name": "Commerce & Economics",
+              "englishName": "Commerce & Economics",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "physical-geography",
+              "slug": "physical-geography",
+              "name": "Physical Geography",
+              "englishName": "Physical Geography",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "human-biology",
+              "slug": "human-biology",
+              "name": "Human Biology",
+              "englishName": "Human Biology",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "botany",
+              "slug": "botany",
+              "name": "Botany",
+              "englishName": "Botany",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "zoology",
+              "slug": "zoology",
+              "name": "Zoology",
+              "englishName": "Zoology",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "chemistry",
+              "slug": "chemistry",
+              "name": "Chemistry",
+              "englishName": "Chemistry",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "science-in-general",
+              "slug": "science-in-general",
+              "name": "Science in General",
+              "englishName": "Science in General",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "international-organisation",
+              "slug": "international-organisation",
+              "name": "International Organisation",
+              "englishName": "International Organisation",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "agriculture",
+              "slug": "agriculture",
+              "name": "Agriculture",
+              "englishName": "Agriculture",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "india-in-general",
+              "slug": "india-in-general",
+              "name": "India - in general",
+              "englishName": "India - in general",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "maharashtra",
+              "slug": "maharashtra",
+              "name": "Maharashtra",
+              "englishName": "Maharashtra",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "history",
+              "slug": "history",
+              "name": "History",
+              "englishName": "History",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "world-at-a-glance",
+              "slug": "world-at-a-glance",
+              "name": "World at a glance",
+              "englishName": "World at a glance",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "environment",
+              "slug": "environment",
+              "name": "Environment",
+              "englishName": "Environment",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "panchayat-raj",
+              "slug": "panchayat-raj",
+              "name": "Panchayat raj",
+              "englishName": "Panchayat raj",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "current-affairs",
+              "slug": "current-affairs",
+              "name": "Current affairs",
+              "englishName": "Current affairs",
+              "nativeName": null,
+              "topics": []
+            }
+          ]
         },
         {
           "code": "english",
@@ -41,11 +194,28 @@
           "name": "English",
           "englishName": "English",
           "nativeName": null,
-          "topicEntryMode": "DEFERRED",
+          "topicEntryMode": "FULL",
           "entryNotes": [
-            "Please refer English for MPSC English medium."
+            "Replicated from the MPSC English Medium English taxonomy for Banking track reuse."
           ],
-          "topics": []
+          "topics": [
+            {
+              "code": "english-grammar",
+              "slug": "english-grammar",
+              "name": "English Grammar",
+              "englishName": "English Grammar",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "english-vocabulary",
+              "slug": "english-vocabulary",
+              "name": "English Vocabulary",
+              "englishName": "English Vocabulary",
+              "nativeName": null,
+              "topics": []
+            }
+          ]
         },
         {
           "code": "test-of-reasoning",

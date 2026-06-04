@@ -237,12 +237,92 @@
           "name": "Maths",
           "englishName": "Maths",
           "nativeName": null,
-          "topicEntryMode": "DEFERRED",
+          "topicEntryMode": "FULL",
           "entryNotes": [
-            "The client syllabus says to refer to the Staff-Railway-Bank mathematics notes.",
-            "Do not invent or duplicate the topic tree until the shared-source strategy is approved."
+            "Replicated from the Bank, Staff, Railway Mathematics taxonomy for MPSC English Medium reuse."
           ],
-          "topics": []
+          "topics": [
+            {
+              "code": "area-volume",
+              "slug": "area-volume",
+              "name": "Area & Volume",
+              "englishName": "Area & Volume",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "average",
+              "slug": "average",
+              "name": "Average",
+              "englishName": "Average",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "lcm-hcf",
+              "slug": "lcm-hcf",
+              "name": "LCM & HCF",
+              "englishName": "LCM & HCF",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "number-system",
+              "slug": "number-system",
+              "name": "Number System",
+              "englishName": "Number System",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "percentage",
+              "slug": "percentage",
+              "name": "Percentage",
+              "englishName": "Percentage",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "profit-loss",
+              "slug": "profit-loss",
+              "name": "Profit & Loss",
+              "englishName": "Profit & Loss",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "ratio-proportion",
+              "slug": "ratio-proportion",
+              "name": "Ratio & Proportion",
+              "englishName": "Ratio & Proportion",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "simple-compound-interest",
+              "slug": "simple-compound-interest",
+              "name": "Simple Interest and Compound Interest",
+              "englishName": "Simple Interest and Compound Interest",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "time-distance",
+              "slug": "time-distance",
+              "name": "Time and Distance",
+              "englishName": "Time and Distance",
+              "nativeName": null,
+              "topics": []
+            },
+            {
+              "code": "time-work",
+              "slug": "time-work",
+              "name": "Time and Work",
+              "englishName": "Time and Work",
+              "nativeName": null,
+              "topics": []
+            }
+          ]
         },
         {
           "code": "test-of-reasoning",

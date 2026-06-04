@@ -16,6 +16,7 @@
     "payments:hdfc:audit-export": "ts-node --transpile-only scripts/export-hdfc-audit-package.ts",
     "taxonomy:validate": "ts-node --transpile-only scripts/validate-taxonomy-draft.ts",
     "taxonomy:audit-inactive": "ts-node --transpile-only scripts/report-inactive-taxonomy-content.ts",
+    "notes:replicate-track": "ts-node --transpile-only scripts/replicate-track-notes.ts",
     "questions:import": "ts-node --transpile-only scripts/import-questions.ts",
     "english-speaking:import": "ts-node --transpile-only scripts/import-english-speaking-references.ts",
     "english-speaking:smoke-test": "ts-node --transpile-only scripts/smoke-test-english-speaking-audio.ts",
