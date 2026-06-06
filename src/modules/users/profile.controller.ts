@@ -40,10 +40,13 @@ export class ProfileController {
     @CurrentUser() user: AuthenticatedUser,
     @Body() body: UpdateMyProfileDto,
   ) {
-    const profile = await this.usersService.updateMyProfile(
-      user.userId,
-      body.fullName,
-    );
+    const profile = await this.usersService.updateMyProfile({
+      userId: user.userId,
+      email: body.email,
+      fullName: body.fullName,
+      phone: body.phone,
+      profileImageFileAssetId: body.profileImageFileAssetId,
+    });
 
     return mapUserIdentity(profile);
   }

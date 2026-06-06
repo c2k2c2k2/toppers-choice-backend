@@ -16,6 +16,7 @@ import {
 } from '@prisma/client';
 import { randomBytes } from 'node:crypto';
 import { IdempotencyService } from '../../infra/idempotency/idempotency.service';
+import { MailService } from '../../infra/mail/mail.service';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuthenticatedUser } from '../auth/auth.types';
 import { SiteSettingsService } from '../site-settings/site-settings.service';
@@ -45,6 +46,7 @@ export class PaymentsService {
     private readonly entitlementsService: EntitlementsService,
     private readonly siteSettingsService: SiteSettingsService,
     private readonly idempotencyService: IdempotencyService,
+    private readonly mailService: MailService,
   ) {}
 
   async createCheckout(
@@ -715,12 +717,28 @@ export class PaymentsService {
       }
     });
 
-    return this.prisma.paymentOrder.findFirstOrThrow({
+    const activatedOrder = await this.prisma.paymentOrder.findFirstOrThrow({
       where: {
         id: order.id,
       },
       select: paymentOrderSelect,
     });
+
+    await this.mailService.sendBrandedMail({
+      to: activatedOrder.user.email,
+      subject: "Your Toppers' Choice plan is active",
+      title: 'Plan purchase confirmed',
+      previewText: 'Your Toppers Choice premium access is now active.',
+      intro: `Hi ${activatedOrder.user.fullName}, your ${activatedOrder.plan.name} plan is active.`,
+      body: `Order ${activatedOrder.merchantOrderCode} for ${formatAmount(
+        activatedOrder.amountPaise,
+        activatedOrder.currencyCode,
+      )} was confirmed. Your access is available from the student dashboard.`,
+      footerNote:
+        'Keep this email for your records. You can view current access from your plans page.',
+    });
+
+    return activatedOrder;
   }
 
   private assertStudentUser(user: AuthenticatedUser) {
@@ -894,4 +912,12 @@ export class PaymentsService {
     const bootstrap = await this.siteSettingsService.getPublicBootstrap();
     return bootstrap.site.id;
   }
+}
+
+function formatAmount(amountPaise: number, currencyCode: string) {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: currencyCode,
+    maximumFractionDigits: 2,
+  }).format(amountPaise / 100);
 }

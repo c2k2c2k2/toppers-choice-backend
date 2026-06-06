@@ -43,6 +43,7 @@ enum RefreshSessionStatus {
 
 enum TokenPurpose {
   PASSWORD_RESET
+  EMAIL_VERIFICATION
 }
 
 enum CatalogVisibility {
@@ -56,6 +57,7 @@ enum FileAssetPurpose {
   CMS_IMAGE
   QUESTION_IMAGE
   PROFILE_IMAGE
+  FEEDBACK_ATTACHMENT
   CONTENT_IMAGE
   CONTENT_AUDIO
   GENERIC_PDF
@@ -350,6 +352,27 @@ enum NotificationAudienceType {
   ACTIVE_SUBSCRIBERS
 }
 
+enum FeedbackCategory {
+  FEEDBACK
+  COMPLAINT
+  SUGGESTION
+  BUG
+}
+
+enum FeedbackStatus {
+  OPEN
+  IN_REVIEW
+  RESOLVED
+  CLOSED
+}
+
+enum FeedbackPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
 enum IdempotencyRecordStatus {
   IN_PROGRESS
   COMPLETED
@@ -389,6 +412,8 @@ model Site {
   notificationBroadcasts   NotificationBroadcast[]
   notificationMessages     NotificationMessage[]
   notificationPreferences  NotificationPreference[]
+  feedbackTickets          FeedbackTicket[]
+  feedbackAttachments      FeedbackAttachment[]
   idempotencyRecords       IdempotencyRecord[]
   examTracks               ExamTrack[]
   mediums                  Medium[]
@@ -455,9 +480,11 @@ model User {
   lastLoginAt                      DateTime?
   emailVerifiedAt                  DateTime?
   phoneVerifiedAt                  DateTime?
+  profileImageFileAssetId          String?
   createdAt                        DateTime                      @default(now())
   updatedAt                        DateTime                      @updatedAt
   site                             Site                          @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  profileImageFileAsset            FileAsset?                    @relation("UserProfileImage", fields: [profileImageFileAssetId], references: [id], onDelete: SetNull)
   refreshSessions                  RefreshSession[]
   passwordResetTokens              PasswordResetToken[]
   userRoles                        UserRole[]                    @relation("UserRolesSubject")
@@ -500,6 +527,9 @@ model User {
   dispatchedNotificationBroadcasts NotificationBroadcast[]       @relation("NotificationBroadcastDispatcher")
   notificationMessages             NotificationMessage[]
   notificationPreferences          NotificationPreference[]
+  feedbackTickets                  FeedbackTicket[]              @relation("FeedbackSubject")
+  assignedFeedbackTickets          FeedbackTicket[]              @relation("FeedbackAssignee")
+  resolvedFeedbackTickets          FeedbackTicket[]              @relation("FeedbackResolver")
   idempotencyRecords               IdempotencyRecord[]
   createdNotes                     Note[]                        @relation("NoteCreator")
   updatedNotes                     Note[]                        @relation("NoteUpdater")
@@ -525,6 +555,7 @@ model User {
   @@unique([siteId, email])
   @@index([siteId, userType, status])
   @@index([siteId, status])
+  @@index([profileImageFileAssetId])
   @@map("users")
 }
 
@@ -1079,6 +1110,8 @@ model FileAsset {
   contentCoverEntries     ContentEntry[]           @relation("ContentCoverAsset")
   contentAttachments      ContentAttachment[]
   questionMediaReferences QuestionMediaReference[]
+  profileImageUsers       User[]                   @relation("UserProfileImage")
+  feedbackAttachments     FeedbackAttachment[]
   cmsPageCoverAssets      CmsPage[]                @relation("CmsPageCoverAsset")
   cmsBannerImageAssets    CmsBanner[]              @relation("CmsBannerImageAsset")
   cmsSectionImageAssets   CmsSection[]             @relation("CmsSectionImageAsset")
@@ -2092,6 +2125,55 @@ model NotificationPreference {
   @@id([userId, channel])
   @@index([siteId, channel, isEnabled])
   @@map("notification_preferences")
+}
+
+model FeedbackTicket {
+  id                 String               @id @default(cuid())
+  siteId             String
+  userId             String?
+  category           FeedbackCategory     @default(FEEDBACK)
+  status             FeedbackStatus       @default(OPEN)
+  priority           FeedbackPriority     @default(NORMAL)
+  subject            String
+  message            String
+  pageUrl            String?
+  pageTitle          String?
+  userAgent          String?
+  ipAddress          String?
+  contextJson        Json?
+  adminNote          String?
+  assignedToUserId   String?
+  resolvedByUserId   String?
+  resolvedAt         DateTime?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  site               Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user               User?                @relation("FeedbackSubject", fields: [userId], references: [id], onDelete: SetNull)
+  assignedToUser     User?                @relation("FeedbackAssignee", fields: [assignedToUserId], references: [id], onDelete: SetNull)
+  resolvedByUser     User?                @relation("FeedbackResolver", fields: [resolvedByUserId], references: [id], onDelete: SetNull)
+  attachments        FeedbackAttachment[]
+
+  @@index([siteId, status, createdAt])
+  @@index([siteId, category, createdAt])
+  @@index([siteId, userId, createdAt])
+  @@map("feedback_tickets")
+}
+
+model FeedbackAttachment {
+  id               String         @id @default(cuid())
+  siteId           String
+  feedbackTicketId String
+  fileAssetId      String
+  label            String?
+  createdAt        DateTime       @default(now())
+  site             Site           @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  feedbackTicket   FeedbackTicket @relation(fields: [feedbackTicketId], references: [id], onDelete: Cascade)
+  fileAsset        FileAsset      @relation(fields: [fileAssetId], references: [id], onDelete: Restrict)
+
+  @@unique([feedbackTicketId, fileAssetId])
+  @@index([siteId, createdAt])
+  @@index([fileAssetId])
+  @@map("feedback_attachments")
 }
 
 model IdempotencyRecord {

@@ -17,6 +17,7 @@ import { AccessTokenGuard } from './modules/auth/guards/access-token.guard';
 import { CmsModule } from './modules/cms/cms.module';
 import { ContentModule } from './modules/content/content.module';
 import { EnglishSpeakingModule } from './modules/english-speaking/english-speaking.module';
+import { FeedbackModule } from './modules/feedback/feedback.module';
 import { FilesModule } from './modules/files/files.module';
 import { HealthModule } from './modules/health/health.module';
 import { NotesModule } from './modules/notes/notes.module';
@@ -54,6 +55,7 @@ import { UsersModule } from './modules/users/users.module';
     CmsModule,
     ContentModule,
     EnglishSpeakingModule,
+    FeedbackModule,
     NotesModule,
     QuestionsModule,
     PaymentsModule,

@@ -34,6 +34,20 @@ export class AuthResponseDto {
   tokens!: AuthTokenBundleResponseDto;
 }
 
+export class SignupResponseDto {
+  @ApiProperty({ type: UserIdentityResponseDto })
+  user!: UserIdentityResponseDto;
+
+  @ApiProperty({ example: 'Verification code sent to your email.' })
+  message!: string;
+
+  @ApiProperty({ example: 'student@example.com' })
+  email!: string;
+
+  @ApiProperty({ example: 600 })
+  resendAfterSeconds!: number;
+}
+
 export class AuthMeResponseDto {
   @ApiProperty({ type: UserIdentityResponseDto })
   user!: UserIdentityResponseDto;

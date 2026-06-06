@@ -30,6 +30,11 @@ export const FILE_PURPOSE_RULES: Record<FileAssetPurpose, FilePurposeRule> = {
     maxSizeBytes: 5 * 1024 * 1024,
     defaultAccessLevel: FileAssetAccess.AUTHENTICATED,
   },
+  [FileAssetPurpose.FEEDBACK_ATTACHMENT]: {
+    allowedContentTypes: [...IMAGE_CONTENT_TYPES, 'application/pdf'],
+    maxSizeBytes: 10 * 1024 * 1024,
+    defaultAccessLevel: FileAssetAccess.AUTHENTICATED,
+  },
   [FileAssetPurpose.CONTENT_IMAGE]: {
     allowedContentTypes: [...IMAGE_CONTENT_TYPES],
     maxSizeBytes: 10 * 1024 * 1024,

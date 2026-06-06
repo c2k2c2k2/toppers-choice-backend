@@ -16,6 +16,7 @@ import {
 } from '@prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { IdempotencyService } from '../../infra/idempotency/idempotency.service';
+import { MailService } from '../../infra/mail/mail.service';
 import { AuthenticatedUser } from '../auth/auth.types';
 import { SiteSettingsService } from '../site-settings/site-settings.service';
 import { NOTIFICATIONS_RUNTIME_CONFIG_KEY } from './notifications.constants';
@@ -43,6 +44,7 @@ export class NotificationsService {
     private readonly prisma: PrismaService,
     private readonly siteSettingsService: SiteSettingsService,
     private readonly idempotencyService: IdempotencyService,
+    private readonly mailService: MailService,
   ) {}
 
   async listMyNotifications(
@@ -540,6 +542,11 @@ export class NotificationsService {
           });
         });
 
+        if (broadcast.channel === NotificationChannel.EMAIL) {
+          await this.dispatchQueuedEmailMessages(broadcast.id);
+          await this.refreshBroadcastStats(broadcast.id);
+        }
+
         return this.getBroadcast(user.siteId, broadcast.id);
       },
     );
@@ -699,6 +706,8 @@ export class NotificationsService {
         },
         select: {
           id: true,
+          email: true,
+          fullName: true,
         },
       });
     }
@@ -734,6 +743,8 @@ export class NotificationsService {
 
       return subscriptions.map((item) => ({
         id: item.userId,
+        email: '',
+        fullName: '',
       }));
     }
 
@@ -751,8 +762,71 @@ export class NotificationsService {
       },
       select: {
         id: true,
+        email: true,
+        fullName: true,
       },
     });
+  }
+
+  private async dispatchQueuedEmailMessages(broadcastId: string) {
+    const messages = await this.prisma.notificationMessage.findMany({
+      where: {
+        broadcastId,
+        channel: NotificationChannel.EMAIL,
+        status: NotificationMessageStatus.PENDING,
+      },
+      include: {
+        user: {
+          select: {
+            email: true,
+            fullName: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    for (const message of messages) {
+      try {
+        const result = await this.mailService.sendBrandedMail({
+          to: message.user.email,
+          subject: message.title,
+          title: message.title,
+          previewText: message.body.slice(0, 140),
+          intro: message.body,
+          footerNote:
+            'You are receiving this because email notifications are enabled for your Toppers Choice account.',
+        });
+
+        await this.prisma.notificationMessage.update({
+          where: { id: message.id },
+          data: result.sent
+            ? {
+                status: NotificationMessageStatus.DELIVERED,
+                deliveredAt: new Date(),
+                failureReason: null,
+                failedAt: null,
+              }
+            : {
+                status: NotificationMessageStatus.FAILED,
+                failedAt: new Date(),
+                failureReason: 'SMTP is not configured.',
+              },
+        });
+      } catch (error) {
+        await this.prisma.notificationMessage.update({
+          where: { id: message.id },
+          data: {
+            status: NotificationMessageStatus.FAILED,
+            failedAt: new Date(),
+            failureReason:
+              error instanceof Error ? error.message : 'Email send failed.',
+          },
+        });
+      }
+    }
   }
 
   private async filterEnabledRecipients(

@@ -15,15 +15,19 @@ import {
 } from './users.types';
 
 type CreateStudentInput = {
+  emailVerifiedAt?: Date | null;
   fullName: string;
   email: string;
+  phone?: string;
   passwordHash: string;
   siteCode?: string;
 };
 
 type CreateUserInput = {
+  emailVerifiedAt?: Date | null;
   fullName: string;
   email: string;
+  phone?: string;
   passwordHash: string;
   userType: UserType;
   siteCode?: string;
@@ -84,7 +88,10 @@ export class UsersService {
   async createStudentSelfSignup(
     input: CreateStudentInput,
   ): Promise<UserIdentityRecord> {
-    return this.createStudentUser(input);
+    return this.createStudentUser({
+      ...input,
+      emailVerifiedAt: null,
+    });
   }
 
   async createStudentFromAdmin(
@@ -126,14 +133,59 @@ export class UsersService {
     });
   }
 
-  async updateMyProfile(
-    userId: string,
-    fullName: string,
-  ): Promise<UserIdentityRecord> {
+  normalizePhone(phone: string | undefined | null) {
+    if (!phone) {
+      return null;
+    }
+
+    return phone.trim().replace(/[\s()-]/gu, '');
+  }
+
+  async updateMyProfile(input: {
+    userId: string;
+    email?: string;
+    fullName: string;
+    phone?: string | null;
+    profileImageFileAssetId?: string | null;
+  }): Promise<UserIdentityRecord> {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { id: input.userId },
+      select: {
+        email: true,
+        siteId: true,
+      },
+    });
+
+    if (!existingUser) {
+      throw new NotFoundException({
+        code: 'USER_NOT_FOUND',
+        message: 'User was not found.',
+      });
+    }
+
+    if (input.profileImageFileAssetId) {
+      await this.assertProfileImageAsset(input.userId, input.profileImageFileAssetId);
+    }
+
+    const normalizedEmail = input.email
+      ? this.normalizeEmail(input.email)
+      : undefined;
+    const isEmailChanged =
+      normalizedEmail !== undefined && normalizedEmail !== existingUser.email;
+
+    if (isEmailChanged) {
+      await this.assertEmailAvailable(existingUser.siteId, normalizedEmail);
+    }
+
     return this.prisma.user.update({
-      where: { id: userId },
+      where: { id: input.userId },
       data: {
-        fullName: fullName.trim(),
+        email: isEmailChanged ? normalizedEmail : undefined,
+        emailVerifiedAt: isEmailChanged ? null : undefined,
+        fullName: input.fullName.trim(),
+        phone:
+          input.phone === undefined ? undefined : this.normalizePhone(input.phone),
+        profileImageFileAssetId: input.profileImageFileAssetId,
       },
       select: userIdentitySelect,
     });
@@ -258,6 +310,11 @@ export class UsersService {
       data: {
         siteId: site.id,
         email: normalizedEmail,
+        emailVerifiedAt:
+          input.emailVerifiedAt === undefined
+            ? new Date()
+            : input.emailVerifiedAt,
+        phone: this.normalizePhone(input.phone),
         fullName: input.fullName.trim(),
         passwordHash: input.passwordHash,
         userType: input.userType,
@@ -265,5 +322,40 @@ export class UsersService {
       },
       select: userIdentitySelect,
     });
+  }
+
+  private async assertProfileImageAsset(userId: string, fileAssetId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        siteId: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException({
+        code: 'USER_NOT_FOUND',
+        message: 'User was not found.',
+      });
+    }
+
+    const asset = await this.prisma.fileAsset.findFirst({
+      where: {
+        id: fileAssetId,
+        siteId: user.siteId,
+        purpose: 'PROFILE_IMAGE',
+        status: 'READY',
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!asset) {
+      throw new NotFoundException({
+        code: 'PROFILE_IMAGE_NOT_FOUND',
+        message: 'Profile image asset was not found.',
+      });
+    }
   }
 }

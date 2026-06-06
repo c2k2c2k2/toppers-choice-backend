@@ -4,6 +4,8 @@ import { SiteSettingsService } from '../site-settings/site-settings.service';
 import {
   ACCESS_TOKEN_TTL_MINUTES_PATH,
   AUTH_RUNTIME_CONFIG_KEY,
+  EMAIL_VERIFICATION_CODE_TTL_MINUTES_PATH,
+  EMAIL_VERIFICATION_MAX_ATTEMPTS_PATH,
   PASSWORD_RESET_CODE_TTL_MINUTES_PATH,
   PASSWORD_RESET_MAX_ATTEMPTS_PATH,
   REFRESH_TOKEN_TTL_DAYS_PATH,
@@ -75,6 +77,40 @@ export class AuthSettingsService {
       refreshTokenTtlDays,
       passwordResetCodeTtlMinutes,
       passwordResetMaxAttempts,
+    };
+  }
+
+  async getEmailVerificationSettings(siteCode?: string) {
+    const [codeTtlMinutes, maxAttempts] = await Promise.all([
+      this.siteSettingsService.getNumberSetting(
+        AUTH_RUNTIME_CONFIG_KEY,
+        EMAIL_VERIFICATION_CODE_TTL_MINUTES_PATH,
+        {
+          siteCode,
+          visibility: ConfigVisibility.INTERNAL,
+          fallback: 10,
+          integer: true,
+          min: 5,
+          max: 60,
+        },
+      ),
+      this.siteSettingsService.getNumberSetting(
+        AUTH_RUNTIME_CONFIG_KEY,
+        EMAIL_VERIFICATION_MAX_ATTEMPTS_PATH,
+        {
+          siteCode,
+          visibility: ConfigVisibility.INTERNAL,
+          fallback: 5,
+          integer: true,
+          min: 1,
+          max: 20,
+        },
+      ),
+    ]);
+
+    return {
+      codeTtlMinutes,
+      maxAttempts,
     };
   }
 }

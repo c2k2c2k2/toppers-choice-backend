@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { IdempotencyModule } from '../../infra/idempotency/idempotency.module';
+import { MailModule } from '../../infra/mail/mail.module';
 import { AuthorizationModule } from '../authorization/authorization.module';
 import { SiteSettingsModule } from '../site-settings/site-settings.module';
 import { AdminEntitlementsController } from './admin-entitlements.controller';
@@ -20,7 +21,7 @@ import { TrialAccessController } from './trial-access.controller';
 import { TrialAccessService } from './trial-access.service';
 
 @Module({
-  imports: [AuthorizationModule, SiteSettingsModule, IdempotencyModule],
+  imports: [AuthorizationModule, SiteSettingsModule, IdempotencyModule, MailModule],
   controllers: [
     PublicPlansController,
     PublicTrialPolicyController,

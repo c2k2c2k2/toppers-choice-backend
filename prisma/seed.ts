@@ -155,6 +155,10 @@ async function main() {
         codeTtlMinutes: 15,
         maxAttempts: 5,
       },
+      emailVerification: {
+        codeTtlMinutes: 10,
+        maxAttempts: 5,
+      },
     },
   );
 

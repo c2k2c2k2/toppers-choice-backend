@@ -34,6 +34,13 @@ export type EnvironmentVariables = {
   HDFC_SMARTGATEWAY_PUBLIC_KEY_PATH?: string;
   HDFC_SMARTGATEWAY_PRIVATE_KEY?: string;
   HDFC_SMARTGATEWAY_PRIVATE_KEY_PATH?: string;
+  SMTP_HOST?: string;
+  SMTP_PORT: number;
+  SMTP_SECURE: boolean;
+  SMTP_USER?: string;
+  SMTP_PASS?: string;
+  SMTP_FROM_EMAIL?: string;
+  SMTP_FROM_NAME: string;
 };
 
 const NODE_ENV_VALUES = ['development', 'test', 'production'] as const;
@@ -161,6 +168,22 @@ export function validateEnvironment(
   const hdfcSmartGatewayPrivateKeyPath = parseOptionalString(
     config.HDFC_SMARTGATEWAY_PRIVATE_KEY_PATH,
   );
+  const smtpHost = parseOptionalString(config.SMTP_HOST);
+  const smtpPort = parseInteger(config.SMTP_PORT, 'SMTP_PORT', 587, errors, {
+    min: 1,
+    max: 65_535,
+  });
+  const smtpSecure = parseBoolean(
+    config.SMTP_SECURE,
+    'SMTP_SECURE',
+    false,
+    errors,
+  );
+  const smtpUser = parseOptionalString(config.SMTP_USER);
+  const smtpPass = parseOptionalString(config.SMTP_PASS);
+  const smtpFromEmail = parseOptionalString(config.SMTP_FROM_EMAIL);
+  const smtpFromName =
+    parseOptionalString(config.SMTP_FROM_NAME) ?? "Toppers' Choice";
 
   if (!databaseUrl && nodeEnv === 'production') {
     errors.push('DATABASE_URL is required when NODE_ENV=production.');
@@ -246,6 +269,20 @@ export function validateEnvironment(
     }
   }
 
+  const smtpConfigValues = [smtpHost, smtpUser, smtpPass, smtpFromEmail];
+  const hasAnySmtpConfig = smtpConfigValues.some(
+    (value) => typeof value === 'string' && value.length > 0,
+  );
+  const hasAllSmtpConfig = smtpConfigValues.every(
+    (value) => typeof value === 'string' && value.length > 0,
+  );
+
+  if (hasAnySmtpConfig && !hasAllSmtpConfig) {
+    errors.push(
+      'SMTP_HOST, SMTP_USER, SMTP_PASS, and SMTP_FROM_EMAIL must all be provided together when SMTP is configured.',
+    );
+  }
+
   if (errors.length > 0) {
     throw new Error(`Environment validation failed:\n- ${errors.join('\n- ')}`);
   }
@@ -287,6 +324,13 @@ export function validateEnvironment(
     HDFC_SMARTGATEWAY_PUBLIC_KEY_PATH: hdfcSmartGatewayPublicKeyPath,
     HDFC_SMARTGATEWAY_PRIVATE_KEY: hdfcSmartGatewayPrivateKey,
     HDFC_SMARTGATEWAY_PRIVATE_KEY_PATH: hdfcSmartGatewayPrivateKeyPath,
+    SMTP_HOST: smtpHost,
+    SMTP_PORT: smtpPort,
+    SMTP_SECURE: smtpSecure,
+    SMTP_USER: smtpUser,
+    SMTP_PASS: smtpPass,
+    SMTP_FROM_EMAIL: smtpFromEmail,
+    SMTP_FROM_NAME: smtpFromName,
   };
 }
 

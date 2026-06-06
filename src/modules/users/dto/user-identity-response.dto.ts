@@ -11,6 +11,9 @@ export class UserIdentityResponseDto {
   @ApiProperty()
   email!: string;
 
+  @ApiPropertyOptional({ example: '+919876543210', nullable: true })
+  phone?: string | null;
+
   @ApiProperty()
   fullName!: string;
 
@@ -28,6 +31,9 @@ export class UserIdentityResponseDto {
 
   @ApiPropertyOptional({ example: null, nullable: true })
   phoneVerifiedAt?: string | null;
+
+  @ApiPropertyOptional({ example: 'cmag4file001', nullable: true })
+  profileImageFileAssetId?: string | null;
 
   @ApiProperty({ example: '2026-03-26T10:00:00.000Z' })
   createdAt!: string;

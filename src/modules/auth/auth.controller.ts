@@ -25,9 +25,14 @@ import { Public } from './decorators/public.decorator';
 import { AuthService } from './auth.service';
 import { AuthenticatedUser } from './auth.types';
 import {
+  EmailOtpRequestDto,
+  EmailOtpVerifyDto,
+} from './dto/email-verification.dto';
+import {
   AuthMeResponseDto,
   AuthResponseDto,
   AuthSessionsResponseDto,
+  SignupResponseDto,
 } from './dto/auth-response.dto';
 import { LoginDto } from './dto/login.dto';
 import { PasswordForgotDto } from './dto/password-forgot.dto';
@@ -43,11 +48,42 @@ export class AuthController {
 
   @Public()
   @Post('signup')
-  @ApiCreatedResponse({ type: AuthResponseDto })
+  @ApiCreatedResponse({ type: SignupResponseDto })
   @ApiBadRequestResponse({ type: ApiErrorResponseDto })
   @ApiConflictResponse({ type: ApiErrorResponseDto })
   async signup(@Body() body: SignupDto, @Req() request: Request) {
     return this.authService.signup(body, getRequestSessionMetadata(request));
+  }
+
+  @Public()
+  @Post('email/otp')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: ActionMessageResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorResponseDto })
+  async requestEmailOtp(
+    @Body() body: EmailOtpRequestDto,
+    @Req() request: Request,
+  ) {
+    return this.authService.requestEmailVerificationCode(
+      body,
+      getRequestSessionMetadata(request),
+    );
+  }
+
+  @Public()
+  @Post('email/verify')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: AuthResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorResponseDto })
+  @ApiForbiddenResponse({ type: ApiErrorResponseDto })
+  async verifyEmail(
+    @Body() body: EmailOtpVerifyDto,
+    @Req() request: Request,
+  ) {
+    return this.authService.verifyEmail(
+      body,
+      getRequestSessionMetadata(request),
+    );
   }
 
   @Public()
