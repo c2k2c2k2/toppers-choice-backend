@@ -228,6 +228,7 @@ async function main() {
       },
       providers: {
         hdfc: {
+          callbackPath: '/api/v1/payments/providers/hdfc/callback',
           returnPath: '/payments/result',
         },
         phonepe: {

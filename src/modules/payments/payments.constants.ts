@@ -11,6 +11,7 @@ export const PAYMENTS_TRIAL_TOTAL_MINUTES_PATH = 'trial.totalMinutes';
 export const PAYMENTS_TRIAL_HEARTBEAT_SECONDS_PATH = 'trial.heartbeatSeconds';
 export const PAYMENTS_TRIAL_MAX_HEARTBEAT_GAP_SECONDS_PATH =
   'trial.maxHeartbeatGapSeconds';
+export const HDFC_CALLBACK_PATH = 'providers.hdfc.callbackPath';
 export const HDFC_RETURN_PATH = 'providers.hdfc.returnPath';
 export const PHONEPE_PAY_PATH = 'providers.phonepe.payPath';
 export const PHONEPE_STATUS_PATH_TEMPLATE =

@@ -209,10 +209,11 @@ export class HdfcSmartGatewayPaymentProviderService
     const merchantOrderCode =
       this.pickString(normalizedPayload, ['order_id']) ??
       this.pickString(normalizedPayload, ['content', 'order', 'order_id']) ??
+      this.pickString(normalizedPayload, ['content', 'txn', 'order_id']) ??
       this.pickString(normalizedPayload, ['orderId']);
     const providerEventId =
-      this.pickString(normalizedPayload, ['event_name']) ??
-      this.pickString(normalizedPayload, ['id']);
+      this.pickString(normalizedPayload, ['id']) ??
+      this.pickString(normalizedPayload, ['event_name']);
     const eventType =
       this.pickString(normalizedPayload, ['event_name']) ??
       this.pickString(normalizedPayload, ['status']) ??

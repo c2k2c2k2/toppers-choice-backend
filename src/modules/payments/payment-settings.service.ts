@@ -7,6 +7,7 @@ import {
   DEFAULT_TRIAL_HEARTBEAT_SECONDS,
   DEFAULT_TRIAL_MAX_HEARTBEAT_GAP_SECONDS,
   DEFAULT_TRIAL_TOTAL_MINUTES,
+  HDFC_CALLBACK_PATH,
   HDFC_RETURN_PATH,
   PAYMENT_SUBSCRIPTION_MODE_VALUES,
   PAYMENTS_ACTIVE_PROVIDER_PATH,
@@ -36,6 +37,7 @@ type PhonePeRuntimeConfig = {
 };
 
 type HdfcSmartGatewayRuntimeConfig = {
+  callbackUrl: string | null;
   returnUrl: string | null;
 };
 
@@ -231,7 +233,14 @@ export class PaymentSettingsService {
   }
 
   async getHdfcRuntimeConfig(): Promise<HdfcSmartGatewayRuntimeConfig> {
-    const [returnPath, appBaseUrl] = await Promise.all([
+    const [callbackPath, returnPath, appBaseUrl] = await Promise.all([
+      this.siteSettingsService.getStringSetting(
+        PAYMENTS_RUNTIME_CONFIG_KEY,
+        HDFC_CALLBACK_PATH,
+        {
+          fallback: '/api/v1/payments/providers/hdfc/callback',
+        },
+      ),
       this.siteSettingsService.getStringSetting(
         PAYMENTS_RUNTIME_CONFIG_KEY,
         HDFC_RETURN_PATH,
@@ -251,6 +260,7 @@ export class PaymentSettingsService {
     ]);
 
     return {
+      callbackUrl: this.resolveUrl(appBaseUrl, callbackPath),
       returnUrl: this.resolveUrl(appBaseUrl, returnPath),
     };
   }
