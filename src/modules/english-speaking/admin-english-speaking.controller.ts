@@ -28,6 +28,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { AuthenticatedUser } from '../auth/auth.types';
 import {
   AdminEnglishSpeakingTopicDetailResponseDto,
+  AdminEnglishSpeakingMaterialResponseDto,
   AdminEnglishSpeakingTopicListResponseDto,
 } from './dto/english-speaking-response.dto';
 import {
@@ -36,6 +37,7 @@ import {
   ListAdminEnglishSpeakingQueryDto,
   CreateEnglishSpeakingTopicDto,
   PublishEnglishSpeakingTopicDto,
+  UpdateEnglishSpeakingMaterialDto,
   UpdateEnglishSpeakingTopicDto,
 } from './dto/manage-english-speaking.dto';
 import { EnglishSpeakingService } from './english-speaking.service';
@@ -59,6 +61,33 @@ export class AdminEnglishSpeakingController {
     @Query() query: ListAdminEnglishSpeakingQueryDto,
   ) {
     return this.englishSpeakingService.listAdminTopics(user.siteId, query);
+  }
+
+  @Get('material')
+  @Policy('content.structured.read')
+  @ApiOkResponse({ type: AdminEnglishSpeakingMaterialResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto })
+  @ApiForbiddenResponse({ type: ApiErrorResponseDto })
+  async getMaterial(@CurrentUser() user: AuthenticatedUser) {
+    return this.englishSpeakingService.getAdminMaterial(user.siteId);
+  }
+
+  @Patch('material')
+  @Policy('content.structured.manage')
+  @Audit({
+    action: 'admin.english_speaking.material.update',
+    resourceType: 'english_speaking_material',
+    resourceIdResponseField: 'id',
+    includeBodyKeys: ['notesFileAssetId'],
+  })
+  @ApiOkResponse({ type: AdminEnglishSpeakingMaterialResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto })
+  @ApiForbiddenResponse({ type: ApiErrorResponseDto })
+  async updateMaterial(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: UpdateEnglishSpeakingMaterialDto,
+  ) {
+    return this.englishSpeakingService.updateMaterial(user, body);
   }
 
   @Get(':topicId')

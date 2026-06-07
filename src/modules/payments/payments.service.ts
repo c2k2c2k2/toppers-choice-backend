@@ -463,11 +463,12 @@ export class PaymentsService {
     force = false,
     callbackEventId?: string,
   ) {
-    if (
+    const isExpiredPendingOrder =
       order.expiresAt &&
       order.expiresAt <= new Date() &&
-      !isTerminalPaymentStatus(order.status)
-    ) {
+      !isTerminalPaymentStatus(order.status);
+
+    if (isExpiredPendingOrder && !force) {
       return this.prisma.paymentOrder.update({
         where: {
           id: order.id,
@@ -491,6 +492,11 @@ export class PaymentsService {
       },
     );
     const now = new Date();
+    const nextOrderStatus =
+      isExpiredPendingOrder &&
+      statusResult.status === PaymentOrderStatus.PENDING
+        ? PaymentOrderStatus.EXPIRED
+        : statusResult.status;
 
     const reconciled = await this.prisma.$transaction(async (tx) => {
       if (source !== PaymentEventSource.CALLBACK) {
@@ -514,19 +520,19 @@ export class PaymentsService {
           id: order.id,
         },
         data: {
-          status: statusResult.status,
+          status: nextOrderStatus,
           providerReferenceId: statusResult.providerReferenceId,
           providerStatus: statusResult.providerStatus,
           confirmedAt:
-            statusResult.status === PaymentOrderStatus.SUCCEEDED ? now : null,
+            nextOrderStatus === PaymentOrderStatus.SUCCEEDED ? now : null,
           callbackConfirmedAt:
             source === PaymentEventSource.CALLBACK &&
-            statusResult.status === PaymentOrderStatus.SUCCEEDED
+            nextOrderStatus === PaymentOrderStatus.SUCCEEDED
               ? now
               : undefined,
           failedAt:
-            statusResult.status === PaymentOrderStatus.FAILED ||
-            statusResult.status === PaymentOrderStatus.CANCELLED
+            nextOrderStatus === PaymentOrderStatus.FAILED ||
+            nextOrderStatus === PaymentOrderStatus.CANCELLED
               ? now
               : null,
           lastCheckedAt: now,

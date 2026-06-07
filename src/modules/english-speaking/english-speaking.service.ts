@@ -29,6 +29,7 @@ import type {
   GenerateEnglishSpeakingAudioDto,
   ListAdminEnglishSpeakingQueryDto,
   PublishEnglishSpeakingTopicDto,
+  UpdateEnglishSpeakingMaterialDto,
   UpdateEnglishSpeakingTopicDto,
   UpsertEnglishSpeakingSentenceDto,
 } from './dto/manage-english-speaking.dto';
@@ -63,6 +64,29 @@ type NormalizedSentenceInput = {
   orderIndex: number;
 };
 
+const englishSpeakingPdfAssetSelect =
+  Prisma.validator<Prisma.FileAssetSelect>()({
+    accessLevel: true,
+    contentType: true,
+    id: true,
+    originalFileName: true,
+    purpose: true,
+    sizeBytes: true,
+    status: true,
+  });
+
+const englishSpeakingMaterialSelect =
+  Prisma.validator<Prisma.EnglishSpeakingMaterialSelect>()({
+    id: true,
+    siteId: true,
+    notesFileAssetId: true,
+    createdAt: true,
+    updatedAt: true,
+    notesFileAsset: {
+      select: englishSpeakingPdfAssetSelect,
+    },
+  });
+
 const adminSentenceContextSelect =
   Prisma.validator<Prisma.EnglishSpeakingSentenceSelect>()({
     id: true,
@@ -94,6 +118,14 @@ const adminSentenceContextSelect =
 
 type AdminSentenceContextRecord = Prisma.EnglishSpeakingSentenceGetPayload<{
   select: typeof adminSentenceContextSelect;
+}>;
+
+type EnglishSpeakingMaterialRecord = Prisma.EnglishSpeakingMaterialGetPayload<{
+  select: typeof englishSpeakingMaterialSelect;
+}>;
+
+type EnglishSpeakingPdfAssetRecord = Prisma.FileAssetGetPayload<{
+  select: typeof englishSpeakingPdfAssetSelect;
 }>;
 
 @Injectable()
@@ -129,6 +161,69 @@ export class EnglishSpeakingService {
   async getAdminTopic(siteId: string, topicId: string) {
     const topic = await this.getAdminTopicRecord(siteId, topicId);
     return this.mapAdminTopicDetail(topic);
+  }
+
+  async getAdminMaterial(siteId: string) {
+    const material = await this.ensureMaterialRecord(siteId);
+    return this.mapAdminMaterial(material);
+  }
+
+  async updateMaterial(
+    user: AuthenticatedUser,
+    input: UpdateEnglishSpeakingMaterialDto,
+  ) {
+    const notesFileAssetId =
+      input.notesFileAssetId === undefined
+        ? undefined
+        : input.notesFileAssetId?.trim() || null;
+
+    if (notesFileAssetId !== undefined && notesFileAssetId !== null) {
+      await this.validateNotesPdfAsset(user.siteId, notesFileAssetId);
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      const material = await tx.englishSpeakingMaterial.upsert({
+        where: {
+          siteId: user.siteId,
+        },
+        update: {
+          notesFileAssetId,
+          updatedByUserId: user.userId,
+        },
+        create: {
+          notesFileAssetId: notesFileAssetId ?? null,
+          siteId: user.siteId,
+          updatedByUserId: user.userId,
+        },
+        select: {
+          id: true,
+          notesFileAssetId: true,
+        },
+      });
+
+      await tx.fileAssetReference.deleteMany({
+        where: {
+          resourceId: material.id,
+          resourceType: 'english_speaking_material',
+          siteId: user.siteId,
+        },
+      });
+
+      if (material.notesFileAssetId) {
+        await tx.fileAssetReference.create({
+          data: {
+            accessLevel: FileAssetAccess.AUTHENTICATED,
+            fileAssetId: material.notesFileAssetId,
+            resourceId: material.id,
+            resourceType: 'english_speaking_material',
+            siteId: user.siteId,
+            slot: 'notes_pdf',
+          },
+        });
+      }
+    });
+
+    return this.getAdminMaterial(user.siteId);
   }
 
   async createTopic(
@@ -419,21 +514,24 @@ export class EnglishSpeakingService {
   }
 
   async listStudentTopics(user: AuthenticatedUser) {
-    const premiumAccess =
-      await this.englishSpeakingEntitlementService.canAccessPremiumTopics(
+    const [premiumAccess, items, material] = await Promise.all([
+      this.englishSpeakingEntitlementService.canAccessPremiumTopics(
         user.siteId,
         user.userId,
-      );
-    const items = await this.prisma.englishSpeakingTopic.findMany({
-      where: this.buildStudentTopicWhere(user.siteId),
-      orderBy: [{ orderIndex: 'asc' }, { title: 'asc' }],
-      select: englishSpeakingTopicSelect,
-    });
+      ),
+      this.prisma.englishSpeakingTopic.findMany({
+        where: this.buildStudentTopicWhere(user.siteId),
+        orderBy: [{ orderIndex: 'asc' }, { title: 'asc' }],
+        select: englishSpeakingTopicSelect,
+      }),
+      this.getMaterialRecord(user.siteId),
+    ]);
 
     return {
       items: items.map((item) =>
         this.mapStudentTopicSummary(item, premiumAccess),
       ),
+      material: this.mapStudentMaterial(material),
       total: items.length,
     };
   }
@@ -556,6 +654,36 @@ export class EnglishSpeakingService {
         marathiText: sentence.marathiText,
         orderIndex: sentence.orderIndex,
       })),
+    };
+  }
+
+  private mapAdminMaterial(material: EnglishSpeakingMaterialRecord) {
+    return {
+      createdAt: material.createdAt,
+      id: material.id,
+      notesFileAssetId: material.notesFileAssetId,
+      notesPdf: material.notesFileAsset
+        ? this.mapPdfAsset(material.notesFileAsset)
+        : null,
+      updatedAt: material.updatedAt,
+    };
+  }
+
+  private mapStudentMaterial(material: EnglishSpeakingMaterialRecord | null) {
+    return {
+      notesPdf: material?.notesFileAsset
+        ? this.mapPdfAsset(material.notesFileAsset)
+        : null,
+    };
+  }
+
+  private mapPdfAsset(asset: EnglishSpeakingPdfAssetRecord) {
+    return {
+      contentType: asset.contentType,
+      id: asset.id,
+      originalFileName: asset.originalFileName,
+      protectedDeliveryPath: `/assets/${encodeURIComponent(asset.id)}`,
+      sizeBytes: asset.sizeBytes,
     };
   }
 
@@ -743,6 +871,72 @@ export class EnglishSpeakingService {
     }
 
     return topic;
+  }
+
+  private async getMaterialRecord(siteId: string) {
+    return this.prisma.englishSpeakingMaterial.findUnique({
+      where: {
+        siteId,
+      },
+      select: englishSpeakingMaterialSelect,
+    });
+  }
+
+  private async ensureMaterialRecord(siteId: string) {
+    const material = await this.getMaterialRecord(siteId);
+
+    if (material) {
+      return material;
+    }
+
+    return this.prisma.englishSpeakingMaterial.create({
+      data: {
+        siteId,
+      },
+      select: englishSpeakingMaterialSelect,
+    });
+  }
+
+  private async validateNotesPdfAsset(siteId: string, fileAssetId: string) {
+    const asset = await this.prisma.fileAsset.findFirst({
+      where: {
+        id: fileAssetId,
+        siteId,
+        status: FileAssetStatus.READY,
+      },
+      select: englishSpeakingPdfAssetSelect,
+    });
+
+    if (!asset) {
+      throw new BadRequestException({
+        code: 'ENGLISH_SPEAKING_NOTES_PDF_INVALID',
+        message:
+          'A ready PDF file asset is required for English speaking notes.',
+      });
+    }
+
+    if (
+      asset.purpose !== FileAssetPurpose.GENERIC_PDF ||
+      asset.contentType !== 'application/pdf'
+    ) {
+      throw new BadRequestException({
+        code: 'ENGLISH_SPEAKING_NOTES_PDF_INVALID',
+        message: 'English speaking notes must use a generic PDF file asset.',
+      });
+    }
+
+    if (
+      asset.accessLevel !== FileAssetAccess.PUBLIC &&
+      asset.accessLevel !== FileAssetAccess.AUTHENTICATED
+    ) {
+      throw new BadRequestException({
+        code: 'ENGLISH_SPEAKING_NOTES_PDF_ACCESS_INVALID',
+        message:
+          'English speaking notes must use PUBLIC or AUTHENTICATED file access.',
+      });
+    }
+
+    return asset;
   }
 
   private async ensureAdminTopicExists(siteId: string, topicId: string) {

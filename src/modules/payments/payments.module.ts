@@ -6,6 +6,7 @@ import { SiteSettingsModule } from '../site-settings/site-settings.module';
 import { AdminEntitlementsController } from './admin-entitlements.controller';
 import { AdminPaymentsController } from './admin-payments.controller';
 import { AdminPlansController } from './admin-plans.controller';
+import { AdminUserEntitlementsCompatController } from './admin-user-entitlements-compat.controller';
 import { EntitlementsController } from './entitlements.controller';
 import { EntitlementsService } from './entitlements.service';
 import { PaymentGatewayService } from './payment-gateway.service';
@@ -28,6 +29,7 @@ import { TrialAccessService } from './trial-access.service';
     AdminPlansController,
     EntitlementsController,
     AdminEntitlementsController,
+    AdminUserEntitlementsCompatController,
     PaymentsController,
     AdminPaymentsController,
     TrialAccessController,

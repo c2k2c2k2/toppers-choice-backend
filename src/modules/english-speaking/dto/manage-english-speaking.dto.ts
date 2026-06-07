@@ -139,6 +139,18 @@ export class ListAdminEnglishSpeakingQueryDto {
   search?: string;
 }
 
+export class UpdateEnglishSpeakingMaterialDto {
+  @ApiPropertyOptional({
+    example: 'cmag4asset001',
+    nullable: true,
+    description:
+      'Ready PDF file asset to show as English speaking notes. Send null to remove the linked PDF.',
+  })
+  @IsOptional()
+  @IsString()
+  notesFileAssetId?: string | null;
+}
+
 export class GenerateEnglishSpeakingAudioDto {
   @ApiPropertyOptional({
     enum: EnglishSpeakingLanguage,

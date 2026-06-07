@@ -12,6 +12,51 @@ export enum StudentEnglishSpeakingTopicAccessMode {
   LOCKED = 'LOCKED',
 }
 
+export class EnglishSpeakingPdfAssetResponseDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty()
+  originalFileName!: string;
+
+  @ApiProperty()
+  contentType!: string;
+
+  @ApiPropertyOptional({ nullable: true })
+  sizeBytes!: number | null;
+
+  @ApiProperty()
+  protectedDeliveryPath!: string;
+}
+
+export class AdminEnglishSpeakingMaterialResponseDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiPropertyOptional({ nullable: true })
+  notesFileAssetId!: string | null;
+
+  @ApiPropertyOptional({
+    type: EnglishSpeakingPdfAssetResponseDto,
+    nullable: true,
+  })
+  notesPdf!: EnglishSpeakingPdfAssetResponseDto | null;
+
+  @ApiProperty()
+  createdAt!: Date;
+
+  @ApiProperty()
+  updatedAt!: Date;
+}
+
+export class StudentEnglishSpeakingMaterialResponseDto {
+  @ApiPropertyOptional({
+    type: EnglishSpeakingPdfAssetResponseDto,
+    nullable: true,
+  })
+  notesPdf!: EnglishSpeakingPdfAssetResponseDto | null;
+}
+
 export class AdminEnglishSpeakingAudioStateResponseDto {
   @ApiProperty({ enum: EnglishSpeakingLanguage })
   language!: EnglishSpeakingLanguage;
@@ -195,6 +240,9 @@ export class StudentEnglishSpeakingTopicDetailResponseDto extends StudentEnglish
 export class StudentEnglishSpeakingTopicListResponseDto {
   @ApiProperty({ type: [StudentEnglishSpeakingTopicSummaryResponseDto] })
   items!: StudentEnglishSpeakingTopicSummaryResponseDto[];
+
+  @ApiProperty({ type: StudentEnglishSpeakingMaterialResponseDto })
+  material!: StudentEnglishSpeakingMaterialResponseDto;
 
   @ApiProperty()
   total!: number;

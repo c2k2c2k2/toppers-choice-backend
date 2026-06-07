@@ -424,6 +424,7 @@ model Site {
   fileAssetReferences      FileAssetReference[]
   contentEntries           ContentEntry[]
   englishSpeakingTopics    EnglishSpeakingTopic[]
+  englishSpeakingMaterial  EnglishSpeakingMaterial?
   questions                Question[]
   practiceSessions         PracticeSession[]
   practiceSessionQuestions PracticeSessionQuestion[]
@@ -534,6 +535,7 @@ model User {
   createdNotes                     Note[]                        @relation("NoteCreator")
   updatedNotes                     Note[]                        @relation("NoteUpdater")
   publishedNotes                   Note[]                        @relation("NotePublisher")
+  updatedEnglishSpeakingMaterials  EnglishSpeakingMaterial[]     @relation("EnglishSpeakingMaterialUpdater")
   createdNoteIndexEntries          NoteIndexEntry[]              @relation("NoteIndexEntryCreator")
   updatedNoteIndexEntries          NoteIndexEntry[]              @relation("NoteIndexEntryUpdater")
   noteBookmarks                    NoteBookmark[]
@@ -1082,42 +1084,43 @@ model Tag {
 }
 
 model FileAsset {
-  id                      String                   @id @default(cuid())
-  siteId                  String
-  createdByUserId         String
-  confirmedByUserId       String?
-  purpose                 FileAssetPurpose
-  accessLevel             FileAssetAccess          @default(PROTECTED)
-  status                  FileAssetStatus          @default(PENDING_UPLOAD)
-  objectKey               String                   @unique
-  originalFileName        String
-  extension               String?
-  contentType             String
-  declaredSizeBytes       Int?
-  sizeBytes               Int?
-  checksumSha256          String?
-  etag                    String?
-  imageWidth              Int?
-  imageHeight             Int?
-  uploadExpiresAt         DateTime?
-  confirmedAt             DateTime?
-  createdAt               DateTime                 @default(now())
-  updatedAt               DateTime                 @updatedAt
-  site                    Site                     @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  createdByUser           User                     @relation("FileAssetCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
-  confirmedByUser         User?                    @relation("FileAssetConfirmer", fields: [confirmedByUserId], references: [id], onDelete: SetNull)
-  references              FileAssetReference[]
-  contentCoverEntries     ContentEntry[]           @relation("ContentCoverAsset")
-  contentAttachments      ContentAttachment[]
-  questionMediaReferences QuestionMediaReference[]
-  profileImageUsers       User[]                   @relation("UserProfileImage")
-  feedbackAttachments     FeedbackAttachment[]
-  cmsPageCoverAssets      CmsPage[]                @relation("CmsPageCoverAsset")
-  cmsBannerImageAssets    CmsBanner[]              @relation("CmsBannerImageAsset")
-  cmsSectionImageAssets   CmsSection[]             @relation("CmsSectionImageAsset")
-  contentNotes            Note[]                   @relation("NoteContentAsset")
-  previewNotes            Note[]                   @relation("NotePreviewAsset")
-  coverNotes              Note[]                   @relation("NoteCoverAsset")
+  id                       String                    @id @default(cuid())
+  siteId                   String
+  createdByUserId          String
+  confirmedByUserId        String?
+  purpose                  FileAssetPurpose
+  accessLevel              FileAssetAccess           @default(PROTECTED)
+  status                   FileAssetStatus           @default(PENDING_UPLOAD)
+  objectKey                String                    @unique
+  originalFileName         String
+  extension                String?
+  contentType              String
+  declaredSizeBytes        Int?
+  sizeBytes                Int?
+  checksumSha256           String?
+  etag                     String?
+  imageWidth               Int?
+  imageHeight              Int?
+  uploadExpiresAt          DateTime?
+  confirmedAt              DateTime?
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  site                     Site                      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  createdByUser            User                      @relation("FileAssetCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  confirmedByUser          User?                     @relation("FileAssetConfirmer", fields: [confirmedByUserId], references: [id], onDelete: SetNull)
+  references               FileAssetReference[]
+  contentCoverEntries      ContentEntry[]            @relation("ContentCoverAsset")
+  contentAttachments       ContentAttachment[]
+  questionMediaReferences  QuestionMediaReference[]
+  profileImageUsers        User[]                    @relation("UserProfileImage")
+  feedbackAttachments      FeedbackAttachment[]
+  cmsPageCoverAssets       CmsPage[]                 @relation("CmsPageCoverAsset")
+  cmsBannerImageAssets     CmsBanner[]               @relation("CmsBannerImageAsset")
+  cmsSectionImageAssets    CmsSection[]              @relation("CmsSectionImageAsset")
+  contentNotes             Note[]                    @relation("NoteContentAsset")
+  previewNotes             Note[]                    @relation("NotePreviewAsset")
+  coverNotes               Note[]                    @relation("NoteCoverAsset")
+  englishSpeakingMaterials EnglishSpeakingMaterial[] @relation("EnglishSpeakingNotesAsset")
 
   @@index([siteId, purpose, createdAt])
   @@index([siteId, status, createdAt])
@@ -1212,6 +1215,22 @@ model EnglishSpeakingTopic {
   @@index([siteId, accessType, status])
   @@index([siteId, orderIndex])
   @@map("english_speaking_topics")
+}
+
+model EnglishSpeakingMaterial {
+  id               String     @id @default(cuid())
+  siteId           String     @unique
+  notesFileAssetId String?
+  updatedByUserId  String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  site             Site       @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  notesFileAsset   FileAsset? @relation("EnglishSpeakingNotesAsset", fields: [notesFileAssetId], references: [id], onDelete: SetNull)
+  updatedByUser    User?      @relation("EnglishSpeakingMaterialUpdater", fields: [updatedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([notesFileAssetId])
+  @@index([updatedByUserId])
+  @@map("english_speaking_materials")
 }
 
 model EnglishSpeakingSentence {
@@ -2128,30 +2147,30 @@ model NotificationPreference {
 }
 
 model FeedbackTicket {
-  id                 String               @id @default(cuid())
-  siteId             String
-  userId             String?
-  category           FeedbackCategory     @default(FEEDBACK)
-  status             FeedbackStatus       @default(OPEN)
-  priority           FeedbackPriority     @default(NORMAL)
-  subject            String
-  message            String
-  pageUrl            String?
-  pageTitle          String?
-  userAgent          String?
-  ipAddress          String?
-  contextJson        Json?
-  adminNote          String?
-  assignedToUserId   String?
-  resolvedByUserId   String?
-  resolvedAt         DateTime?
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  site               Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  user               User?                @relation("FeedbackSubject", fields: [userId], references: [id], onDelete: SetNull)
-  assignedToUser     User?                @relation("FeedbackAssignee", fields: [assignedToUserId], references: [id], onDelete: SetNull)
-  resolvedByUser     User?                @relation("FeedbackResolver", fields: [resolvedByUserId], references: [id], onDelete: SetNull)
-  attachments        FeedbackAttachment[]
+  id               String               @id @default(cuid())
+  siteId           String
+  userId           String?
+  category         FeedbackCategory     @default(FEEDBACK)
+  status           FeedbackStatus       @default(OPEN)
+  priority         FeedbackPriority     @default(NORMAL)
+  subject          String
+  message          String
+  pageUrl          String?
+  pageTitle        String?
+  userAgent        String?
+  ipAddress        String?
+  contextJson      Json?
+  adminNote        String?
+  assignedToUserId String?
+  resolvedByUserId String?
+  resolvedAt       DateTime?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  site             Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user             User?                @relation("FeedbackSubject", fields: [userId], references: [id], onDelete: SetNull)
+  assignedToUser   User?                @relation("FeedbackAssignee", fields: [assignedToUserId], references: [id], onDelete: SetNull)
+  resolvedByUser   User?                @relation("FeedbackResolver", fields: [resolvedByUserId], references: [id], onDelete: SetNull)
+  attachments      FeedbackAttachment[]
 
   @@index([siteId, status, createdAt])
   @@index([siteId, category, createdAt])
